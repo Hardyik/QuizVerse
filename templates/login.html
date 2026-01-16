@@ -119,6 +119,7 @@
         </div>
     </div>
 
+
     <script>
         AOS.init({
             duration: 800,
@@ -126,19 +127,45 @@
             once: true
         });
         feather.replace();
-    </script>
-    <script>
-    const adminCheckbox = document.getElementById("admin-mode");
-    const loginForm = document.getElementById("loginForm");
 
-    adminCheckbox.addEventListener("change", () => {
-        if (adminCheckbox.checked) {
-            loginForm.action = "/adminpanel";   // admin page
-        } else {
-            loginForm.action = "/user_dashboard"; // normal user
-        }
-    });
-</script>
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const isAdmin = document.getElementById('admin-mode').checked;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store token (optional)
+                    localStorage.setItem('token', data.access_token);
+                    
+                    // Redirect based on admin status
+                    if (data.is_admin && isAdmin) {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/user_dashboard';
+                    }
+                } else {
+                    alert('Login failed: ' + data.msg);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again.');
+            }
+        });
+    </script>
 
 </body>
 </html>

@@ -172,6 +172,30 @@ def playquiz():
 
 
 # ------------- AUTH ENDPOINTS -------------
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.get_json() or {}
+    email = data.get('email')
+    password = data.get('password')
+
+    # Find user by email
+    user = User.query.filter_by(email=email).first()
+    
+    if not user or not user.check_password(password):
+        return jsonify({"msg": "Invalid email or password"}), 401
+
+    # Create JWT token
+    token = create_access_token(identity=user.username)
+    
+    return jsonify({
+        "access_token": token,
+        "username": user.username,
+        "email": user.email,
+        "is_admin": user.is_admin,
+        "level": user.level
+    }), 200
+
+
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json() or {}
