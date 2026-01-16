@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - QuizVerse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-purple-700 p-4 text-white flex justify-center space-x-6">
+        <a href="/" class="hover:text-purple-300">Home</a>
+        <a href="/about" class="hover:text-purple-300 font-semibold">About</a>
+        <a href="/login" class="hover:text-purple-300">Sign in</a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="text-center py-12 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+        <h1 class="text-4xl font-extrabold">About QuizVerse</h1>
+        <p class="mt-3 text-lg text-purple-100 max-w-3xl mx-auto">
+            A student-built project designed to make learning interactive, fun, and challenging.
+        </p>
+    </header>
+
+    <!-- About Project Section -->
+    <section class="max-w-5xl mx-auto px-6 py-12">
+        <div class="text-center mb-10" data-aos="fade-up">
+            <h2 class="text-2xl font-bold text-purple-700 mb-4">Our Project</h2>
+            <p class="text-gray-600 leading-relaxed">
+                QuizVerse is an interactive quiz web application created as a Computer Science project.
+                Our goal was simple – to design a platform where users can test their knowledge, explore various topics, 
+                and enjoy an engaging quiz experience powered by clean UI and responsive design.  
+                Built using <span class="font-semibold text-purple-700">HTML, CSS, JavaScript, Python and MYSQL (Flask / MYSQL backend)</span>.
+                it showcases how web technologies can blend fun with learning.
+            </p>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="bg-white py-12">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-center text-purple-700 mb-10">Meet Our Team</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                
+                <!-- Team Member 1 -->
+                <div class="bg-gray-100 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition" data-aos="fade-up">
+                    <img src="https://i.pravatar.cc/150?img=3" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+                    <h3 class="text-lg font-semibold">Atharva</h3>
+                    <p class="text-sm text-purple-600">Frontend & UI Developer</p>
+                    <p class="mt-3 text-gray-600 text-sm">
+                        Designed the layout, quiz interface, and category UI with a focus on simplicity and smooth experience.
+                    </p>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="bg-gray-100 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition" data-aos="fade-up">
+                    <img src="https://i.pravatar.cc/150?img=15" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+                    <h3 class="text-lg font-semibold">Parth</h3>
+                    <p class="text-sm text-purple-600">Backend Developer</p>
+                    <p class="mt-3 text-gray-600 text-sm">
+                        Handled the quiz logic, data storage, and server-side scripting using Python and SQL.
+                    </p>
+                </div>
+
+                <!-- Team Member 3 -->
+                <div class="bg-gray-100 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition" data-aos="fade-up">
+                    <img src="" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+                    <h3 class="text-lg font-semibold">Hardik</h3>
+                    <p class="text-sm text-purple-600">Content & Design</p>
+                    <p class="mt-3 text-gray-600 text-sm">
+                        Curated quiz questions, category ideas, and worked on responsive visual content.
+                    </p>
+                </div>
+
+                <!-- Team Member 4 -->
+                <div class="bg-gray-100 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition" data-aos="fade-up">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+                    <h3 class="text-lg font-semibold">Pratik</h3>
+                    <p class="text-sm text-purple-600">Database Engineer</p>
+                    <p class="mt-3 text-gray-600 text-sm">
+                        Designed and optimized the database schema for quizzes, scores, and user data.
+                    </p>
+                </div>
+
+                <!-- Team Member 5 -->
+                <div class="bg-gray-100 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition" data-aos="fade-up">
+                    <img src="https://i.pravatar.cc/150?img=9" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+                    <h3 class="text-lg font-semibold">Atharva</h3>
+                    <p class="text-sm text-purple-600">Tester & Documentation</p>
+                    <p class="mt-3 text-gray-600 text-sm">
+                        Ensured smooth gameplay experience, tested responsiveness, and created project documentation.
+                    </p>
+                </div>
+
+            </div> 
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-purple-700 text-white text-center py-6 mt-12">
+        <p>&copy; 2024 QuizVerse | College Project</p>
+        <p class="text-sm text-purple-200 mt-2">Built with passion by our amazing team.</p>
+    </footer>
+
+    <!-- AOS Animation Script - Load before initialization -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS after the library is loaded
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QuizVerse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <nav class="bg-purple-700 p-4 text-white flex items-center h-16 px-6 bg-purple-700 relative">
+        <!-- Logo -->
+         <div class="flex items-center gap-2">
+            <a href="/" class="flex items-center gap-2">
+              <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png"  alt="QuizVerse Logo" class="h-12 w-12 rounded-lg">
+                <span class="text-xl font-bold text-white-900">QuizVerse</span>
+            </a>
+            <!--Navbar Links-->
+        </div>
+        <div class="absolute left-1/2 transform -translate-x-1/2 flex gap-6 text-white">
+            <a href="/" class="hover:text-purple-300">Home</a>
+            <a href="#" class="hover:text-purple-300">Demo Quiz</a>
+            <a href="/about" class="hover:text-purple-300">About</a>
+        </div>
+        <!-- Sign Up Button -->
+        <div class="ml-auto">
+            <button onclick="location.href='/signup'" class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign Up</button>
+        </div>
+    </nav>
+
+    
+
+    <!-- Quiz Section -->
+    
+    <div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-6">
+        <div class="flex justify-center mb-6">
+            <span id="timer" class="bg-purple-100 text-purple-700 px-6 py-2 rounded-full text-2xl font-semibold transition-all">
+                    ⏱️ Time Left: 30s
+            </span>
+        </div>
+
+            <hr class="mb-6">
+
+        <div id="quiz-box">
+            <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6"></h2>
+            <div id="options" class="space-y-3"></div>
+            <button id="next-btn" class="mt-6 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 hidden">
+                  Next Question
+            </button>
+        </div>
+
+        <div id="result-box" class="hidden text-center">
+            <h2 class="text-2xl font-bold text-purple-700 mb-4">Quiz Completed!</h2>
+            <p class="text-lg text-gray-700">Your Score: <span id="score"></span> / <span id="total"></span></p>
+            <a href="/play" class="mt-6 inline-block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Restart Quiz</a>
+        </div>
+    </div>
+    
+    <script>
+        // ======== Quiz Data ========
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                options: ["Madrid", "Berlin", "Rome", "Paris"],
+                answer: "Paris"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Earth", "Jupiter", "Mars","Saturn"],
+                answer: "Mars"
+            },
+            {
+                question: "Who wrote 'Romeo and Juliet'?",
+                options: ["William Shakespeare", "Charles Dickens",  "Leo Tolstoy", "Mark Twain"],
+                answer: "William Shakespeare"
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                options: ["Indian Ocean", "Pacific Ocean", "Arctic Ocean", "Atlantic Ocean"],
+                answer: "Pacific Ocean"
+            }
+        ];
+
+        // ======== Variables ========
+        let currentIndex = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval;
+
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const nextBtn = document.getElementById('next-btn');
+        const timerEl = document.getElementById('timer');
+        const quizBox = document.getElementById('quiz-box');
+        const resultBox = document.getElementById('result-box');
+        const scoreEl = document.getElementById('score');
+        const totalEl = document.getElementById('total');
+
+        // ======== Load Question ========
+        function loadQuestion() {
+            const q = quizData[currentIndex];
+            questionEl.textContent = q.question;
+            optionsEl.innerHTML = "";
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.textContent = opt;
+                btn.className = "w-full text-left border rounded-md px-4 py-2 hover:bg-purple-50 transition";
+                btn.onclick = () => selectOption(btn, q.answer);
+                optionsEl.appendChild(btn);
+            });
+
+            nextBtn.classList.add('hidden');
+        }
+
+        // ======== Select Option ========
+        function selectOption(selectedBtn, correctAnswer) {
+            const allBtns = document.querySelectorAll("#options button");
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (selectedBtn.textContent === correctAnswer) {
+                selectedBtn.classList.add("bg-green-100", "border-green-500");
+                score++;
+            } else {
+                selectedBtn.classList.add("bg-red-100", "border-red-500");
+                allBtns.forEach(btn => {
+                    if (btn.textContent === correctAnswer)
+                        btn.classList.add("bg-green-100", "border-green-500");
+                });
+            }
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        // ======== Show Result ========
+        function showResult() {
+            clearInterval(timerInterval);
+            quizBox.classList.add('hidden');
+            resultBox.classList.remove('hidden');
+            scoreEl.textContent = score;
+            totalEl.textContent = quizData.length;
+        }
+
+        // ======== Timer ========
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `⏱️ Time Left: ${timeLeft}s`;
+                timerEl.classList.remove(
+                "bg-purple-100",
+                "text-purple-700",
+                "bg-yellow-100",
+                "text-yellow-700",
+                "bg-red-100",
+                "text-red-700",
+                "animate-pulse"
+                );
+                if (timeLeft <= 10) {
+                    timerEl.classList.add("bg-red-100", "text-red-700", "animate-pulse");
+                    } else if (timeLeft <= 20) {
+                    timerEl.classList.add("bg-yellow-100", "text-yellow-700");
+                    } else {
+                    timerEl.classList.add("bg-purple-100", "text-purple-700");
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        // ======== Next Question ========
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                loadQuestion();
+                resetTimer();
+            } else {
+                showResult();
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            timerEl.textContent = `⏱️ Time Left: ${timeLeft}s`;
+            startTimer();
+        }
+
+        // ======== Initialize ========
+        loadQuestion();
+        startTimer();
+        nextBtn.addEventListener('click', nextQuestion);
+    </script>
+</body>
+</html>

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QuizVerse Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap 5 CDN -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+  />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      background-color: #0f172a; /* dark background to match QuizVerse vibe */
+      color: #e5e7eb;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: #020617;
+      padding: 1.25rem 1rem;
+      border-right: 1px solid #1f2937;
+    }
+
+    .sidebar .brand {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar .nav-link {
+      color: #9ca3af;
+      border-radius: 0.75rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background: #1f2937;
+      color: #f9fafb;
+    }
+
+    .sidebar .nav-link i {
+      margin-right: 0.5rem;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 1.5rem;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .top-bar .admin-name {
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 1rem;
+      border: 1px solid #1f2937;
+      color: #e5e7eb;
+    }
+
+    .table {
+      color: #e5e7eb;
+    }
+
+    .table thead {
+      background: #020617;
+    }
+
+    .badge-status {
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .badge-status.active {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .badge-status.inactive {
+      background: rgba(248, 113, 113, 0.1);
+      color: #f87171;
+      border: 1px solid rgba(248, 113, 113, 0.4);
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .form-control,
+    .form-select {
+      background: #020617;
+      border-color: #1f2937;
+      color: #e5e7eb;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      background: #020617;
+      color: #f9fafb;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px #38bdf8;
+    }
+
+    .btn-primary {
+      background: #38bdf8;
+      border-color: #38bdf8;
+    }
+
+    .btn-primary:hover {
+      background: #0ea5e9;
+      border-color: #0ea5e9;
+    }
+
+    .btn-outline-light {
+      border-color: #4b5563;
+      color: #e5e7eb;
+    }
+
+    .btn-outline-light:hover {
+      background: #111827;
+      border-color: #6b7280;
+    }
+
+    .nav-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b7280;
+      margin: 1rem 0 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      body {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="brand">
+        <i class="bi bi-lightning-charge-fill"></i> QuizVerse
+      </div>
+    </div>
+
+    <div class="nav-section-title">Main</div>
+    <nav class="nav flex-column mb-2">
+      <button class="nav-link active" data-section="dashboard">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </button>
+      <button class="nav-link" data-section="quizzes">
+        <i class="bi bi-question-circle"></i> Quizzes
+      </button>
+      <button class="nav-link" data-section="categories">
+        <i class="bi bi-tags"></i> Categories
+      </button>
+      <button class="nav-link" data-section="users">
+        <i class="bi bi-people"></i> Users
+      </button>
+      <button class="nav-link" data-section="scoreboard">
+        <i class="bi bi-trophy"></i> Scoreboard
+      </button>
+    </nav>
+
+    <div class="nav-section-title">Other</div>
+    <nav class="nav flex-column">
+      <button class="nav-link" data-section="featured">
+        <i class="bi bi-stars"></i> Featured Quiz
+      </button>
+      <button class="nav-link" data-section="settings">
+        <i class="bi bi-gear"></i> Settings
+      </button>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div>
+        <h4 class="mb-0">Admin Panel</h4>
+        <small class="text-secondary">Manage QuizVerse content and users</small>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="admin-name">Hi, Admin 👋</span>
+        <button class="btn btn-outline-light btn-sm">
+          <i class="bi bi-box-arrow-right me-1"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION: DASHBOARD -->
+    <section id="section-dashboard" class="section-wrapper">
+      <div class="section-title">Overview</div>
+      <div class="row g-3 mb-3">
+        <div class="col-md-3">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-secondary small">Total Users</span>
+              <i class="bi bi-people"></i>
+            </div>
+            <h4 class="mb-0" id="stat-total-users">1,248</h4>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-secondary small">Total Quizzes</span>
+              <i class="bi bi-question-circle"></i>
+            </div>
+            <h4 class="mb-0" id="stat-total-quizzes">82</h4>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-secondary small">Total Attempts</span>
+              <i class="bi bi-bar-chart"></i>
+            </div>
+            <h4 class="mb-0" id="stat-total-attempts">5,732</h4>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-secondary small">Active Today</span>
+              <i class="bi bi-lightning"></i>
+            </div>
+            <h4 class="mb-0" id="stat-active-today">129</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="section-title mb-0" style="font-size: 1rem;">Recent Quiz Attempts</span>
+              <button class="btn btn-sm btn-outline-light">View All</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Quiz</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Replace with dynamic data in backend -->
+                  <tr>
+                    <td>atharva_123</td>
+                    <td>World Capitals Challenge</td>
+                    <td>9 / 10</td>
+                    <td>2025-12-05</td>
+                  </tr>
+                  <tr>
+                    <td>geek_girl</td>
+                    <td>Frontend Basics</td>
+                    <td>7 / 10</td>
+                    <td>2025-12-05</td>
+                  </tr>
+                  <tr>
+                    <td>moviebuff</td>
+                    <td>Bollywood Trivia</td>
+                    <td>8 / 10</td>
+                    <td>2025-12-04</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card p-3">
+            <div class="section-title mb-2" style="font-size: 1rem;">Top Categories</div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                <span>Geography</span>
+                <span class="text-secondary small">50 quizzes</span>
+              </li>
+              <li class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                <span>Technology</span>
+                <span class="text-secondary small">45 quizzes</span>
+              </li>
+              <li class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                <span>Movies</span>
+                <span class="text-secondary small">38 quizzes</span>
+              </li>
+              <li class="list-group-item bg-transparent text-light d-flex justify-content-between">
+                <span>Music</span>
+                <span class="text-secondary small">45 quizzes</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: QUIZZES -->
+    <section id="section-quizzes" class="section-wrapper d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="section-title mb-0">Manage Quizzes</div>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#quizModal">
+          <i class="bi bi-plus-lg me-1"></i> Add New Quiz
+        </button>
+      </div>
+
+      <div class="card p-3 mb-3">
+        <form class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Search</label>
+            <input type="text" class="form-control" placeholder="Search by title..." />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Category</label>
+            <select class="form-select">
+              <option value="">All</option>
+              <option>Geography</option>
+              <option>Technology</option>
+              <option>Movies</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select">
+              <option value="">All</option>
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-outline-light w-100" type="button">Filter</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Quiz Title</th>
+                <th>Category</th>
+                <th>Difficulty</th>
+                <th>Questions</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th style="width: 140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example static row – replace with backend data -->
+              <tr>
+                <td>1</td>
+                <td>World Capitals Challenge</td>
+                <td>Geography</td>
+                <td>Medium</td>
+                <td>10</td>
+                <td>
+                  <span class="badge-status active">Active</span>
+                </td>
+                <td>2025-11-28</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-light me-1">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-light me-1">
+                    <i class="bi bi-list-check"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-light">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <!-- Repeat rows dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ MODAL (Add / Edit Quiz) -->
+    <div class="modal fade" id="quizModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" style="background:#020617; color:#e5e7eb;">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">Add / Edit Quiz</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form
+            id="quizForm"
+            method="POST"
+            action="/admin/quizzes" 
+            <!-- For update: use /admin/quizzes/:id -->
+          >
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label class="form-label">Quiz Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="title"
+                    placeholder="World Capitals Challenge"
+                    required
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Category</label>
+                  <select class="form-select" name="category_id" required>
+                    <!-- Dynamically render categories -->
+                    <option value="1">Geography</option>
+                    <option value="2">Technology</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Difficulty</label>
+                  <select class="form-select" name="difficulty">
+                    <option>Easy</option>
+                    <option>Medium</option>
+                    <option>Hard</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Time Limit (seconds)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="time_limit"
+                    placeholder="60"
+                    min="10"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" name="is_active">
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Description</label>
+                  <textarea
+                    class="form-control"
+                    name="description"
+                    rows="3"
+                    placeholder="Short description about this quiz..."
+                  ></textarea>
+                </div>
+
+                <!-- You can handle questions in a separate screen or add dynamic fields here -->
+                <div class="col-12">
+                  <small class="text-secondary">
+                    After saving the quiz, you can manage questions and options from the
+                    <strong>Questions</strong> section (next step in your backend).
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer border-secondary">
+              <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Save Quiz
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: CATEGORIES -->
+    <section id="section-categories" class="section-wrapper d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="section-title mb-0">Manage Categories</div>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal">
+          <i class="bi bi-plus-lg me-1"></i> Add Category
+        </button>
+      </div>
+
+      <div class="card p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Total Quizzes</th>
+                <th>Created</th>
+                <th style="width: 130px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example data -->
+              <tr>
+                <td>1</td>
+                <td>Geography</td>
+                <td>World, maps, countries & capitals</td>
+                <td>50</td>
+                <td>2023-10-01</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-light me-1">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-light">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <!-- Repeat dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY MODAL -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="background:#020617; color:#e5e7eb;">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">Add / Edit Category</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form method="POST" action="/admin/categories">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Category Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="name"
+                  placeholder="Geography"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  name="description"
+                  rows="3"
+                  placeholder="Short description of this category..."
+                ></textarea>
+              </div>
+            </div>
+            <div class="modal-footer border-secondary">
+              <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Save Category
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: USERS -->
+    <section id="section-users" class="section-wrapper d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="section-title mb-0">User Management</div>
+      </div>
+
+      <div class="card p-3 mb-3">
+        <form class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Search</label>
+            <input type="text" class="form-control" placeholder="Username / Email" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Role</label>
+            <select class="form-select">
+              <option value="">All</option>
+              <option>Admin</option>
+              <option>User</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select">
+              <option value="">All</option>
+              <option>Active</option>
+              <option>Blocked</option>
+            </select>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-outline-light w-100" type="button">Filter</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th>Status</th>
+                <th>Quizzes Played</th>
+                <th>Best Score</th>
+                <th style="width: 140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example data -->
+              <tr>
+                <td>1</td>
+                <td>atharva_123</td>
+                <td>atharva@example.com</td>
+                <td><span class="badge-status active">Admin</span></td>
+                <td>2024-03-12</td>
+                <td><span class="badge-status active">Active</span></td>
+                <td>42</td>
+                <td>10/10</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-light me-1">
+                    <i class="bi bi-person-lines-fill"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-light me-1">
+                    <i class="bi bi-shield-lock"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-light">
+                    <i class="bi bi-slash-circle"></i>
+                  </button>
+                </td>
+              </tr>
+              <!-- Repeat dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: SCOREBOARD -->
+    <section id="section-scoreboard" class="section-wrapper d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="section-title mb-0">Scoreboard / Leaderboard</div>
+      </div>
+
+      <div class="card p-3 mb-3">
+        <form class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Quiz</label>
+            <select class="form-select">
+              <option value="">All Quizzes</option>
+              <option>World Capitals Challenge</option>
+              <option>Frontend Basics</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Time Range</label>
+            <select class="form-select">
+              <option>All Time</option>
+              <option>Today</option>
+              <option>This Week</option>
+              <option>This Month</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Order By</label>
+            <select class="form-select">
+              <option>Highest Score</option>
+              <option>Fastest Time</option>
+              <option>Most Attempts</option>
+            </select>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-outline-light w-100" type="button">Apply</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Quiz</th>
+                <th>Score</th>
+                <th>Time Taken (s)</th>
+                <th>Attempts</th>
+                <th>Last Played</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example data -->
+              <tr>
+                <td>1</td>
+                <td>geek_girl</td>
+                <td>World Capitals Challenge</td>
+                <td>10 / 10</td>
+                <td>35</td>
+                <td>4</td>
+                <td>2025-12-05</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>atharva_123</td>
+                <td>World Capitals Challenge</td>
+                <td>9 / 10</td>
+                <td>40</td>
+                <td>3</td>
+                <td>2025-12-05</td>
+              </tr>
+              <!-- Replace dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: FEATURED QUIZ -->
+    <section id="section-featured" class="section-wrapper d-none">
+      <div class="section-title mb-3">Featured Quiz of the Week</div>
+      <div class="card p-3">
+        <form method="POST" action="/admin/featured-quiz">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Select Featured Quiz</label>
+              <select class="form-select" name="quiz_id">
+                <!-- Fill options from quizzes table -->
+                <option value="1">World Capitals Challenge</option>
+                <option value="2">Frontend Basics</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-control" name="start_date" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">End Date</label>
+              <input type="date" class="form-control" name="end_date" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Highlight Text</label>
+              <textarea
+                class="form-control"
+                name="highlight"
+                rows="2"
+                placeholder="Test your knowledge about world capitals with our most popular quiz this week."
+              ></textarea>
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+              <button class="btn btn-primary" type="submit">
+                Save Featured Quiz
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- SECTION: SETTINGS -->
+    <section id="section-settings" class="section-wrapper d-none">
+      <div class="section-title mb-3">Admin Settings</div>
+      <div class="card p-3 mb-3">
+        <h6 class="mb-3">Profile</h6>
+        <form class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Admin Name</label>
+            <input type="text" class="form-control" value="QuizVerse Admin" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="admin@quizverse.com" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Change Password</label>
+            <input type="password" class="form-control" placeholder="New password" />
+          </div>
+          <div class="col-12 d-flex justify-content-end">
+            <button class="btn btn-primary" type="button">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Sidebar section switching
+    const navButtons = document.querySelectorAll(".sidebar .nav-link");
+    const sections = document.querySelectorAll(".section-wrapper");
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-section");
+
+        // active button style
+        navButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // show / hide sections
+        sections.forEach((sec) => {
+          if (sec.id === "section-" + target) {
+            sec.classList.remove("d-none");
+          } else {
+            sec.classList.add("d-none");
+          }
+        });
+      });
+    });
+
+    // TODO: Hook these up with real backend using fetch/AJAX or normal form submits.
+    // - /admin/quizzes         (POST, PUT, DELETE)
+    // - /admin/categories      (POST, PUT, DELETE)
+    // - /admin/users           (GET, PATCH for status/role)
+    // - /admin/scoreboard      (GET with filters)
+    // - /admin/featured-quiz   (POST)
+  </script>
+</body>
+</html>
