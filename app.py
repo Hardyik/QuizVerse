@@ -195,43 +195,6 @@ def register():
     
     return jsonify({"msg": "registered successfully"}), 201
 
-
-@app.route('/api/login', methods=['POST'])
-
-def login():
-    email = request.form["email"]
-    password = request.form["password"]
-
-    # Connect DB
-    conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="quizverse"
-    )
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute(
-        "SELECT * FROM users WHERE email=%s AND password=%s",
-        (email, password)
-    )
-    user = cursor.fetchone()
-
-    if not user:
-        return "Invalid credentials"
-
-    # Save session
-    session["user_id"] = user["id"]
-    session["is_admin"] = user["is_admin"]
-
-    # MAIN LOGIC
-    if user["is_admin"] == 1:
-        return redirect("/admin")
-    else:
-        return redirect("/user_dashboard")
-
-
-
 # ------------- QUIZ API ENDPOINTS -------------
 @app.route('/api/categories', methods=['GET'])
 def list_categories():
