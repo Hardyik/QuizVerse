@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizVerse - My Dashboard</title>
+    <title>QuizVerse • My Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -30,19 +30,6 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: var(--dark-color);
             min-height: 100vh;
-        }
-
-        /* Header */
-        .header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
 
         .logo {
@@ -447,80 +434,81 @@
             }
         }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <div class="logo-img">
-                <img src='https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png' alt='QuizVerse Logo'>
-            </div>
-            <h1>QuizVerse</h1>
-        </div>
-        
-        <!-- Menu Button (Mobile) -->
-        <button class="menu-toggle" id="menuToggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        
-        <!-- Desktop Menu -->
-        <div class="desktop-menu">
-            <div class="user-info">
-                <div class="user-avatar">JS</div>
-                <div class="user-details">
-                    <h3>John Smith</h3>
-                    <p>Level 15 • 2,450 XP</p>
-                </div>
-            </div>
-            
-            <div class="header-actions">
-                <button class="icon-btn" id="notificationBtn">
-                    <i class="fas fa-bell"></i>
-                </button>
-                <button class="icon-btn" id="settingsBtn">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+<!-- DASHBOARD NAVBAR -->
+<nav class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-    
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <h3>Menu</h3>
-            <button class="close-menu" id="closeMenu">
-                <i class="fas fa-times"></i>
-            </button>
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2">
+      <img
+        src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png"
+        alt="QuizVerse Logo"
+        class="w-12 h-12 rounded-xl object-contain bg-white shadow-sm"
+        />
+
+      <span class="text-xl font-bold text-gray-900">QuizVerse</span>
+    </a>
+
+    <!-- Desktop User Info -->
+    <div class="hidden md:flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <div class="user-avatar">X</div>
+        <div class="user-details text-left">
+          <h3 class="text-sm font-semibold">[Username]</h3>
+          <p class="text-xs text-gray-500">Level [ ]</p>
         </div>
-        
-        <div class="mobile-user-info">
-            <div class="mobile-user-avatar">JS</div>
-            <div>
-                <h3>John Smith</h3>
-                <p>Level 15 • 2,450 XP</p>
-            </div>
-        </div>
-        
-        <div class="mobile-actions">
-            <button class="mobile-action-btn" id="mobileNotificationBtn">
-                <i class="fas fa-bell"></i>
-                <span>Notifications</span>
-            </button>
-            <button class="mobile-action-btn" id="mobileSettingsBtn">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </button>
-        </div>
+      </div>
+
+      <button class="icon-btn" id="settingsBtn">
+        <i class="fas fa-cog"></i>
+      </button>
     </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="menu-toggle md:hidden" id="menuToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="mobile-menu">
+  <div class="mobile-menu-header">
+    <h3 class="text-lg font-semibold">Menu</h3>
+    <button id="closeMenu" class="close-menu">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="mobile-user-info">
+    <div class="mobile-user-avatar">X</div>
+    <p class="font-semibold">[Username]</p>
+    <p class="text-sm text-gray-500">Level [ ]</p>
+  </div>
+
+  <div class="mobile-actions">
+    <button class="mobile-action-btn" id="mobileSettingsBtn">
+      <i class="fas fa-cog"></i>
+      Settings
+    </button>
+  </div>
+</div>
+
+
 
     <!-- Dashboard Container -->
     <main class="dashboard-container">
         <!-- Welcome Section -->
         <section class="welcome-section">
             <div class="welcome-text">
-                <h2>Welcome back, John! 🎉</h2>
+                <h2>Welcome back, [username]! 🎉</h2>
                 <p class="learning-goal">Your knowledge is growing every day. Keep up the great work!</p>
             </div>
         </section>
@@ -529,20 +517,12 @@
         <div class="stats-grid">
             <div class="stat-card" id="totalQuizzesCard">
                 <h3>Quizzes Taken</h3>
-                <div class="stat-value">47</div>
-                <p>+5 this week</p>
-                <div class="stat-progress">
-                    <div class="stat-progress-bar" id="quizzesProgress"></div>
-                </div>
+                <div class="stat-value">0</div>
             </div>
             
             <div class="stat-card" id="avgScoreCard">
                 <h3>Average Score</h3>
-                <div class="stat-value">84%</div>
-                <p>+2% from last month</p>
-                <div class="stat-progress">
-                    <div class="stat-progress-bar" id="scoreProgress"></div>
-                </div>
+                <div class="stat-value">0%</div>
             </div>
         </div>
 
@@ -554,9 +534,13 @@
                     <i class="fas fa-dumbbell"></i>
                     <span>Practice Mode</span>
                 </a>
-                <a href="#" class="action-btn" id="createBtn">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Create Quiz</span>
+                <a href="#" class="action-btn" id="selectQuizBtn">
+                    <i class="fas fa-play"></i>
+                    <span>Select Quiz</span>
+                </a>
+                <a href="/playquiz" class="action-btn" id="playRandomBtn">
+                    <i class="fas fa-random"></i>
+                    <span>Play Random</span>
                 </a>
             </div>
         </section>
@@ -569,46 +553,45 @@
     </footer>
 
     <script>
-        // Mobile Menu Toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const closeMenu = document.getElementById('closeMenu');
-        
-        // Open mobile menu
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.add('active');
-            mobileMenuOverlay.style.display = 'block';
-        });
-        
-        // Close mobile menu
-        function closeMobileMenu() {
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.style.display = 'none';
-        }
-        
-        closeMenu.addEventListener('click', closeMobileMenu);
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-        
-        // Desktop buttons
-        document.getElementById('notificationBtn').addEventListener('click', () => {
-            alert('Notifications (3 unread)');
-        });
-        
-        document.getElementById('settingsBtn').addEventListener('click', () => {
-            alert('Opening settings...');
-        });
-        
-        // Mobile menu buttons
-        document.getElementById('mobileNotificationBtn').addEventListener('click', () => {
-            alert('Notifications (3 unread)');
-            closeMobileMenu();
-        });
-        
-        document.getElementById('mobileSettingsBtn').addEventListener('click', () => {
-            alert('Opening settings...');
-            closeMobileMenu();
-        });
-    </script>
+const menuToggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+const closeMenu = document.getElementById('closeMenu');
+const settingsBtn = document.getElementById('settingsBtn');
+const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
+
+// Open mobile menu
+if (menuToggle) {
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.add('active');
+    mobileMenuOverlay.style.display = 'block';
+  });
+}
+
+// Close mobile menu
+function closeMobileMenu() {
+  mobileMenu.classList.remove('active');
+  mobileMenuOverlay.style.display = 'none';
+}
+
+if (closeMenu) closeMenu.addEventListener('click', closeMobileMenu);
+if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+// Desktop settings
+if (settingsBtn) {
+  settingsBtn.addEventListener('click', () => {
+    alert('Opening settings...');
+  });
+}
+
+// Mobile settings
+if (mobileSettingsBtn) {
+  mobileSettingsBtn.addEventListener('click', () => {
+    alert('Opening settings...');
+    closeMobileMenu();
+  });
+}
+</script>
+
 </body>
 </html>
