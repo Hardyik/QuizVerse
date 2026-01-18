@@ -1,11 +1,11 @@
 databases:
   - name: quizverse-db
-    databaseName: quizverse
+    databaseName: qvdb
     user: quizverse_user
 
 services:
   - type: web
-    name: quizverse
+    name: qvdb
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
