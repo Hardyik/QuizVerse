@@ -60,7 +60,7 @@ Perfect for students, learners, and quiz enthusiasts.
 ---
 
 ## 📂 Project Structure
-
+```text
 QuizVerse/
 │
 ├── app.py # Main Flask application
@@ -85,7 +85,7 @@ QuizVerse/
 │ └── 404.html
 │
 └── .git/
-
+```
 ---
 
 🎯 Future Enhancements
