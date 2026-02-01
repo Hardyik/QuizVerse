@@ -66,7 +66,7 @@ QuizVerse/
 ├── app.py # Main Flask application
 ├── requirements.txt # Project dependencies
 ├── render.yaml # Render deployment config
-├── env.sh # Environment variables
+├── .env # Environment variables
 ├── .gitattributes
 │
 ├── static/
