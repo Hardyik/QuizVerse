@@ -454,19 +454,31 @@
     </a>
 
     <!-- Desktop User Info -->
-    <div class="hidden md:flex items-center gap-6">
-      <div class="flex items-center gap-3">
-        <div class="user-avatar">X</div>
-        <div class="user-details text-left">
-          <h3 class="text-sm font-semibold">[Username]</h3>
-          <p class="text-xs text-gray-500">Level [ ]</p>
-        </div>
-      </div>
+<div class="hidden md:flex items-center gap-6">
 
-      <button class="icon-btn" id="settingsBtn">
-        <i class="fas fa-cog"></i>
-      </button>
+  <!-- User Info -->
+    <div class="flex items-center gap-3">
+        <div class="user-avatar">X</div>
+
+        <div class="user-details text-left">
+        <h3 class="text-sm font-semibold" id="userNameDesktop"></h3>
+        <p class="text-xs text-gray-500" id="userLevelDesktop"></p>
+        </div>
     </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+        <button class="icon-btn" id="settingsBtn" title="Settings">
+        <i class="fas fa-cog"></i>
+        </button>
+
+        <button class="icon-btn" id="logoutBtn" title="Logout">
+        <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+
+</div>
+
 
     <!-- Mobile Menu Button -->
     <button class="menu-toggle md:hidden" id="menuToggle">
@@ -489,8 +501,8 @@
 
   <div class="mobile-user-info">
     <div class="mobile-user-avatar">X</div>
-    <p class="font-semibold">[Username]</p>
-    <p class="text-sm text-gray-500">Level [ ]</p>
+    <p class="font-semibold" id="userNameMobile"></p>
+    <p class="text-sm text-gray-500" id="userLevelMobile"></p>
   </div>
 
   <div class="mobile-actions">
@@ -498,6 +510,11 @@
       <i class="fas fa-cog"></i>
       Settings
     </button>
+    <button class="mobile-action-btn" id="mobileLogoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+    </button>
+
   </div>
 </div>
 
@@ -508,7 +525,7 @@
         <!-- Welcome Section -->
         <section class="welcome-section">
             <div class="welcome-text">
-                <h2>Welcome back, [username]! 🎉</h2>
+                <h2>Welcome back <span id="welcomeUsername"></span>! 🎉</h2>
                 <p class="learning-goal">Your knowledge is growing every day. Keep up the great work!</p>
             </div>
         </section>
@@ -517,12 +534,12 @@
         <div class="stats-grid">
             <div class="stat-card" id="totalQuizzesCard">
                 <h3>Quizzes Taken</h3>
-                <div class="stat-value">0</div>
+                <div class="stat-value" id="totalQuizzes"></div>
             </div>
             
             <div class="stat-card" id="avgScoreCard">
                 <h3>Average Score</h3>
-                <div class="stat-value">0%</div>
+                <div class="stat-value" id="avgScore"></div>
             </div>
         </div>
 
@@ -591,6 +608,72 @@ if (mobileSettingsBtn) {
     closeMobileMenu();
   });
 }
+
+const token = localStorage.getItem("access_token");
+
+if (!token) {
+    window.location.href = "/login";
+}
+
+fetch("/api/user/profile", {
+    headers: {
+        "Authorization": "Bearer " + token
+    }
+})
+.then(res => {
+    if (!res.ok) throw new Error("Unauthorized");
+    return res.json();
+})
+.then(data => {
+    // Desktop
+    document.getElementById("userNameDesktop").textContent = data.username;
+    document.getElementById("userLevelDesktop").textContent = `Level ${data.level}`;
+
+    // Mobile
+    document.getElementById("userNameMobile").textContent = data.username;
+    document.getElementById("userLevelMobile").textContent = `Level ${data.level}`;
+
+    // Welcome Message
+    document.getElementById("welcomeUsername").textContent = data.username;
+
+    // Stats
+    document.getElementById("totalQuizzes").textContent = data.total_quizzes;
+    document.getElementById("avgScore").textContent = `${data.avg_score}%`;
+
+
+    // Avatar initials
+    const initials = data.username
+        .split(" ")
+        .map(n => n[0])
+        .join("")
+        .toUpperCase();
+
+    document.querySelectorAll(".user-avatar, .mobile-user-avatar")
+        .forEach(el => el.textContent = initials);
+})
+.catch(err => {
+    console.error(err);
+    window.location.href = "/login";
+});
+
+// LOGOUT (desktop)
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("access_token");
+    window.location.href = "/login";
+  });
+}
+
+// LOGOUT (mobile)
+const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+if (mobileLogoutBtn) {
+  mobileLogoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("access_token");
+    window.location.href = "/login";
+  });
+}
+
 </script>
 
 </body>

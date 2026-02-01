@@ -152,6 +152,14 @@ def play():
 
 @app.route('/admin')
 def admin_panel():
+    # Check if user is logged in via session
+    if 'user_id' not in session:
+        return redirect('/login')
+    
+    user = User.query.get(session['user_id'])
+    if not user or not user.is_admin:
+        return redirect('/login')
+    
     return render_template('Admin.html')
 
 
@@ -169,6 +177,10 @@ def signup():
 def playquiz():
     return render_template('playquiz.html')
 
+@app.route('/faq')
+def faq():
+       return render_template('faq.html')
+
 
 
 # ------------- AUTH ENDPOINTS -------------
@@ -178,14 +190,16 @@ def api_login():
     email = data.get('email')
     password = data.get('password')
 
-    # Find user by email
     user = User.query.filter_by(email=email).first()
     
     if not user or not user.check_password(password):
         return jsonify({"msg": "Invalid email or password"}), 401
 
-    # Create JWT token
     token = create_access_token(identity=user.username)
+    
+    # ADD THESE TWO LINES:
+    session['user_id'] = user.id
+    session['username'] = user.username
     
     return jsonify({
         "access_token": token,
@@ -435,8 +449,6 @@ def user_profile():
         "username": user.username,
         "email": user.email,
         "level": user.level,
-        "xp": user.xp,
-        "streak": user.streak,
         "total_quizzes": total_quizzes,
         "avg_score": round(avg_score, 2),
         "recent_results": [

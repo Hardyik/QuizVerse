@@ -56,7 +56,8 @@
                 <p class="text-white/80">Quizzically analyze your knowledge</p>
             </div>
 
-            <form id="loginForm" action="/user_dashboard" method="post" class="space-y-6">
+            <!-- REMOVED action="/user_dashboard" - this was causing the issue -->
+            <form id="loginForm" class="space-y-6">
 
                 <div>
                     <label for="email" class="block text-sm font-medium text-white mb-2">Email Address</label>
@@ -65,7 +66,8 @@
                             <i data-feather="mail" class="text-white/60"></i>
                         </div >
                         <input id="email" name="email" type="email" autocomplete="email" required 
-                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
+                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+                            placeholder="admin@quizverse.com">
                     </div>
                 </div>
 
@@ -76,7 +78,8 @@
                             <i data-feather="lock" class="text-white/60"></i>
                         </div>
                         <input id="password" name="password" type="password" autocomplete="current-password" required 
-                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
+                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+                            placeholder="Enter your password">
                     </div>
                 </div>
 
@@ -88,19 +91,18 @@
                     </div>
 
                     <div class="text-sm text-right space-y-2">
-    <div class="flex items-center justify-end gap-2">
-        <input id="admin-mode" type="checkbox"
-            class="h-4 w-4 rounded border-white/30 bg-white/10 focus:ring-white/50">
-        <label for="admin-mode" class="text-white cursor-pointer">
-            Admin login
-        </label>
-    </div>
+                        <div class="flex items-center justify-end gap-2">
+                            <input id="admin-mode" type="checkbox"
+                                class="h-4 w-4 rounded border-white/30 bg-white/10 focus:ring-white/50">
+                            <label for="admin-mode" class="text-white cursor-pointer">
+                                Admin login
+                            </label>
+                        </div>
 
-    <a href="#" class="font-medium text-white hover:text-white/80">
-        Forgot password?
-    </a>
-</div>
-
+                        <a href="#" class="font-medium text-white hover:text-white/80">
+                            Forgot password?
+                        </a>
+                    </div>
                 </div>
 
                 <div>
@@ -134,7 +136,7 @@
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const isAdmin = document.getElementById('admin-mode').checked;
+            const isAdminMode = document.getElementById('admin-mode').checked;
             
             try {
                 const response = await fetch('/api/login', {
@@ -148,14 +150,40 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    // Store token (optional)
-                    localStorage.setItem('token', data.access_token);
+                    // Store token in localStorage
+                    localStorage.setItem("access_token", data.access_token);
                     
-                    // Redirect based on admin status
-                    if (data.is_admin && isAdmin) {
-                        window.location.href = '/admin';
+                    console.log("Login successful:", data);
+                    console.log("Is admin:", data.is_admin);
+                    console.log("Admin mode checkbox:", isAdminMode);
+                    
+                    // FIXED: Proper redirect logic
+                    // If user checked "Admin login" AND they are actually an admin
+                    // FIXED: Proper redirect logic with admin detection
+                    if (data.is_admin) {
+                        // User is an admin
+                        if (isAdminMode) {
+                            // Admin checked the box - go to admin panel
+                            console.log("Redirecting to admin panel");
+                            window.location.href = '/admin';
+                        } else {
+                            // Admin didn't check the box - show message
+                            alert('⚠️ Admin Account Detected!\n\nYou are logging in with an admin account. Please check the "Admin login" checkbox to access the Admin Panel.\n\nRedirecting to login page...');
+                            setTimeout(() => {
+                                window.location.href = '/login';
+                            }, 500);
+                        }
                     } else {
-                        window.location.href = '/user_dashboard';
+                        // Regular user
+                        if (isAdminMode) {
+                            // Regular user tried to check admin box
+                            alert('You do not have admin privileges. Redirecting to user dashboard.');
+                            window.location.href = '/user_dashboard';
+                        } else {
+                            // Normal user login
+                            console.log("Redirecting to user dashboard");
+                            window.location.href = '/user_dashboard';
+                        }
                     }
                 } else {
                     alert('Login failed: ' + data.msg);
