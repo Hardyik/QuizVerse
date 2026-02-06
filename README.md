@@ -60,13 +60,13 @@ Perfect for students, learners, and quiz enthusiasts.
 ---
 
 ## 📂 Project Structure
-
+```text
 QuizVerse/
 │
 ├── app.py # Main Flask application
 ├── requirements.txt # Project dependencies
 ├── render.yaml # Render deployment config
-├── env.sh # Environment variables
+├── .env # Environment variables
 ├── .gitattributes
 │
 ├── static/
@@ -85,7 +85,7 @@ QuizVerse/
 │ └── 404.html
 │
 └── .git/
-
+```
 ---
 
 🎯 Future Enhancements
