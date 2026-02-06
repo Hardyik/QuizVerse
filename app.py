@@ -140,9 +140,9 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/categories')
+@app.route('/explore')
 def categories_page():
-    return render_template('categories.html')
+    return render_template('explore.html')
 
 
 @app.route('/demo')
