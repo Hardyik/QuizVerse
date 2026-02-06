@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>QuizVerse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-50">
 
     <!-- Header -->
     <nav class="bg-purple-700 p-4 text-white flex items-center h-16 px-6 bg-purple-700 relative">
         <!-- Logo -->
-         <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
             <a href="/" class="flex items-center gap-2">
-              <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png"  alt="QuizVerse Logo" class="h-12 w-12 rounded-lg">
+                <img src="/static/logo.png" alt="QuizVerse Logo" class="h-12 w-12 rounded-lg">
                 <span class="text-xl font-bold text-white-900">QuizVerse</span>
             </a>
             <!--Navbar Links-->
@@ -25,62 +27,164 @@
         </div>
         <!-- Sign Up Button -->
         <div class="ml-auto">
-            <button onclick="location.href='/signup'" class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign Up</button>
+            <button onclick="location.href='/signup'"
+                class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign Up</button>
         </div>
     </nav>
 
-    
+
 
     <!-- Quiz Section -->
-    
+
     <div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-6">
-        <div class="flex justify-center mb-6">
-            <span id="timer" class="bg-purple-100 text-purple-700 px-6 py-2 rounded-full text-2xl font-semibold transition-all">
-                    ⏱️ Time Left: 30s
+        <!-- Demo Mode Badge -->
+        <div class="flex justify-center mb-4">
+            <span
+                class="bg-yellow-100 text-yellow-800 px-4 py-1 rounded-full text-sm font-semibold border border-yellow-300">
+                🎮 DEMO MODE - Limited to 5 Questions
             </span>
         </div>
 
-            <hr class="mb-6">
+        <!-- Question Counter -->
+        <div class="flex justify-center mb-3">
+            <span id="question-counter" class="text-gray-600 font-medium text-sm">
+                Question <span id="current-q">1</span> of <span id="total-q">5</span>
+            </span>
+        </div>
+
+        <div class="flex justify-center mb-6">
+            <span id="timer"
+                class="bg-purple-100 text-purple-700 px-6 py-2 rounded-full text-2xl font-semibold transition-all">
+                ⏱️ Time Left: 30s
+            </span>
+        </div>
+
+        <hr class="mb-6">
 
         <div id="quiz-box">
             <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6"></h2>
             <div id="options" class="space-y-3"></div>
             <button id="next-btn" class="mt-6 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 hidden">
-                  Next Question
+                Next Question
             </button>
         </div>
 
         <div id="result-box" class="hidden text-center">
             <h2 class="text-2xl font-bold text-purple-700 mb-4">Quiz Completed!</h2>
-            <p class="text-lg text-gray-700">Your Score: <span id="score"></span> / <span id="total"></span></p>
-            <a href="/play" class="mt-6 inline-block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Restart Quiz</a>
+            <p class="text-lg text-gray-700 mb-2">Your Score: <span id="score"></span> / <span id="total"></span></p>
+            <p class="text-md text-gray-600 mb-6">Percentage: <span id="percentage"
+                    class="font-bold text-purple-600"></span>%</p>
+
+            <!-- Call to Action for Sign Up -->
+            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-lg p-6 mb-6">
+                <h3 class="text-lg font-semibold text-purple-900 mb-2">🎯 Want More Challenges?</h3>
+                <p class="text-gray-700 mb-4">Sign up to unlock 15-question quizzes with diverse categories and track
+                    your progress!</p>
+                <a href="/signup"
+                    class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-md hover:from-purple-700 hover:to-indigo-700 font-semibold shadow-md transform hover:scale-105 transition">
+                    Sign Up to QuizVerse
+                </a>
+            </div>
+
+            <a href="#" onclick="location.reload()"
+                class="inline-block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Try Another Demo
+                Quiz</a>
         </div>
     </div>
-    
+
     <script>
-        // ======== Quiz Data ========
-        const quizData = [
-            {
-                question: "What is the capital of France?",
-                options: ["Madrid", "Berlin", "Rome", "Paris"],
-                answer: "Paris"
-            },
-            {
-                question: "Which planet is known as the Red Planet?",
-                options: ["Earth", "Jupiter", "Mars","Saturn"],
-                answer: "Mars"
-            },
-            {
-                question: "Who wrote 'Romeo and Juliet'?",
-                options: ["William Shakespeare", "Charles Dickens",  "Leo Tolstoy", "Mark Twain"],
-                answer: "William Shakespeare"
-            },
-            {
-                question: "What is the largest ocean on Earth?",
-                options: ["Indian Ocean", "Pacific Ocean", "Arctic Ocean", "Atlantic Ocean"],
-                answer: "Pacific Ocean"
-            }
+        // ======== Quiz Data Pool ========
+        const allQuizData = [
+            // Geography
+            { question: "What is the capital of France?", options: ["Madrid", "Berlin", "Rome", "Paris"], answer: "Paris" },
+            { question: "Which continent is the largest by area?", options: ["Africa", "Asia", "North America", "Europe"], answer: "Asia" },
+            { question: "What is the smallest country in the world?", options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], answer: "Vatican City" },
+            { question: "What is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], answer: "Nile" },
+            { question: "Which country has the most time zones?", options: ["USA", "Russia", "France", "China"], answer: "France" },
+            { question: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Brisbane"], answer: "Canberra" },
+            { question: "Which ocean is the deepest?", options: ["Atlantic", "Indian", "Pacific", "Arctic"], answer: "Pacific" },
+            { question: "Mount Everest is located in which mountain range?", options: ["Andes", "Rockies", "Alps", "Himalayas"], answer: "Himalayas" },
+
+            // Science
+            { question: "What is the chemical symbol for water?", options: ["H2O", "O2", "CO2", "NaCl"], answer: "H2O" },
+            { question: "Which planet is known as the Red Planet?", options: ["Earth", "Jupiter", "Mars", "Saturn"], answer: "Mars" },
+            { question: "What is the speed of light?", options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"], answer: "300,000 km/s" },
+            { question: "What gas do plants absorb from the atmosphere?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], answer: "Carbon Dioxide" },
+            { question: "How many bones are in the human body?", options: ["186", "206", "226", "246"], answer: "206" },
+            { question: "What is the largest planet in our solar system?", options: ["Earth", "Saturn", "Jupiter", "Neptune"], answer: "Jupiter" },
+            { question: "Who developed the theory of relativity?", options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"], answer: "Albert Einstein" },
+            { question: "What is the smallest unit of life?", options: ["Atom", "Molecule", "Cell", "Organ"], answer: "Cell" },
+
+            // History
+            { question: "Who was the first president of the United States?", options: ["Thomas Jefferson", "George Washington", "Abraham Lincoln", "John Adams"], answer: "George Washington" },
+            { question: "In which year did World War II end?", options: ["1943", "1944", "1945", "1946"], answer: "1945" },
+            { question: "Who painted the Mona Lisa?", options: ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello"], answer: "Leonardo da Vinci" },
+            { question: "Which ancient wonder is still standing?", options: ["Colossus of Rhodes", "Hanging Gardens", "Great Pyramid of Giza", "Lighthouse of Alexandria"], answer: "Great Pyramid of Giza" },
+            { question: "Who was the first person to walk on the moon?", options: ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "Alan Shepard"], answer: "Neil Armstrong" },
+            { question: "In which year did the Titanic sink?", options: ["1910", "1911", "1912", "1913"], answer: "1912" },
+            { question: "Who wrote the Declaration of Independence?", options: ["George Washington", "Benjamin Franklin", "Thomas Jefferson", "John Adams"], answer: "Thomas Jefferson" },
+
+            // Literature
+            { question: "Who wrote 'Romeo and Juliet'?", options: ["William Shakespeare", "Charles Dickens", "Leo Tolstoy", "Mark Twain"], answer: "William Shakespeare" },
+            { question: "What is the best-selling book of all time?", options: ["The Lord of the Rings", "Harry Potter", "The Bible", "Don Quixote"], answer: "The Bible" },
+            { question: "Who wrote '1984'?", options: ["Aldous Huxley", "George Orwell", "Ray Bradbury", "Isaac Asimov"], answer: "George Orwell" },
+            { question: "Which Shakespeare play features the quote 'To be or not to be'?", options: ["Macbeth", "Hamlet", "Othello", "King Lear"], answer: "Hamlet" },
+            { question: "Who wrote 'Pride and Prejudice'?", options: ["Charlotte Brontë", "Emily Brontë", "Jane Austen", "Mary Shelley"], answer: "Jane Austen" },
+            { question: "What is the longest novel ever written?", options: ["War and Peace", "In Search of Lost Time", "Atlas Shrugged", "Clarissa"], answer: "In Search of Lost Time" },
+
+            // Technology
+            { question: "Which company developed the iPhone?", options: ["Samsung", "Google", "Apple", "Microsoft"], answer: "Apple" },
+            { question: "What year was Facebook founded?", options: ["2002", "2004", "2006", "2008"], answer: "2004" },
+            { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"], answer: "Hyper Text Markup Language" },
+            { question: "Who co-founded Microsoft with Bill Gates?", options: ["Steve Jobs", "Paul Allen", "Larry Page", "Mark Zuckerberg"], answer: "Paul Allen" },
+            { question: "What does USB stand for?", options: ["Universal Serial Bus", "United System Bus", "Universal System Board", "United Serial Board"], answer: "Universal Serial Bus" },
+
+            // Sports
+            { question: "How many players are on a soccer team?", options: ["9", "10", "11", "12"], answer: "11" },
+            { question: "Which country won the FIFA World Cup in 2018?", options: ["Brazil", "Germany", "France", "Argentina"], answer: "France" },
+            { question: "How many rings are on the Olympic flag?", options: ["4", "5", "6", "7"], answer: "5" },
+            { question: "In which sport would you perform a slam dunk?", options: ["Volleyball", "Basketball", "Tennis", "Baseball"], answer: "Basketball" },
+            { question: "What is the maximum score in a single frame of bowling?", options: ["100", "200", "300", "400"], answer: "300" },
+            { question: "How long is a marathon?", options: ["26.2 miles", "20 miles", "30 miles", "25 miles"], answer: "26.2 miles" },
+            { question: "Which country has won the most Cricket World Cups?", options: ["India", "Australia", "England", "West Indies"], answer: "Australia" },
+            { question: "What sport is called 'the beautiful game'?", options: ["Basketball", "Cricket", "Football/Soccer", "Tennis"], answer: "Football/Soccer" },
+
+            // Movies
+            { question: "Who directed 'Jurassic Park'?", options: ["James Cameron", "Steven Spielberg", "George Lucas", "Christopher Nolan"], answer: "Steven Spielberg" },
+            { question: "Which movie features the character Jack Dawson?", options: ["Avatar", "Titanic", "The Revenant", "Inception"], answer: "Titanic" },
+            { question: "What is the highest-grossing film of all time?", options: ["Avengers: Endgame", "Avatar", "Titanic", "Star Wars"], answer: "Avatar" },
+            { question: "Who played Iron Man in the Marvel movies?", options: ["Chris Evans", "Robert Downey Jr.", "Chris Hemsworth", "Mark Ruffalo"], answer: "Robert Downey Jr." },
+            { question: "Which movie won the Oscar for Best Picture in 2020?", options: ["1917", "Joker", "Parasite", "Once Upon a Time in Hollywood"], answer: "Parasite" },
+            { question: "Who directed 'The Dark Knight'?", options: ["Zack Snyder", "Christopher Nolan", "Tim Burton", "James Wan"], answer: "Christopher Nolan" },
+            { question: "In which year was the first Star Wars movie released?", options: ["1975", "1977", "1979", "1980"], answer: "1977" },
+
+            // Music
+            { question: "Who is known as the King of Pop?", options: ["Elvis Presley", "Michael Jackson", "Prince", "Madonna"], answer: "Michael Jackson" },
+            { question: "Which band wrote 'Bohemian Rhapsody'?", options: ["The Beatles", "Led Zeppelin", "Queen", "Pink Floyd"], answer: "Queen" },
+            { question: "How many strings does a standard guitar have?", options: ["4", "5", "6", "7"], answer: "6" },
+            { question: "Who sang 'Rolling in the Deep'?", options: ["Adele", "Taylor Swift", "Beyoncé", "Rihanna"], answer: "Adele" },
+            { question: "What is the real name of rapper Eminem?", options: ["Marshall Mathers", "Curtis Jackson", "Calvin Broadus", "Shawn Carter"], answer: "Marshall Mathers" },
+            { question: "Which band was Freddie Mercury the lead singer of?", options: ["The Beatles", "Queen", "Led Zeppelin", "The Rolling Stones"], answer: "Queen" },
+            { question: "Who is known as the Queen of Soul?", options: ["Diana Ross", "Whitney Houston", "Aretha Franklin", "Tina Turner"], answer: "Aretha Franklin" },
+
+            // General Knowledge
+            { question: "What is the largest mammal in the world?", options: ["African Elephant", "Blue Whale", "Giraffe", "Polar Bear"], answer: "Blue Whale" },
+            { question: "How many sides does a hexagon have?", options: ["5", "6", "7", "8"], answer: "6" },
+            { question: "What is the tallest building in the world?", options: ["Empire State Building", "Burj Khalifa", "Shanghai Tower", "One World Trade Center"], answer: "Burj Khalifa" },
+            { question: "Which language has the most native speakers?", options: ["English", "Spanish", "Mandarin Chinese", "Hindi"], answer: "Mandarin Chinese" },
+            { question: "What is the largest desert in the world?", options: ["Sahara", "Arabian", "Antarctic", "Gobi"], answer: "Antarctic" },
+            { question: "How many continents are there?", options: ["5", "6", "7", "8"], answer: "7" },
+            { question: "What is the smallest prime number?", options: ["0", "1", "2", "3"], answer: "2" },
+            { question: "What is the largest ocean on Earth?", options: ["Indian Ocean", "Pacific Ocean", "Arctic Ocean", "Atlantic Ocean"], answer: "Pacific Ocean" }
         ];
+
+        // Shuffle and select 5 random questions for demo (limited for non-account users)
+        function getRandomQuestions(num = 5) {
+            const shuffled = [...allQuizData].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, num);
+        }
+
+        const quizData = getRandomQuestions(5);
 
         // ======== Variables ========
         let currentIndex = 0;
@@ -103,7 +207,14 @@
             questionEl.textContent = q.question;
             optionsEl.innerHTML = "";
 
-            q.options.forEach(opt => {
+            // Update question counter
+            document.getElementById('current-q').textContent = currentIndex + 1;
+            document.getElementById('total-q').textContent = quizData.length;
+
+            // Shuffle options for each question
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.textContent = opt;
                 btn.className = "w-full text-left border rounded-md px-4 py-2 hover:bg-purple-50 transition";
@@ -136,10 +247,19 @@
         // ======== Show Result ========
         function showResult() {
             clearInterval(timerInterval);
+
+            // Hide quiz elements
+            document.getElementById('question-counter').classList.add('hidden');
+            document.getElementById('timer').parentElement.classList.add('hidden');
+
             quizBox.classList.add('hidden');
             resultBox.classList.remove('hidden');
+
+            const percentage = Math.round((score / quizData.length) * 100);
+
             scoreEl.textContent = score;
             totalEl.textContent = quizData.length;
+            document.getElementById('percentage').textContent = percentage;
         }
 
         // ======== Timer ========
@@ -148,19 +268,19 @@
                 timeLeft--;
                 timerEl.textContent = `⏱️ Time Left: ${timeLeft}s`;
                 timerEl.classList.remove(
-                "bg-purple-100",
-                "text-purple-700",
-                "bg-yellow-100",
-                "text-yellow-700",
-                "bg-red-100",
-                "text-red-700",
-                "animate-pulse"
+                    "bg-purple-100",
+                    "text-purple-700",
+                    "bg-yellow-100",
+                    "text-yellow-700",
+                    "bg-red-100",
+                    "text-red-700",
+                    "animate-pulse"
                 );
                 if (timeLeft <= 10) {
                     timerEl.classList.add("bg-red-100", "text-red-700", "animate-pulse");
-                    } else if (timeLeft <= 20) {
+                } else if (timeLeft <= 20) {
                     timerEl.classList.add("bg-yellow-100", "text-yellow-700");
-                    } else {
+                } else {
                     timerEl.classList.add("bg-purple-100", "text-purple-700");
                 }
                 if (timeLeft <= 0) {
@@ -194,4 +314,5 @@
         nextBtn.addEventListener('click', nextQuestion);
     </script>
 </body>
+
 </html>

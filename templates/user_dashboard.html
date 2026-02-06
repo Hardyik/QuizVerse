@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -239,6 +240,15 @@
             box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
         }
 
+        /* Dark mode – softer welcome gradient */
+        [data-theme="dark"] .welcome-section {
+            background: linear-gradient(135deg,
+                    #2b3a8f 0%,
+                    #3b1c6e 100%) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+        }
+
+
         .welcome-text h2 {
             font-size: 1.8rem;
             margin-bottom: 10px;
@@ -258,6 +268,12 @@
             display: inline-block;
             margin-top: 10px;
         }
+
+        [data-theme="dark"] .learning-goal {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #e6e6ff !important;
+        }
+
 
         /* Stats Cards */
         .stats-grid {
@@ -378,19 +394,19 @@
             .header {
                 padding: 15px 20px;
             }
-            
+
             .menu-toggle {
                 display: block;
             }
-            
+
             .desktop-menu {
                 display: none;
             }
-            
+
             .logo h1 {
                 font-size: 1.5rem;
             }
-            
+
             .logo-img {
                 width: 100px;
                 height: 35px;
@@ -401,7 +417,7 @@
                 text-align: center;
                 gap: 20px;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -411,16 +427,16 @@
             .header {
                 padding: 15px;
             }
-            
+
             .logo h1 {
                 font-size: 1.3rem;
             }
-            
+
             .logo-img {
                 width: 80px;
                 height: 30px;
             }
-            
+
             .mobile-menu {
                 width: 250px;
             }
@@ -428,95 +444,182 @@
             .dashboard-container {
                 padding: 10px;
             }
-            
+
             .actions-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ========== DARK MODE STYLES ========== */
+        :root {
+            --dm-bg-primary: #ffffff;
+            --dm-bg-secondary: #f8f9fa;
+            --dm-text-primary: #212529;
+            --dm-text-secondary: #6c757d;
+            --dm-border-color: #dee2e6;
+        }
+
+        [data-theme="dark"] {
+            --dm-bg-primary: #1a1a1a;
+            --dm-bg-secondary: #2d2d2d;
+            --dm-text-primary: #ffffff;
+            --dm-text-secondary: #b0b0b0;
+            --dm-border-color: #404040;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+            color: var(--dm-text-primary) !important;
+        }
+
+        [data-theme="dark"] .bg-white,
+        [data-theme="dark"] nav {
+            background-color: var(--dm-bg-secondary) !important;
+            color: var(--dm-text-primary) !important;
+        }
+
+        [data-theme="dark"] .stat-card,
+        [data-theme="dark"] .action-btn,
+        [data-theme="dark"] .quick-quiz-card {
+            background-color: #2d2d40 !important;
+            color: var(--dm-text-primary) !important;
+            border-color: var(--dm-border-color) !important;
+        }
+
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4 {
+            color: var(--dm-text-primary) !important;
+        }
+
+        [data-theme="dark"] p,
+        [data-theme="dark"] .text-gray-500,
+        [data-theme="dark"] .text-gray-600 {
+            color: var(--dm-text-secondary) !important;
+        }
+
+        [data-theme="dark"] .shadow,
+        [data-theme="dark"] .shadow-sm {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        [data-theme="dark"] .mobile-menu {
+            background-color: #2d2d40 !important;
+        }
+
+        [data-theme="dark"] .icon-btn {
+            background-color: #404040 !important;
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .icon-btn:hover {
+            background-color: #4a4a4a !important;
+        }
+
+        /* Dark mode – navbar logo & text */
+        [data-theme="dark"] nav a span {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] nav img {
+            background-color: #ffffff !important;
+        }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
     <!-- Header -->
-<!-- DASHBOARD NAVBAR -->
-<nav class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- DASHBOARD NAVBAR -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
 
-    <!-- Logo -->
-    <a href="#" class="flex items-center gap-2">
-      <img
-        src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png"
-        alt="QuizVerse Logo"
-        class="w-12 h-12 rounded-xl object-contain bg-white shadow-sm"
-        />
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2">
+                <img src="static/logo.png" alt="QuizVerse Logo"
+                    class="w-12 h-12 rounded-xl object-contain bg-white shadow-sm" />
 
-      <span class="text-xl font-bold text-gray-900">QuizVerse</span>
-    </a>
+                <span class="text-xl font-bold text-gray-900">QuizVerse</span>
+            </a>
 
-    <!-- Desktop User Info -->
-<div class="hidden md:flex items-center gap-6">
+            <!-- Desktop User Info -->
+            <div class="hidden md:flex items-center gap-6">
 
-  <!-- User Info -->
-    <div class="flex items-center gap-3">
-        <div class="user-avatar">X</div>
+                <!-- User Info -->
+                <div class="flex items-center gap-3">
+                    <div class="user-avatar">X</div>
 
-        <div class="user-details text-left">
-        <h3 class="text-sm font-semibold" id="userNameDesktop"></h3>
-        <p class="text-xs text-gray-500" id="userLevelDesktop"></p>
+                    <div class="user-details text-left">
+                        <h3 class="text-sm font-semibold" id="userNameDesktop"></h3>
+                        <p class="text-xs text-gray-500" id="userLevelDesktop"></p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                    <!-- Dark Mode Toggle -->
+                    <button id="darkModeToggle" class="icon-btn" title="Toggle Dark Mode">
+                        <i id="sunIcon" class="fas fa-sun"></i>
+                        <i id="moonIcon" class="fas fa-moon" style="display: none;"></i>
+                    </button>
+
+                    <button class="icon-btn" id="settingsBtn" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+
+                    <button class="icon-btn" id="logoutBtn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- Mobile Menu Button -->
+            <button class="menu-toggle md:hidden" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-header">
+            <h3 class="text-lg font-semibold">Menu</h3>
+            <button id="closeMenu" class="close-menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="mobile-user-info">
+            <div class="mobile-user-avatar">X</div>
+            <p class="font-semibold" id="userNameMobile"></p>
+            <p class="text-sm text-gray-500" id="userLevelMobile"></p>
+        </div>
+
+        <div class="mobile-actions">
+            <!-- Dark Mode Toggle -->
+            <button class="mobile-action-btn" id="darkModeToggleMobile">
+                <i id="sunIconMobile" class="fas fa-sun"></i>
+                <i id="moonIconMobile" class="fas fa-moon" style="display: none;"></i>
+                <span id="darkModeTextMobile">Dark Mode</span>
+            </button>
+
+            <button class="mobile-action-btn" id="mobileSettingsBtn">
+                <i class="fas fa-cog"></i>
+                Settings
+            </button>
+            <button class="mobile-action-btn" id="mobileLogoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+
         </div>
     </div>
-
-    <!-- Actions -->
-    <div class="flex items-center gap-2">
-        <button class="icon-btn" id="settingsBtn" title="Settings">
-        <i class="fas fa-cog"></i>
-        </button>
-
-        <button class="icon-btn" id="logoutBtn" title="Logout">
-        <i class="fas fa-sign-out-alt"></i>
-        </button>
-    </div>
-
-</div>
-
-
-    <!-- Mobile Menu Button -->
-    <button class="menu-toggle md:hidden" id="menuToggle">
-      <i class="fas fa-bars"></i>
-    </button>
-  </div>
-</nav>
-
-<!-- Mobile Menu Overlay -->
-<div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
-
-<!-- Mobile Menu -->
-<div id="mobileMenu" class="mobile-menu">
-  <div class="mobile-menu-header">
-    <h3 class="text-lg font-semibold">Menu</h3>
-    <button id="closeMenu" class="close-menu">
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-
-  <div class="mobile-user-info">
-    <div class="mobile-user-avatar">X</div>
-    <p class="font-semibold" id="userNameMobile"></p>
-    <p class="text-sm text-gray-500" id="userLevelMobile"></p>
-  </div>
-
-  <div class="mobile-actions">
-    <button class="mobile-action-btn" id="mobileSettingsBtn">
-      <i class="fas fa-cog"></i>
-      Settings
-    </button>
-    <button class="mobile-action-btn" id="mobileLogoutBtn">
-        <i class="fas fa-sign-out-alt"></i>
-        Logout
-    </button>
-
-  </div>
-</div>
 
 
 
@@ -536,7 +639,7 @@
                 <h3>Quizzes Taken</h3>
                 <div class="stat-value" id="totalQuizzes"></div>
             </div>
-            
+
             <div class="stat-card" id="avgScoreCard">
                 <h3>Average Score</h3>
                 <div class="stat-value" id="avgScore"></div>
@@ -555,7 +658,7 @@
                     <i class="fas fa-play"></i>
                     <span>Select Quiz</span>
                 </a>
-                <a href="/playquiz" class="action-btn" id="playRandomBtn">
+                <a href="/random" class="action-btn" id="playRandomBtn">
                     <i class="fas fa-random"></i>
                     <span>Play Random</span>
                 </a>
@@ -570,111 +673,173 @@
     </footer>
 
     <script>
-const menuToggle = document.getElementById('menuToggle');
-const mobileMenu = document.getElementById('mobileMenu');
-const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-const closeMenu = document.getElementById('closeMenu');
-const settingsBtn = document.getElementById('settingsBtn');
-const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const closeMenu = document.getElementById('closeMenu');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
 
-// Open mobile menu
-if (menuToggle) {
-  menuToggle.addEventListener('click', () => {
-    mobileMenu.classList.add('active');
-    mobileMenuOverlay.style.display = 'block';
-  });
-}
+        // Open mobile menu
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+                mobileMenuOverlay.style.display = 'block';
+            });
+        }
 
-// Close mobile menu
-function closeMobileMenu() {
-  mobileMenu.classList.remove('active');
-  mobileMenuOverlay.style.display = 'none';
-}
+        // Close mobile menu
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.style.display = 'none';
+        }
 
-if (closeMenu) closeMenu.addEventListener('click', closeMobileMenu);
-if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        if (closeMenu) closeMenu.addEventListener('click', closeMobileMenu);
+        if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
-// Desktop settings
-if (settingsBtn) {
-  settingsBtn.addEventListener('click', () => {
-    alert('Opening settings...');
-  });
-}
+        // Desktop settings
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+                alert('Opening settings...');
+            });
+        }
 
-// Mobile settings
-if (mobileSettingsBtn) {
-  mobileSettingsBtn.addEventListener('click', () => {
-    alert('Opening settings...');
-    closeMobileMenu();
-  });
-}
+        // Mobile settings
+        if (mobileSettingsBtn) {
+            mobileSettingsBtn.addEventListener('click', () => {
+                alert('Opening settings...');
+                closeMobileMenu();
+            });
+        }
 
-const token = localStorage.getItem("access_token");
+        const token = localStorage.getItem("access_token");
 
-if (!token) {
-    window.location.href = "/login";
-}
+        if (!token) {
+            window.location.href = "/login";
+        }
 
-fetch("/api/user/profile", {
-    headers: {
-        "Authorization": "Bearer " + token
-    }
-})
-.then(res => {
-    if (!res.ok) throw new Error("Unauthorized");
-    return res.json();
-})
-.then(data => {
-    // Desktop
-    document.getElementById("userNameDesktop").textContent = data.username;
-    document.getElementById("userLevelDesktop").textContent = `Level ${data.level}`;
+        fetch("/api/user/profile", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Unauthorized");
+                return res.json();
+            })
+            .then(data => {
+                // Desktop
+                document.getElementById("userNameDesktop").textContent = data.username;
+                document.getElementById("userLevelDesktop").textContent = `Level ${data.level}`;
 
-    // Mobile
-    document.getElementById("userNameMobile").textContent = data.username;
-    document.getElementById("userLevelMobile").textContent = `Level ${data.level}`;
+                // Mobile
+                document.getElementById("userNameMobile").textContent = data.username;
+                document.getElementById("userLevelMobile").textContent = `Level ${data.level}`;
 
-    // Welcome Message
-    document.getElementById("welcomeUsername").textContent = data.username;
+                // Welcome Message
+                document.getElementById("welcomeUsername").textContent = data.username;
 
-    // Stats
-    document.getElementById("totalQuizzes").textContent = data.total_quizzes;
-    document.getElementById("avgScore").textContent = `${data.avg_score}%`;
+                // Stats
+                document.getElementById("totalQuizzes").textContent = data.total_quizzes;
+                document.getElementById("avgScore").textContent = `${data.avg_score}%`;
 
 
-    // Avatar initials
-    const initials = data.username
-        .split(" ")
-        .map(n => n[0])
-        .join("")
-        .toUpperCase();
+                // Avatar initials
+                const initials = data.username
+                    .split(" ")
+                    .map(n => n[0])
+                    .join("")
+                    .toUpperCase();
 
-    document.querySelectorAll(".user-avatar, .mobile-user-avatar")
-        .forEach(el => el.textContent = initials);
-})
-.catch(err => {
-    console.error(err);
-    window.location.href = "/login";
-});
+                document.querySelectorAll(".user-avatar, .mobile-user-avatar")
+                    .forEach(el => el.textContent = initials);
+            })
+            .catch(err => {
+                console.error(err);
+                window.location.href = "/login";
+            });
 
-// LOGOUT (desktop)
-const logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("access_token");
-    window.location.href = "/login";
-  });
-}
+        // LOGOUT (desktop)
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", () => {
+                localStorage.removeItem("access_token");
+                window.location.href = "/login";
+            });
+        }
 
-// LOGOUT (mobile)
-const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
-if (mobileLogoutBtn) {
-  mobileLogoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("access_token");
-    window.location.href = "/login";
-  });
-}
+        // LOGOUT (mobile)
+        const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+        if (mobileLogoutBtn) {
+            mobileLogoutBtn.addEventListener("click", () => {
+                localStorage.removeItem("access_token");
+                window.location.href = "/login";
+            });
+        }
 
-</script>
+    </script>
+
+    <!-- Dark Mode Script (Embedded) -->
+    <script>
+        (function () {
+            'use strict';
+
+            // Initialize dark mode from localStorage
+            const htmlElement = document.documentElement;
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-theme', savedTheme);
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                const darkModeToggleMobile = document.getElementById('darkModeToggleMobile');
+                const sunIcon = document.getElementById('sunIcon');
+                const moonIcon = document.getElementById('moonIcon');
+                const sunIconMobile = document.getElementById('sunIconMobile');
+                const moonIconMobile = document.getElementById('moonIconMobile');
+                const darkModeText = document.getElementById('darkModeTextMobile');
+
+                // Update icons based on current theme
+                function updateIcons(theme) {
+                    if (theme === 'dark') {
+                        if (sunIcon) sunIcon.style.display = 'none';
+                        if (moonIcon) moonIcon.style.display = 'inline';
+                        if (sunIconMobile) sunIconMobile.style.display = 'none';
+                        if (moonIconMobile) moonIconMobile.style.display = 'inline';
+                        if (darkModeText) darkModeText.textContent = 'Light Mode';
+                    } else {
+                        if (sunIcon) sunIcon.style.display = 'inline';
+                        if (moonIcon) moonIcon.style.display = 'none';
+                        if (sunIconMobile) sunIconMobile.style.display = 'inline';
+                        if (moonIconMobile) moonIconMobile.style.display = 'none';
+                        if (darkModeText) darkModeText.textContent = 'Dark Mode';
+                    }
+                }
+
+                // Initial icon state
+                updateIcons(savedTheme);
+
+                // Toggle function
+                function toggleDarkMode() {
+                    const currentTheme = htmlElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    htmlElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateIcons(newTheme);
+                }
+
+                // Desktop toggle
+                if (darkModeToggle) {
+                    darkModeToggle.addEventListener('click', toggleDarkMode);
+                }
+
+                // Mobile toggle
+                if (darkModeToggleMobile) {
+                    darkModeToggleMobile.addEventListener('click', toggleDarkMode);
+                }
+            });
+        })();
+    </script>
 
 </body>
+
 </html>

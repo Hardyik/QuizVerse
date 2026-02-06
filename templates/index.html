@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuizVerse • Home</title>
 
   <!-- SEO -->
-  <meta name="description" content="QuizVerse - Challenge your knowledge with fun and engaging quizzes across various categories.">
+  <meta name="description"
+    content="QuizVerse - Challenge your knowledge with fun and engaging quizzes across various categories.">
   <meta name="keywords" content="quiz, trivia, education, learning">
   <meta name="author" content="QuizVerse">
 
@@ -32,354 +34,371 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+
     .hero-gradient {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
+
     .category-card {
       transition: transform .3s ease, box-shadow .3s ease;
     }
+
     .category-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .1);
     }
+
     [data-aos] {
       opacity: 0;
     }
+
     [data-aos].aos-animate {
       opacity: 1;
     }
 
-/* Dark Mode Styles - ENHANCED */
-:root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --text-primary: #212529;
-    --text-secondary: #6c757d;
-    --border-color: #dee2e6;
-}
+    /* Dark Mode Styles - ENHANCED */
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --border-color: #dee2e6;
+    }
 
-[data-theme="dark"] {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --border-color: #404040;
-}
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --border-color: #404040;
+    }
 
-/* Body & Background */
-[data-theme="dark"] body {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
-    color: var(--text-primary) !important;
-}
+    /* Body & Background */
+    [data-theme="dark"] body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+      color: var(--text-primary) !important;
+    }
 
-/* White backgrounds to dark */
-[data-theme="dark"] .bg-white {
-    background-color: var(--bg-secondary) !important;
-    color: var(--text-primary) !important;
-}
+    /* White backgrounds to dark */
+    [data-theme="dark"] .bg-white {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-primary) !important;
+    }
 
-[data-theme="dark"] .bg-gray-50,
-[data-theme="dark"] .bg-gray-100 {
-    background-color: #2a2a3e !important;
-    color: var(--text-primary) !important;
-}
+    [data-theme="dark"] .bg-gray-50,
+    [data-theme="dark"] .bg-gray-100 {
+      background-color: #2a2a3e !important;
+      color: var(--text-primary) !important;
+    }
 
-/* Text colors */
-[data-theme="dark"] .text-gray-800,
-[data-theme="dark"] .text-gray-900 {
-    color: var(--text-primary) !important;
-}
+    /* Text colors */
+    [data-theme="dark"] .text-gray-800,
+    [data-theme="dark"] .text-gray-900 {
+      color: var(--text-primary) !important;
+    }
 
-[data-theme="dark"] .text-gray-600,
-[data-theme="dark"] .text-gray-500,
-[data-theme="dark"] .text-gray-700 {
-    color: var(--text-secondary) !important;
-}
+    [data-theme="dark"] .text-gray-600,
+    [data-theme="dark"] .text-gray-500,
+    [data-theme="dark"] .text-gray-700 {
+      color: var(--text-secondary) !important;
+    }
 
-/* Borders */
-[data-theme="dark"] .border,
-[data-theme="dark"] .border-gray-200 {
-    border-color: var(--border-color) !important;
-}
+    /* Borders */
+    [data-theme="dark"] .border,
+    [data-theme="dark"] .border-gray-200 {
+      border-color: var(--border-color) !important;
+    }
 
-/* Shadows */
-[data-theme="dark"] .shadow,
-[data-theme="dark"] .shadow-md,
-[data-theme="dark"] .shadow-lg,
-[data-theme="dark"] .shadow-sm {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
-}
+    /* Shadows */
+    [data-theme="dark"] .shadow,
+    [data-theme="dark"] .shadow-md,
+    [data-theme="dark"] .shadow-lg,
+    [data-theme="dark"] .shadow-sm {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
+    }
 
-/* Category cards */
-[data-theme="dark"] .category-card {
-    background-color: #2d2d40 !important;
-    color: var(--text-primary) !important;
-}
+    /* Category cards */
+    [data-theme="dark"] .category-card {
+      background-color: #2d2d40 !important;
+      color: var(--text-primary) !important;
+    }
 
-[data-theme="dark"] .category-card:hover {
-    background-color: #34344a !important;
-}
+    [data-theme="dark"] .category-card:hover {
+      background-color: #34344a !important;
+    }
 
-/* Featured section specific fix */
-[data-theme="dark"] .bg-gray-100 {
-    background-color: #1a1a2e !important;
-}
+    /* Featured section specific fix */
+    [data-theme="dark"] .bg-gray-100 {
+      background-color: #1a1a2e !important;
+    }
 
-[data-theme="dark"] .bg-gray-100 .bg-white {
-    background-color: #2d2d40 !important;
-}
+    [data-theme="dark"] .bg-gray-100 .bg-white {
+      background-color: #2d2d40 !important;
+    }
 
-/* Navbar dark mode toggle button styling */
-[data-theme="dark"] #darkModeToggle {
-    background-color: #404040 !important;
-}
+    /* Navbar dark mode toggle button styling */
+    [data-theme="dark"] #darkModeToggle {
+      background-color: #404040 !important;
+    }
 
-[data-theme="dark"] #darkModeToggle:hover {
-    background-color: #4a4a4a !important;
-}
+    [data-theme="dark"] #darkModeToggle:hover {
+      background-color: #4a4a4a !important;
+    }
 
-[data-theme="dark"] #darkModeToggle svg {
-    color: #ffffff !important;
-}
+    [data-theme="dark"] #darkModeToggle svg {
+      color: #ffffff !important;
+    }
 
-/* Make sure all text in dark sections is visible */
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6 {
-    color: var(--text-primary) !important;
-}
+    /* Make sure all text in dark sections is visible */
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4,
+    [data-theme="dark"] h5,
+    [data-theme="dark"] h6 {
+      color: var(--text-primary) !important;
+    }
 
-[data-theme="dark"] p {
-    color: var(--text-secondary) !important;
-}
+    [data-theme="dark"] p {
+      color: var(--text-secondary) !important;
+    }
 
-/* Footer stays dark in both modes */
-[data-theme="dark"] .bg-gray-800 {
-    background-color: #0f0f1e !important;
-}
+    /* Footer stays dark in both modes */
+    [data-theme="dark"] .bg-gray-800 {
+      background-color: #0f0f1e !important;
+    }
 
+    /* Dark mode – soften hero gradient */
+    [data-theme="dark"] .hero-gradient {
+      background: linear-gradient(135deg,
+          #2b3a8f 0%,
+          #3b1c6e 100%) !important;
+    }
+
+    [data-theme="dark"] .hero-gradient h1,
+    [data-theme="dark"] .hero-gradient p {
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
   </style>
 </head>
 
 <body class="bg-gray-50">
 
-<!-- NAVIGATION -->
-<nav class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2">
-      <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png" width="60" alt="QuizVerse" class="rounded-lg">
-      <span class="text-xl font-bold text-gray-900">QuizVerse</span>
-    </a>
+  <!-- NAVIGATION -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/static/logo.png" width="50" alt="QuizVerse" class="rounded-lg">
+        <span class="text-xl font-bold text-gray-900">QuizVerse</span>
+      </a>
 
-    <div class="hidden md:flex items-center gap-8">
-      <a onclick="location.href='index'" class="border-b-2 border-purple-500 font-medium">Home</a>
-      <a onclick="location.href='categories'" class="text-gray-500 hover:text-gray-900">Explore</a>
-      <a onclick="location.href='about'" class="text-gray-500 hover:text-gray-900">About</a>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <!-- Dark Mode Toggle Button -->
-      <button id="darkModeToggle" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition" title="Toggle Dark Mode">
-          <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-gray-700">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg id="moonIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-gray-700">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
-      </button>
-      <button onclick="location.href='login'" class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign In</button>
-      <button onclick="location.href='signup'" class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign Up</button>
-      <button id="mobile-menu-button" class="md:hidden">
-        <i data-feather="menu"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg px-4 py-3 space-y-2">
-    <a href="/" class="block font-medium">Home</a>
-    <a href="categories" class="text-gray-500 hover:text-gray-900">Explore</a>
-    <a href="about" class="block text-gray-500 hover:text-gray-900">About</a>
-    <a href="login" class="block bg-purple-600 text-white text-center py-2 rounded">Sign In</a>
-    <a href="signup" class="block bg-purple-600 text-white text-center py-2 rounded">Create Account</a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero-gradient text-white text-center py-24">
-  <h1 class="text-5xl font-extrabold" data-aos="fade-down">Challenge Your Knowledge</h1>
-  <p class="mt-6 text-xl max-w-xl mx-auto" data-aos="fade-up">
-    Join QuizVerse for fun, engaging quizzes. Test yourself, learn, and compete!
-  </p>
-  <a href="demo" class="inline-flex items-center mt-10 bg-white text-purple-700 px-6 py-3 rounded-md">
-    Start Playing demo quiz
-    <i data-feather="arrow-right" class="ml-2"></i>
-  </a>
-</section>
-
-<!-- POPULAR CATEGORIES -->
-<section class="max-w-7xl mx-auto py-16 px-4">
-  <h2 class="text-3xl font-extrabold text-center mb-10" data-aos="fade-up">Popular Categories</h2>
-
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-    <!-- Geography -->
-    <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up">
-      <i data-feather="globe" class="text-purple-600"></i>
-      <h3 class="mt-4 font-semibold">Geography</h3>
-      <p class="text-sm text-gray-500 mt-2">Explore countries, capitals, and landmarks.</p>
-    </a>
-
-    <!-- Technology -->
-    <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="100">
-      <i data-feather="cpu" class="text-blue-600"></i>
-      <h3 class="mt-4 font-semibold">Technology</h3>
-      <p class="text-sm text-gray-500 mt-2">Programming, AI, gadgets, and more.</p>
-    </a>
-
-    <!-- Movies -->
-    <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="200">
-      <i data-feather="film" class="text-green-600"></i>
-      <h3 class="mt-4 font-semibold">Movies</h3>
-      <p class="text-sm text-gray-500 mt-2">From classics to blockbusters.</p>
-    </a>
-
-    <!-- Music -->
-    <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="300">
-      <i data-feather="music" class="text-yellow-600"></i>
-      <h3 class="mt-4 font-semibold">Music</h3>
-      <p class="text-sm text-gray-500 mt-2">Artists, albums, genres & lyrics.</p>
-    </a>
-  </div>
-  <div class="text-center mt-12" data-aos="fade-up">
-        <a
-          href="categories"
-          class="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium"
-        >
-          View All Categories
-          <i data-feather="chevron-right" class="ml-1 h-4 w-4"></i>
-        </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/" class="border-b-2 border-purple-500 font-medium">Home</a>
+        <a href="/explore" class="text-gray-500 hover:text-gray-900">Explore</a>
+        <a href="/about" class="text-gray-500 hover:text-gray-900">About</a>
       </div>
-</section>
-  
+
+      <div class="flex items-center gap-3">
+        <!-- Dark Mode Toggle Button -->
+        <button id="darkModeToggle"
+          class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"
+          title="Toggle Dark Mode">
+          <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            class="w-5 h-5 text-gray-700">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg id="moonIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" class="w-5 h-5 text-gray-700">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+        <button onclick="location.href='login'"
+          class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign In</button>
+        <button onclick="location.href='signup'"
+          class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign Up</button>
+        <button id="mobile-menu-button" class="md:hidden">
+          <i data-feather="menu"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg px-4 py-3 space-y-2">
+      <a href="/" class="block font-medium">Home</a>
+      <a href="/explore" class="text-gray-500 hover:text-gray-900">Explore</a>
+      <a href="/about" class="block text-gray-500 hover:text-gray-900">About</a>
+      <a href="/login" class="block bg-purple-600 text-white text-center py-2 rounded">Sign In</a>
+      <a href="/signup" class="block bg-purple-600 text-white text-center py-2 rounded">Create Account</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-gradient text-white text-center py-24">
+    <h1 class="text-5xl font-extrabold" data-aos="fade-down">Challenge Your Knowledge</h1>
+    <p class="mt-6 text-xl max-w-xl mx-auto" data-aos="fade-up">
+      Join QuizVerse for fun, engaging quizzes. Test yourself, learn, and compete!
+    </p>
+    <a href="demo" class="inline-flex items-center mt-10 bg-white text-purple-700 px-6 py-3 rounded-md">
+      Start Playing demo quiz
+      <i data-feather="arrow-right" class="ml-2"></i>
+    </a>
+  </section>
+
+  <!-- POPULAR CATEGORIES -->
+  <section class="max-w-7xl mx-auto py-16 px-4">
+    <h2 class="text-3xl font-extrabold text-center mb-10" data-aos="fade-up">Popular Categories</h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Geography -->
+      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up">
+        <i data-feather="globe" class="text-purple-600"></i>
+        <h3 class="mt-4 font-semibold">Geography</h3>
+        <p class="text-sm text-gray-500 mt-2">Explore countries, capitals, and landmarks.</p>
+      </a>
+
+      <!-- Technology -->
+      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="100">
+        <i data-feather="cpu" class="text-blue-600"></i>
+        <h3 class="mt-4 font-semibold">Technology</h3>
+        <p class="text-sm text-gray-500 mt-2">Programming, AI, gadgets, and more.</p>
+      </a>
+
+      <!-- Movies -->
+      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="200">
+        <i data-feather="film" class="text-green-600"></i>
+        <h3 class="mt-4 font-semibold">Movies</h3>
+        <p class="text-sm text-gray-500 mt-2">From classics to blockbusters.</p>
+      </a>
+
+      <!-- Music -->
+      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="300">
+        <i data-feather="music" class="text-yellow-600"></i>
+        <h3 class="mt-4 font-semibold">Music</h3>
+        <p class="text-sm text-gray-500 mt-2">Artists, albums, genres & lyrics.</p>
+      </a>
+    </div>
+    <div class="text-center mt-12" data-aos="fade-up">
+      <a href="/explore" class="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium">
+        View All Categories
+        <i data-feather="chevron-right" class="ml-1 h-4 w-4"></i>
+      </a>
+    </div>
+  </section>
+
   <!-- Featured Quiz -->
-    <div class="bg-gray-100">
-      <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-        <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-          <div
-            class="max-w-md mx-auto lg:max-w-none lg:mx-0"
-            data-aos="fade-right"
-          >
-            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Ready to take the Challenge?
-            </h2>
-            <p class="mt-3 text-lg text-gray-500">
-              Test your knowledge about world capitals with our most popular quiz.
-            </p>
-            <div class="mt-6 space-y-3">
-              <div class="flex items-center">
-                <i data-feather="clock" class="h-5 w-5 text-purple-600 mr-2"></i>
-                <span class="text-gray-700">10 minutes • 20 questions</span>
-              </div>
-              <div class="flex items-center">
-                <i data-feather="star" class="h-5 w-5 text-purple-600 mr-2"></i>
-                <span class="text-gray-700">4.8/5 average rating</span>
-              </div>
+  <div class="bg-gray-100">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
+        <div class="max-w-md mx-auto lg:max-w-none lg:mx-0" data-aos="fade-right">
+          <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+            Ready to take the Challenge?
+          </h2>
+          <p class="mt-3 text-lg text-gray-500">
+            Test your knowledge about world capitals with our most popular quiz.
+          </p>
+          <div class="mt-6 space-y-3">
+            <div class="flex items-center">
+              <i data-feather="clock" class="h-5 w-5 text-purple-600 mr-2"></i>
+              <span class="text-gray-700">10 minutes • 20 questions</span>
             </div>
-            <div class="mt-8">
-              <a
-                href="demo"
-                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 transition duration-150 ease-in-out"
-              >
-                Take the Quiz
-                <i data-feather="chevron-right" class="ml-2"></i>
-              </a>
+            <div class="flex items-center">
+              <i data-feather="star" class="h-5 w-5 text-purple-600 mr-2"></i>
+              <span class="text-gray-700">4.8/5 average rating</span>
             </div>
           </div>
-          <div class="mt-12 lg:mt-0" data-aos="fade-left" data-aos-delay="200">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-              <img src="https://i.postimg.cc/ZKy3Ndx5/Gemini-Generated-Image-1tmu7g1tmu7g1tmu.png" alt="Gemini-Generated-Image-1tmu7g1tmu7g1tmu"></a>
-              <div class="p-6">
-                <h3 class="text-xl font-medium text-gray-900">
-                  World Capitals Challenge
-                </h3>
-                <p class="mt-2 text-sm text-gray-500">
-                  Can you name all the capitals? Test your geography knowledge now! This quiz covers capitals from all continents with varying difficulty levels.
-                </p>
-                <div class="mt-4 flex items-center justify-between">
-                  <span class="text-sm text-gray-500">Difficulty: Medium</span>
-                </div>
+          <div class="mt-8">
+            <a href="/demo"
+              class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 transition duration-150 ease-in-out">
+              Take the Quiz
+              <i data-feather="chevron-right" class="ml-2"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mt-12 lg:mt-0" data-aos="fade-left" data-aos-delay="200">
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img src="/static/quiz_page.png" alt="Quiz-Page"></a>
+            <div class="p-6">
+              <h3 class="text-xl font-medium text-gray-900">
+                World Capitals Challenge
+              </h3>
+              <p class="mt-2 text-sm text-gray-500">
+                Can you name all the capitals? Test your geography knowledge now! This quiz covers capitals from all
+                continents with varying difficulty levels.
+              </p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-sm text-gray-500">Difficulty: Medium</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
-<!-- CTA -->
-<section class="bg-purple-700 text-white py-16">
-  <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-center">
-    <div data-aos="fade-right">
-      <h2 class="text-3xl font-extrabold">Ready to challenge yourself?</h2>
-      <p class="mt-4 text-purple-200">
-        Join QuizVerse today and track your progress, earn badges, and compete.
-      </p>
-    </div>
-    <div class="flex gap-4" data-aos="fade-left">
-      <a href="/signup" class="bg-white text-purple-600 px-5 py-3 rounded-md font-medium">Create Account</a>
-      <a href="/login" class="bg-purple-600 bg-opacity-60 px-5 py-3 rounded-md font-medium">Sign In</a>
-    </div>
   </div>
-</section>
 
-<!-- FOOTER -->
-<footer class="bg-gray-800 text-gray-400">
-  <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-4 gap-8">
 
-    <div>
-      <div class="flex items-center gap-2">
-        <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png" width="40" alt="Logo" class="rounded-lg">
-        <span class="text-white font-bold text-xl">QuizVerse</span>
+  <!-- CTA -->
+  <section class="bg-purple-700 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-center">
+      <div data-aos="fade-right">
+        <h2 class="text-3xl font-extrabold">Ready to challenge yourself?</h2>
+        <p class="mt-4 text-purple-200">
+          Join QuizVerse today and track your progress, earn badges, and compete.
+        </p>
       </div>
-      <p class="mt-4 text-sm">
-        The ultimate platform for knowledge seekers.
-      </p>
+      <div class="flex gap-4" data-aos="fade-left">
+        <a href="/signup" class="bg-white text-purple-600 px-5 py-3 rounded-md font-medium">Create Account</a>
+        <a href="/login" class="bg-purple-600 bg-opacity-60 px-5 py-3 rounded-md font-medium">Sign In</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-gray-400">
+    <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-4 gap-8">
+
+      <div>
+        <div class="flex items-center gap-2">
+          <img src="/static/logo.png" width="40" alt="Logo" class="rounded-lg">
+          <span class="text-white font-bold text-xl">QuizVerse</span>
+        </div>
+        <p class="mt-4 text-sm">
+          The ultimate platform for knowledge seekers.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="uppercase text-sm font-semibold">QuizVerse</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="uppercase text-sm font-semibold">Connect</h3>
+        <a href="https://github.com/Hardyik/QuizVerse.git" target="_blank" aria-label="GitHub">
+          <i data-feather="github"></i>
+        </a>
+      </div>
+
     </div>
 
-    <div>
-      <h3 class="uppercase text-sm font-semibold">QuizVerse</h3>
-      <ul class="mt-4 space-y-2">
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/faq">FAQ</a></li>
-      </ul>
+    <div class="border-t border-gray-700 py-4 text-center text-sm">
+      © 2026 QuizVerse | College Project
     </div>
-    <div>
-      <h3 class="uppercase text-sm font-semibold">Connect</h3>
-      <a href="https://github.com/Hardyik/QuizVerse.git" target="_blank" aria-label="GitHub">
-        <i data-feather="github"></i>
-      </a>
-    </div>
+  </footer>
 
-  </div>
+  <script>
+    AOS.init({ once: true, duration: 800 });
+    feather.replace();
 
-  <div class="border-t border-gray-700 py-4 text-center text-sm">
-    © 2026 QuizVerse | College Project
-  </div>
-</footer>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
 
-<script>
-  AOS.init({ once: true, duration: 800 });
-  feather.replace();
-
-  const btn = document.getElementById('mobile-menu-button');
-  const menu = document.getElementById('mobile-menu');
-
-  btn.addEventListener('click', () => {
-    menu.classList.toggle('hidden');
-  });
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
 
     // Dark Mode Toggle Script
     const darkModeToggle = document.getElementById('darkModeToggle');
@@ -393,29 +412,30 @@
 
     // Update icon based on current theme
     if (currentTheme === 'dark') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
     }
 
     // Toggle dark mode
     darkModeToggle.addEventListener('click', () => {
-        const currentTheme = htmlElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        // Toggle icons
-        if (newTheme === 'dark') {
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        } else {
-            sunIcon.style.display = 'block';
-            moonIcon.style.display = 'none';
-        }
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      htmlElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+
+      // Toggle icons
+      if (newTheme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
     });
 
-</script>
+  </script>
 
 </body>
+
 </html>

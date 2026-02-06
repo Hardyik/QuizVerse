@@ -1,0 +1,161 @@
+/* ============================================
+   GLOBAL DARK MODE STYLES
+   Include this in all pages except login/signup
+   ============================================ */
+
+/* CSS Variables */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #404040;
+}
+
+/* Body & Background */
+[data-theme="dark"] body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+  color: var(--text-primary) !important;
+}
+
+/* White backgrounds to dark */
+[data-theme="dark"] .bg-white {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50,
+[data-theme="dark"] .bg-gray-100 {
+  background-color: #2a2a3e !important;
+  color: var(--text-primary) !important;
+}
+
+/* Text colors */
+[data-theme="dark"] .text-gray-800,
+[data-theme="dark"] .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-600,
+[data-theme="dark"] .text-gray-500,
+[data-theme="dark"] .text-gray-700 {
+  color: var(--text-secondary) !important;
+}
+
+/* Borders */
+[data-theme="dark"] .border,
+[data-theme="dark"] .border-gray-200 {
+  border-color: var(--border-color) !important;
+}
+
+/* Shadows */
+[data-theme="dark"] .shadow,
+[data-theme="dark"] .shadow-md,
+[data-theme="dark"] .shadow-lg,
+[data-theme="dark"] .shadow-sm {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Cards */
+[data-theme="dark"] .category-card,
+[data-theme="dark"] .card {
+  background-color: #2d2d40 !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .category-card:hover,
+[data-theme="dark"] .card:hover {
+  background-color: #34344a !important;
+}
+
+/* Quiz Card */
+[data-theme="dark"] .quiz-card {
+  background-color: #2d2d40 !important;
+  border-color: #8b5cf6 !important;
+}
+
+/* Headings */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] p {
+  color: var(--text-secondary) !important;
+}
+
+/* Footer stays dark in both modes */
+[data-theme="dark"] .bg-gray-800 {
+  background-color: #0f0f1e !important;
+}
+
+/* Navbar dark mode toggle button styling */
+[data-theme="dark"] #darkModeToggle {
+  background-color: #404040 !important;
+}
+
+[data-theme="dark"] #darkModeToggle:hover {
+  background-color: #4a4a4a !important;
+}
+
+[data-theme="dark"] #darkModeToggle svg {
+  color: #ffffff !important;
+}
+
+/* Question text in dark mode */
+[data-theme="dark"] .question-text {
+  color: var(--text-primary) !important;
+}
+
+/* Admin Panel Dark Mode */
+[data-theme="dark"] .sidebar {
+  background: linear-gradient(135deg, #4a4a6a 0%, #5a4a7a 100%) !important;
+}
+
+/* User Dashboard Cards */
+[data-theme="dark"] .dashboard-card {
+  background-color: #2d2d40 !important;
+  color: var(--text-primary) !important;
+}
+
+/* Demo/Quiz Timer */
+[data-theme="dark"] .timer-badge {
+  background-color: #2d2d40 !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Progress bars remain visible */
+[data-theme="dark"] .progress-bar-container {
+  background-color: #404040 !important;
+}
+
+/* 404 Page */
+[data-theme="dark"] .container {
+  background-color: #2d2d40 !important;
+  color: var(--text-primary) !important;
+}
+
+/* About Page team cards */
+[data-theme="dark"] .bg-gray-100 {
+  background-color: #2a2a3e !important;
+}
+
+/* About & Categories hero */
+[data-theme="dark"] header.bg-gradient-to-r {
+  background: linear-gradient(135deg,
+      #2b3a8f 0%,
+      #3b1c6e 100%) !important;
+}

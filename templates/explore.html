@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Explore • QuizVerse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-purple-700 p-4 text-white flex justify-center space-x-6">
+        <a href="/" class="hover:text-purple-300">Home</a>
+        <a href="/categories" class="border-b-2 border-white-500 font-medium">Explore</a>
+        <a href="/about" class="hover:text-purple-300">About</a>
+        <a href="/signup" class="hover:text-purple-300">Sign up</a>
+        <a href="/login" class="hover:text-purple-300">Sign in</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="text-center py-12 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+        <h1 class="text-4xl font-extrabold">Explore Quiz Categories</h1>
+        <p class="mt-3 text-lg text-purple-100 max-w-2xl mx-auto">
+            Choose a category that interests you and start your quiz adventure!
+        </p>
+    </header>
+
+    <!-- Categories Grid -->
+    <section class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+            <!-- Example Category Template -->
+            <!-- Just copy and change the text/icon/color below to add more -->
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-purple-100 rounded-lg">
+                    <i data-feather="globe" class="text-purple-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Geography</h3>
+                    <p class="text-sm text-gray-500">World capitals, continents, and maps.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <i data-feather="cpu" class="text-blue-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Technology</h3>
+                    <p class="text-sm text-gray-500">Computers, software, and innovation.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-green-100 rounded-lg">
+                    <i data-feather="film" class="text-green-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Movies</h3>
+                    <p class="text-sm text-gray-500">Cinema, directors, and famous scenes.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-yellow-100 rounded-lg">
+                    <i data-feather="music" class="text-yellow-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Music</h3>
+                    <p class="text-sm text-gray-500">Genres, artists, and albums.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-red-100 rounded-lg">
+                    <i data-feather="book" class="text-red-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">History</h3>
+                    <p class="text-sm text-gray-500">Events, wars, and civilizations.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-pink-100 rounded-lg">
+                    <i data-feather="star" class="text-pink-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Celebrities</h3>
+                    <p class="text-sm text-gray-500">Famous people and pop culture.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-indigo-100 rounded-lg">
+                    <i data-feather="book-open" class="text-indigo-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Literature</h3>
+                    <p class="text-sm text-gray-500">Authors, books, and poetry.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-teal-100 rounded-lg">
+                    <i data-feather="activity" class="text-teal-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Science</h3>
+                    <p class="text-sm text-gray-500">Physics, chemistry, and biology.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-orange-100 rounded-lg">
+                    <i data-feather="coffee" class="text-orange-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Food & Drinks</h3>
+                    <p class="text-sm text-gray-500">Cuisines, ingredients, and recipes.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition"
+                data-aos="fade-up">
+                <div class="p-3 bg-gray-100 rounded-lg">
+                    <i data-feather="smile" class="text-gray-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Personality</h3>
+                    <p class="text-sm text-gray-500">Fun and introspective quizzes.</p>
+                </div>
+            </div>
+
+            <!-- More categories -->
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-blue-100 rounded-lg"><i data-feather='cloud'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Weather</h3>
+                    <p class='text-sm text-gray-500'>Climate and meteorology facts.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-yellow-100 rounded-lg"><i data-feather='sun'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Astronomy</h3>
+                    <p class='text-sm text-gray-500'>Planets, stars, and galaxies.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-purple-100 rounded-lg"><i data-feather='code'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Programming</h3>
+                    <p class='text-sm text-gray-500'>Languages, logic, and challenges.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-red-100 rounded-lg"><i data-feather='heart'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Sports</h3>
+                    <p class='text-sm text-gray-500'>Cricket, football, and Olympics.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-green-100 rounded-lg"><i data-feather='truck'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Travel</h3>
+                    <p class='text-sm text-gray-500'>Destinations and adventures.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-pink-100 rounded-lg"><i data-feather='dollar-sign'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Business</h3>
+                    <p class='text-sm text-gray-500'>Startups, markets, and strategy.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-indigo-100 rounded-lg"><i data-feather='cpu'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>AI & Robotics</h3>
+                    <p class='text-sm text-gray-500'>Automation and modern tech.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-orange-100 rounded-lg"><i data-feather='feather'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Art</h3>
+                    <p class='text-sm text-gray-500'>Painting, sculpture, and design.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-gray-100 rounded-lg"><i data-feather='target'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Gaming</h3>
+                    <p class='text-sm text-gray-500'>PC, console, and mobile trivia.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition">
+                <div class="p-3 bg-teal-100 rounded-lg"><i data-feather='briefcase'></i></div>
+                <div>
+                    <h3 class='text-lg font-semibold text-gray-900'>Career & Skills</h3>
+                    <p class='text-sm text-gray-500'>Aptitude, reasoning, and soft skills.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-center text-gray-400 py-6 mt-10">
+        <p>&copy; 2025 QuizVerse. All rights reserved.</p>
+    </footer>
+
+    <!-- Dark Mode Script -->
+    <script src="/static/dark-mode.js"></script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+        feather.replace();
+    </script>
+</body>
+
+</html>

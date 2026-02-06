@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,44 +13,53 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .right-alignment{
-          text-align: right
+
+        .right-alignment {
+            text-align: right
         }
+
         .login-card {
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .input-field {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
+
         .input-field:focus {
             background: rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.4);
         }
+
         .btn-primary {
             background: linear-gradient(to right, #667eea, #764ba2);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
     </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md" data-aos="fade-up">
         <div class="p-8 sm:p-10">
             <div class="text-center mb-8">
                 <div class="flex justify-center mb-4">
                     <div>
-                        <img src='https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png' alt='Untitled-design-(3)' width='80' height='50' class="w-50 h-50 rounded-full bg-white/20 flex items-center justify-center">
+                        <img src='static/logo.png' alt='LOGO' width='80' height='50'
+                            class="w-50 h-50 rounded-full bg-white/20 flex items-center justify-center">
                     </div>
                 </div>
                 <h1 class="text-3xl font-bold text-white mb-2">Welcome to QuizVerse</h1>
@@ -64,8 +74,8 @@
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-feather="mail" class="text-white/60"></i>
-                        </div >
-                        <input id="email" name="email" type="email" autocomplete="email" required 
+                        </div>
+                        <input id="email" name="email" type="email" autocomplete="email" required
                             class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
                             placeholder="admin@quizverse.com">
                     </div>
@@ -77,7 +87,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-feather="lock" class="text-white/60"></i>
                         </div>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required 
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
                             class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
                             placeholder="Enter your password">
                     </div>
@@ -85,7 +95,7 @@
 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input id="remember-me" name="remember-me" type="checkbox" 
+                        <input id="remember-me" name="remember-me" type="checkbox"
                             class="h-4 w-4 rounded border-white/30 bg-white/10 focus:ring-white/50">
                         <label for="remember-me" class="ml-2 block text-sm text-white">Remember me</label>
                     </div>
@@ -106,15 +116,15 @@
                 </div>
 
                 <div>
-                    <button type="submit" 
-                            class="btn-primary w-full flex justify-center py-3 px-4 border border- rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
+                    <button type="submit"
+                        class="btn-primary w-full flex justify-center py-3 px-4 border border- rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
                         Sign in
                     </button>
                 </div>
             </form>
             <div class="mt-6 text-center">
                 <p class="text-sm text-white/80">
-                    Don't have an account? 
+                    Don't have an account?
                     <a href="/signup" class="font-medium text-white hover:text-white/80 transition">Sign up</a>
                 </p>
             </div>
@@ -133,11 +143,11 @@
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault(); // Prevent default form submission
-            
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const isAdminMode = document.getElementById('admin-mode').checked;
-            
+
             try {
                 const response = await fetch('/api/login', {
                     method: 'POST',
@@ -146,17 +156,17 @@
                     },
                     body: JSON.stringify({ email, password })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     // Store token in localStorage
                     localStorage.setItem("access_token", data.access_token);
-                    
+
                     console.log("Login successful:", data);
                     console.log("Is admin:", data.is_admin);
                     console.log("Admin mode checkbox:", isAdminMode);
-                    
+
                     // FIXED: Proper redirect logic
                     // If user checked "Admin login" AND they are actually an admin
                     // FIXED: Proper redirect logic with admin detection
@@ -196,4 +206,5 @@
     </script>
 
 </body>
+
 </html>

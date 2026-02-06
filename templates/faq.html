@@ -1,72 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ - QuizVerse</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
-    
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
-        
+
         .fun-title {
             font-family: 'Fredoka', sans-serif;
         }
-        
+
         .faq-item {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .faq-item:hover {
             transform: translateY(-2px);
         }
-        
+
         .faq-question {
             cursor: pointer;
             position: relative;
             user-select: none;
         }
-        
+
         .faq-answer {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .faq-answer.active {
             max-height: 500px;
         }
-        
+
         .arrow-icon {
             transition: transform 0.3s ease;
         }
-        
+
         .arrow-icon.rotated {
             transform: rotate(180deg);
         }
-        
+
         .emoji-float {
             animation: float 3s ease-in-out infinite;
         }
-        
+
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
-        
+
         .gradient-text {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .category-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -76,36 +87,56 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         .shake-on-hover:hover {
             animation: shake 0.5s;
         }
-        
+
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-5px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(5px);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2">
-                <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png" width="50" alt="QuizVerse Logo" class="rounded-lg">
+                <img src="/static/logo.png" width="50" alt="QuizVerse Logo" class="rounded-lg">
                 <span class="text-xl font-bold text-gray-900 fun-title">QuizVerse</span>
             </a>
-            
+
             <div class="hidden md:flex items-center gap-6">
                 <a href="/" class="text-gray-600 hover:text-purple-600 transition">Home</a>
                 <a href="/categories" class="text-gray-600 hover:text-purple-600 transition">Explore</a>
                 <a href="/about" class="text-gray-600 hover:text-purple-600 transition">About</a>
                 <a href="/faq" class="text-purple-600 font-semibold border-b-2 border-purple-600">FAQ</a>
             </div>
-            
+
             <div class="flex items-center gap-3">
-                <a href="/login" class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">Sign In</a>
+                <a href="/login"
+                    class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">Sign
+                    In</a>
             </div>
         </div>
     </nav>
@@ -127,7 +158,7 @@
                 <span class="text-3xl">🚀</span>
                 <h2 class="text-2xl font-bold fun-title text-gray-800">Getting Started</h2>
             </div>
-            
+
             <div class="space-y-4">
                 <!-- FAQ Item 1 -->
                 <div class="faq-item bg-white rounded-2xl shadow-md overflow-hidden">
@@ -140,8 +171,10 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Super easy! Just click on "Explore" in the menu, pick a category that interests you, and hit "Start Quiz". No signup needed to try our demo quiz! 🎉</p>
-                            <p class="mt-2 text-sm italic">💡 Pro tip: Create an account to track your scores and compete on the leaderboard!</p>
+                            <p>Super easy! Just click on "Explore" in the menu, pick a category that interests you, and
+                                hit "Start Quiz". No signup needed to try our demo quiz! 🎉</p>
+                            <p class="mt-2 text-sm italic">💡 Pro tip: Create an account to track your scores and
+                                compete on the leaderboard!</p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +190,9 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Nope! You can play our demo quizzes without an account. BUT... if you want to save your progress, see your stats, and climb the leaderboard, you'll want to sign up! It's free and takes just 30 seconds. ⚡</p>
+                            <p>Nope! You can play our demo quizzes without an account. BUT... if you want to save your
+                                progress, see your stats, and climb the leaderboard, you'll want to sign up! It's free
+                                and takes just 30 seconds. ⚡</p>
                         </div>
                     </div>
                 </div>
@@ -173,7 +208,8 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>100% FREE! 🎊 This is a college project made with ❤️ by students who love learning. No hidden fees, no premium plans, no tricks. Just pure quiz fun!</p>
+                            <p>100% FREE! 🎊 This is a college project made with ❤️ by students who love learning. No
+                                hidden fees, no premium plans, no tricks. Just pure quiz fun!</p>
                         </div>
                     </div>
                 </div>
@@ -186,7 +222,7 @@
                 <span class="text-3xl">🎯</span>
                 <h2 class="text-2xl font-bold fun-title text-gray-800">Playing Quizzes</h2>
             </div>
-            
+
             <div class="space-y-4">
                 <!-- FAQ Item 4 -->
                 <div class="faq-item bg-white rounded-2xl shadow-md overflow-hidden">
@@ -199,8 +235,10 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Most questions give you 30 seconds to answer. Watch that timer! ⏰ When the time runs out, we automatically move to the next question.</p>
-                            <p class="mt-2 text-sm">Don't panic though - 30 seconds is plenty of time if you know your stuff! 😎</p>
+                            <p>Most questions give you 30 seconds to answer. Watch that timer! ⏰ When the time runs out,
+                                we automatically move to the next question.</p>
+                            <p class="mt-2 text-sm">Don't panic though - 30 seconds is plenty of time if you know your
+                                stuff! 😎</p>
                         </div>
                     </div>
                 </div>
@@ -216,7 +254,8 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Absolutely! Take quizzes as many times as you want. Practice makes perfect! 💪 Each attempt might have different questions, so you'll keep learning new things.</p>
+                            <p>Absolutely! Take quizzes as many times as you want. Practice makes perfect! 💪 Each
+                                attempt might have different questions, so you'll keep learning new things.</p>
                         </div>
                     </div>
                 </div>
@@ -232,7 +271,8 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Yes! QuizVerse works perfectly on phones, tablets, and computers. Play anywhere, anytime! 📱💻</p>
+                            <p>Yes! QuizVerse works perfectly on phones, tablets, and computers. Play anywhere, anytime!
+                                📱💻</p>
                         </div>
                     </div>
                 </div>
@@ -245,7 +285,7 @@
                 <span class="text-3xl">🏆</span>
                 <h2 class="text-2xl font-bold fun-title text-gray-800">Scoring & Leaderboards</h2>
             </div>
-            
+
             <div class="space-y-4">
                 <!-- FAQ Item 7 -->
                 <div class="faq-item bg-white rounded-2xl shadow-md overflow-hidden">
@@ -258,12 +298,14 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Simple math! You get 1 point for each correct answer. Your final score is shown as both:</p>
+                            <p>Simple math! You get 1 point for each correct answer. Your final score is shown as both:
+                            </p>
                             <ul class="list-disc ml-6 mt-2 space-y-1">
                                 <li>Raw score (e.g., 8 out of 10)</li>
                                 <li>Percentage (e.g., 80%)</li>
                             </ul>
-                            <p class="mt-2">The faster you answer correctly, the better you'll rank on the leaderboard! 🚀</p>
+                            <p class="mt-2">The faster you answer correctly, the better you'll rank on the leaderboard!
+                                🚀</p>
                         </div>
                     </div>
                 </div>
@@ -279,8 +321,10 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>Just create an account and start scoring! Your best scores automatically appear on the leaderboard. Beat other players to climb to the top! 🌟</p>
-                            <p class="mt-2 text-sm bg-purple-50 p-3 rounded-lg">🎯 <strong>Pro Strategy:</strong> Speed matters! If two players have the same score, the faster one ranks higher.</p>
+                            <p>Just create an account and start scoring! Your best scores automatically appear on the
+                                leaderboard. Beat other players to climb to the top! 🌟</p>
+                            <p class="mt-2 text-sm bg-purple-50 p-3 rounded-lg">🎯 <strong>Pro Strategy:</strong> Speed
+                                matters! If two players have the same score, the faster one ranks higher.</p>
                         </div>
                     </div>
                 </div>
@@ -293,7 +337,7 @@
                 <span class="text-3xl">🔧</span>
                 <h2 class="text-2xl font-bold fun-title text-gray-800">Technical Stuff</h2>
             </div>
-            
+
             <div class="space-y-4">
                 <!-- FAQ Item 9 -->
                 <div class="faq-item bg-white rounded-2xl shadow-md overflow-hidden">
@@ -308,8 +352,10 @@
                         <div class="px-6 pb-6 text-gray-600">
                             <p>Thanks for helping us improve! 🙏 You can:</p>
                             <ul class="list-disc ml-6 mt-2 space-y-1">
-                                <li>Email us at: <a href="mailto:contactquizverse@gmail.com" class="text-purple-600 hover:underline">contactquizverse@gmail.com</a></li>
-                                <li>Open an issue on our <a href="https://github.com/Hardyik/QuizVerse.git" class="text-purple-600 hover:underline" target="_blank">GitHub page</a></li>
+                                <li>Email us at: <a href="mailto:contactquizverse@gmail.com"
+                                        class="text-purple-600 hover:underline">contactquizverse@gmail.com</a></li>
+                                <li>Open an issue on our <a href="https://github.com/Hardyik/QuizVerse.git"
+                                        class="text-purple-600 hover:underline" target="_blank">GitHub page</a></li>
                             </ul>
                         </div>
                     </div>
@@ -332,7 +378,8 @@
                                 <li>🛡️ Secure JWT tokens</li>
                                 <li>🗄️ Protected database</li>
                             </ul>
-                            <p class="mt-2">We only collect what we need: username, email, and your quiz scores. We never sell your data! 💯</p>
+                            <p class="mt-2">We only collect what we need: username, email, and your quiz scores. We
+                                never sell your data! 💯</p>
                         </div>
                     </div>
                 </div>
@@ -367,7 +414,7 @@
                 <span class="text-3xl">👨‍💼</span>
                 <h2 class="text-2xl font-bold fun-title text-gray-800">For Admins</h2>
             </div>
-            
+
             <div class="space-y-4">
                 <!-- FAQ Item 12 -->
                 <div class="faq-item bg-white rounded-2xl shadow-md overflow-hidden">
@@ -387,7 +434,8 @@
                                 <li>Enter your admin credentials</li>
                                 <li>You'll be redirected to the Admin Panel! 🎉</li>
                             </ol>
-                            <p class="mt-2 text-sm italic">⚠️ Don't forget to check that admin box, or you'll get a friendly reminder!</p>
+                            <p class="mt-2 text-sm italic">⚠️ Don't forget to check that admin box, or you'll get a
+                                friendly reminder!</p>
                         </div>
                     </div>
                 </div>
@@ -402,13 +450,12 @@
                 We're here to help! Don't be shy, reach out anytime.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="mailto:contactquizverse@gmail.com" 
-                   class="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:-translate-y-1 transition">
+                <a href="mailto:contactquizverse@gmail.com"
+                    class="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:-translate-y-1 transition">
                     📧 Email Us
                 </a>
-                <a href="https://github.com/Hardyik/QuizVerse.git" 
-                   target="_blank"
-                   class="bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:-translate-y-1 transition">
+                <a href="https://github.com/Hardyik/QuizVerse.git" target="_blank"
+                    class="bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:-translate-y-1 transition">
                     🐙 GitHub
                 </a>
             </div>
@@ -419,7 +466,8 @@
     <footer class="bg-gray-800 text-gray-400 py-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <div class="flex items-center justify-center gap-2 mb-4">
-                <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png" width="40" alt="Logo" class="rounded-lg">
+                <img src="https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png" width="40" alt="Logo"
+                    class="rounded-lg">
                 <span class="text-white font-bold text-xl fun-title">QuizVerse</span>
             </div>
             <p class="text-sm">© 2026 QuizVerse | Made with ❤️ by Computer Science Students</p>
@@ -436,24 +484,28 @@
             const faqItem = element.closest('.faq-item');
             const answer = faqItem.querySelector('.faq-answer');
             const arrow = faqItem.querySelector('.arrow-icon');
-            
+
             // Close all other FAQs
             document.querySelectorAll('.faq-answer').forEach(item => {
                 if (item !== answer) {
                     item.classList.remove('active');
                 }
             });
-            
+
             document.querySelectorAll('.arrow-icon').forEach(icon => {
                 if (icon !== arrow) {
                     icon.classList.remove('rotated');
                 }
             });
-            
+
             // Toggle current FAQ
             answer.classList.toggle('active');
             arrow.classList.toggle('rotated');
         }
     </script>
+
+    <!-- Dark Mode Script -->
+    <script src="/static/dark-mode.js"></script>
 </body>
+
 </html>

@@ -173,9 +173,9 @@ def signup():
 
     return render_template('signup.html')
 
-@app.route('/playquiz')
-def playquiz():
-    return render_template('playquiz.html')
+@app.route('/random')
+def random():
+    return render_template('random.html')
 
 @app.route('/faq')
 def faq():

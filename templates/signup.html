@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,47 +10,56 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .right-alignment{
-          text-align: right
+
+        .right-alignment {
+            text-align: right
         }
+
         .login-card {
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .input-field {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
+
         .input-field:focus {
             background: rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.4);
         }
+
         .btn-primary {
             background: linear-gradient(to right, #667eea, #764ba2);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
     </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md" data-aos="fade-up">
         <div class="p-8 sm:p-10">
             <div class="text-center mb-8">
                 <div class="flex justify-center mb-4">
                     <div>
-                        <img src='https://i.postimg.cc/CMB8SBKw/Untitled-design-(3).png' alt='Untitled-design-(3)' width='80' height='50' class="w-50 h-50 rounded-full bg-white/20 flex items-center justify-center">
+                        <img src='static/logo.png   ' alt='LOGO' width='80' height='50'
+                            class="w-50 h-50 rounded-full bg-white/20 flex items-center justify-center">
                     </div>
                 </div>
                 <h1 class="text-3xl font-bold text-white mb-2">Welcome to QuizVerse</h1>
@@ -58,51 +68,53 @@
 
             <form class="mt-8 space-y-6">
                 <label for="name" class="block text-sm font-medium text-white mb-2">Name</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-feather="user" class="text-white/60"></i>
-                        </div >
-                        <input id="username" name="name" type="text" autocomplete="name" required 
-                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-feather="user" class="text-white/60"></i>
                     </div>
+                    <input id="username" name="name" type="text" autocomplete="name" required
+                        class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
+                </div>
                 <div>
                     <label for="email" class="block text-sm font-medium text-white mb-2">Email Address</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-feather="mail" class="text-white/60"></i>
-                        </div >
-                        <input id="email" name="email" type="email" autocomplete="email" required 
+                        </div>
+                        <input id="email" name="email" type="email" autocomplete="email" required
                             class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
                     </div>
                 </div>
-                
+
                 <div>
                     <label for="password" class="block text-sm font-medium text-white mb-2">Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-feather="lock" class="text-white/60"></i>
                         </div>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required 
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
                             class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
                     </div>
                 </div>
                 <div>
-                    <label for="confirm_password" class="block text-sm font-medium text-white mb-2">Confirm Password</label>
+                    <label for="confirm_password" class="block text-sm font-medium text-white mb-2">Confirm
+                        Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-feather="lock" class="text-white/60"></i>
                         </div>
-                        <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required 
+                        <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password"
+                            required
                             class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
                     </div>
                 </div>
                 <div>
                     <p class="right-alignment text-sm text-white/80 mb-4">
-                        Already have an account? 
+                        Already have an account?
                         <a href="/login" class="text-white underline hover:text-white/90">Sign in</a>
                     </p>
-                    <button type="submit" 
-                            class="btn-primary w-full flex justify-center py-3 px-4 border border- rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
+                    <button type="submit"
+                        class="btn-primary w-full flex justify-center py-3 px-4 border border- rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
                         Sign up
                     </button>
                 </div>
@@ -110,7 +122,7 @@
             </form>
         </div>
     </div>
-<!-- AOS and Feather Icons Initialization -->
+    <!-- AOS and Feather Icons Initialization -->
     <script>
         AOS.init({
             duration: 800,
@@ -123,15 +135,15 @@
     <!-- Password Validation Script -->
     <script>
         function validatePasswords() {
-            
-        return true; // allow submit
+
+            return true; // allow submit
         }
     </script>
-<!-- Form Submission Script -->
+    <!-- Form Submission Script -->
     <script>
         document.querySelector('form').addEventListener('submit', async (e) => {
             e.preventDefault(); // Stop the page from refreshing
-            
+
             const password = document.getElementById("password").value;
             const confirmPassword = document.getElementById("confirm_password").value;
 
@@ -154,7 +166,7 @@
 
                 if (response.status === 400) {
                     // This triggers if the user already exists
-                    alert("Error: " + data.message); 
+                    alert("Error: " + data.message);
                 } else if (response.status === 201) {
                     alert("Account created successfully!");
                     window.location.href = '/login'; // Send them to login page
@@ -166,4 +178,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,17 +35,26 @@
             font-size: 120px;
             font-weight: bold;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-clip: text; /* Fallback for non-webkit browsers */
+            background-clip: text;
+            /* Fallback for non-webkit browsers */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            color: #667eea; /* Fallback color for non-webkit browsers */
+            color: #667eea;
+            /* Fallback color for non-webkit browsers */
             margin: 20px 0;
             animation: bounce 1s infinite;
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         h1 {
@@ -84,19 +94,55 @@
         a:hover {
             transform: scale(1.05);
         }
+
+        [data-theme="dark"] body {
+            background: radial-gradient(circle at top,
+                    #1a1f3c 0%,
+                    #0f1224 45%,
+                    #0b0e1a 100%) !important;
+            color: #e5e7eb !important;
+        }
+
+        [data-theme="dark"] .container {
+            background-color: #1f243f !important;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7) !important;
+        }
+
+        [data-theme="dark"] h1 {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] p {
+            color: #c7c9ff !important;
+        }
+
+        /* Keep the 404 number stylish but not neon */
+        [data-theme="dark"] .code {
+            background: linear-gradient(135deg,
+                    #6c7cff 0%,
+                    #9f7aea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
 </head>
+
 <body>
     <div class="container">
         <div class="code">404</div>
         <h1>Oops! Page Not Found</h1>
         <p>Looks like you've ended up in the void!</p>
         <div class="tech-message">
-            💡 Error 404: The requested page has been deleted, moved, or never existed. 
+            💡 Error 404: The requested page has been deleted, moved, or never existed.
             Time to debug your navigation!
         </div>
         <p>Don't worry, head back to QuizVerse and test your knowledge with our amazing quizzes.</p>
         <a href="/">← Back to QuizVerse</a>
     </div>
+    <!-- Dark Mode Script -->
+    <script src="/static/dark-mode.js"></script>
 </body>
+
 </html>
