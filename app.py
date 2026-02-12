@@ -163,6 +163,12 @@ def admin_panel():
     return render_template('Admin.html')
 
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
+
+
 @app.route('/user_dashboard')
 def user_dashboard():
     return render_template('user_dashboard.html')
@@ -189,11 +195,19 @@ def api_login():
     data = request.get_json() or {}
     email = data.get('email')
     password = data.get('password')
+    is_admin_login = data.get('is_admin_login', False)
 
     user = User.query.filter_by(email=email).first()
     
     if not user or not user.check_password(password):
         return jsonify({"msg": "Invalid email or password"}), 401
+        
+    # Enforce Admin Login Checkbox
+    if user.is_admin and not is_admin_login:
+        return jsonify({"msg": "Admins must use Admin Login"}), 403
+    
+    if not user.is_admin and is_admin_login:
+         return jsonify({"msg": "Access denied: Not an administrator"}), 403
 
     token = create_access_token(identity=user.username)
     

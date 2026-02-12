@@ -154,7 +154,11 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({
+                        email,
+                        password,
+                        is_admin_login: isAdminMode
+                    })
                 });
 
                 const data = await response.json();
@@ -163,37 +167,11 @@
                     // Store token in localStorage
                     localStorage.setItem("access_token", data.access_token);
 
-                    console.log("Login successful:", data);
-                    console.log("Is admin:", data.is_admin);
-                    console.log("Admin mode checkbox:", isAdminMode);
-
-                    // FIXED: Proper redirect logic
-                    // If user checked "Admin login" AND they are actually an admin
-                    // FIXED: Proper redirect logic with admin detection
+                    // Redirect based on role
                     if (data.is_admin) {
-                        // User is an admin
-                        if (isAdminMode) {
-                            // Admin checked the box - go to admin panel
-                            console.log("Redirecting to admin panel");
-                            window.location.href = '/admin';
-                        } else {
-                            // Admin didn't check the box - show message
-                            alert('⚠️ Admin Account Detected!\n\nYou are logging in with an admin account. Please check the "Admin login" checkbox to access the Admin Panel.\n\nRedirecting to login page...');
-                            setTimeout(() => {
-                                window.location.href = '/login';
-                            }, 500);
-                        }
+                        window.location.href = '/admin';
                     } else {
-                        // Regular user
-                        if (isAdminMode) {
-                            // Regular user tried to check admin box
-                            alert('You do not have admin privileges. Redirecting to user dashboard.');
-                            window.location.href = '/user_dashboard';
-                        } else {
-                            // Normal user login
-                            console.log("Redirecting to user dashboard");
-                            window.location.href = '/user_dashboard';
-                        }
+                        window.location.href = '/user_dashboard';
                     }
                 } else {
                     alert('Login failed: ' + data.msg);

@@ -525,6 +525,65 @@
         [data-theme="dark"] nav img {
             background-color: #ffffff !important;
         }
+
+        /* Settings Dropdown */
+        .settings-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            padding: 10px;
+            display: none;
+            z-index: 1000;
+            margin-top: 10px;
+            border: 1px solid #eee;
+        }
+
+        .settings-dropdown.active {
+            display: block;
+        }
+
+        [data-theme="dark"] .settings-dropdown {
+            background: #2d2d40;
+            border-color: #404040;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        [data-theme="dark"] .dropdown-item {
+            color: var(--dm-text-primary);
+        }
+
+        [data-theme="dark"] .dropdown-item:hover {
+            background: #404040;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #eee;
+            margin: 5px 0;
+        }
+
+        [data-theme="dark"] .dropdown-divider {
+            background: #404040;
+        }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -564,13 +623,28 @@
                         <i id="moonIcon" class="fas fa-moon" style="display: none;"></i>
                     </button>
 
-                    <button class="icon-btn" id="settingsBtn" title="Settings">
-                        <i class="fas fa-cog"></i>
-                    </button>
+                    <div class="relative">
+                        <button class="icon-btn" id="settingsBtn" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
 
-                    <button class="icon-btn" id="logoutBtn" title="Logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
+                        <!-- Settings Dropdown -->
+                        <div class="settings-dropdown" id="settingsDropdown">
+                            <div class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span>Profile</span>
+                            </div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-bell"></i>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item text-red-500 hover:text-red-600" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -697,12 +771,24 @@
         if (closeMenu) closeMenu.addEventListener('click', closeMobileMenu);
         if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
-        // Desktop settings
+        // Desktop settings & Dropdown logic
+        const settingsDropdown = document.getElementById('settingsDropdown');
+
         if (settingsBtn) {
-            settingsBtn.addEventListener('click', () => {
-                alert('Opening settings...');
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsDropdown.classList.toggle('active');
             });
         }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (settingsDropdown && settingsDropdown.classList.contains('active')) {
+                if (!settingsDropdown.contains(e.target) && e.target !== settingsBtn) {
+                    settingsDropdown.classList.remove('active');
+                }
+            }
+        });
 
         // Mobile settings
         if (mobileSettingsBtn) {
