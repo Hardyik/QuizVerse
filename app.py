@@ -25,13 +25,8 @@ def create_app():
 
     # Initialize DB (and Admin)
     with app.app_context():
-        try:
-            db.create_all()
-            create_admin_if_not_exists()
-        except Exception as e:
-            print(f"[ERROR] Database connection failed: {e}")
-            # On Vercel, we can't crash here or the whole function fails.
-            pass
+        db.create_all()
+        create_admin_if_not_exists()
 
     # Error Handlers
     @app.errorhandler(404)
