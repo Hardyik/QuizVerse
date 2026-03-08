@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizVerse | My Profile</title>
+    <meta name="description" content="Manage your QuizVerse profile and account settings.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+
+        .logo span {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #7c3aed;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            border-radius: 20px;
+            padding: 36px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.25);
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            font-weight: 700;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .avatar-wrapper:hover .avatar-circle {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-edit-badge {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            color: #4361ee;
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        .avatar-wrapper:hover .avatar-edit-badge {
+            transform: scale(1.15);
+        }
+
+        /* Avatar Picker Modal */
+        .avatar-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .avatar-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .avatar-modal {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 520px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.35s ease;
+        }
+
+        .avatar-modal h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-modal p {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-bottom: 22px;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .avatar-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            background: #f5f7fa;
+        }
+
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.25s;
+        }
+
+        .avatar-option:hover {
+            border-color: #4361ee;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .avatar-option.selected {
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+        }
+
+        .avatar-option.selected::after {
+            content: '\2713';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 22px;
+            height: 22px;
+            background: #4361ee;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background: #f1f3f5;
+            color: #374151;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 22px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        @media(max-width:500px) {
+            .avatar-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+        }
+
+        .profile-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-card .val {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4361ee;
+        }
+
+        .stat-card .lbl {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            margin-bottom: 22px;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #3a0ca3;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4361ee;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 28px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 28px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        .msg {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .msg.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .msg.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .history-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .history-row:last-child {
+            border-bottom: none;
+        }
+
+        .score-badge {
+            background: #ede9fe;
+            color: #7c3aed;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        @media(max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 24px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+        }
+
+        /* Nav Dark Mode */
+        [data-theme="dark"] nav {
+            background-color: #2d2d40 !important;
+            box-shadow: none !important;
+            border-bottom: 1px solid #404040;
+        }
+
+        [data-theme="dark"] .logo span {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .nav-links a {
+            color: #b0b0b0 !important;
+        }
+
+        [data-theme="dark"] .nav-links a:hover {
+            color: #818cf8 !important;
+        }
+
+        [data-theme="dark"] #darkModeToggle {
+            background-color: #404040 !important;
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] #darkModeToggle:hover {
+            background-color: #4a4a4a !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/user_dashboard" class="logo">
+            <img src="/static/logo.png" alt="QuizVerse Logo">
+            <span>QuizVerse</span>
+        </a>
+        <div class="nav-links">
+            <a href="/leaderboard">Leaderboard</a>
+            <a href="/user_dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+
+            <!-- Dark Mode Toggle -->
+            <button id="darkModeToggle"
+                style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;border:none;cursor:pointer;margin-left:16px;transition:all 0.2s;color:#555;font-size:1rem;">
+                <i class="fas fa-sun" id="sunIcon"></i>
+                <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar-wrapper" onclick="openAvatarPicker()" title="Change profile picture">
+                <div class="avatar-circle" id="avatarCircle">
+                    <img id="avatarImg" src="/static/avatars/avtar1.jpg" alt="Profile Picture">
+                </div>
+                <div class="avatar-edit-badge"><i class="fas fa-camera"></i></div>
+            </div>
+            <div class="profile-info">
+                <h1 id="profileUsername">Loading...</h1>
+                <p id="profileEmail"></p>
+                <div class="badge" id="levelBadge">Level 1</div>
+            </div>
+        </div>
+
+
+
+        <!-- Edit Profile -->
+        <div class="card">
+            <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="editUsername" placeholder="Your username">
+            </div>
+            <div class="form-group">
+                <label>Email (Cannot be changed)</label>
+                <input type="email" id="editEmail" placeholder="your@email.com" disabled
+                    class="bg-gray-100 cursor-not-allowed">
+            </div>
+            <button class="btn-primary" onclick="updateProfile()">Save Changes</button>
+            <div class="msg" id="profileMsg"></div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="card">
+            <h2><i class="fas fa-lock"></i> Change Password</h2>
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="currentPassword" placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="newPassword" placeholder="At least 8 characters">
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="confirmNewPassword" placeholder="Repeat new password">
+            </div>
+            <button class="btn-primary" onclick="changePassword()">Update Password</button>
+            <div class="msg" id="passwordMsg"></div>
+        </div>
+
+
+
+        <!-- Danger Zone -->
+        <div class="card" style="border:1.5px solid #fee2e2;">
+            <h2 style="color:#dc2626;"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+            <p style="color:#6c757d;font-size:0.9rem;margin-bottom:16px;">Logging out will clear your session. To
+                permanently delete your account, contact admin.</p>
+            <button class="btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+    <!-- Avatar Picker Modal -->
+    <div class="avatar-modal-overlay" id="avatarModal">
+        <div class="avatar-modal">
+            <h2><i class="fas fa-user-circle" style="color:#4361ee;"></i> Choose Your Avatar</h2>
+            <p>Pick a profile picture that represents you!</p>
+            <div class="avatar-grid" id="avatarGrid"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeAvatarPicker()">Cancel</button>
+                <button class="btn-primary" onclick="saveAvatar()">Save Avatar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const token = localStorage.getItem('access_token');
+        if (!token) window.location.href = '/login';
+
+        let userData = {};
+
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/user/profile', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('Unauthorized');
+                userData = await res.json();
+
+                document.getElementById('profileUsername').textContent = userData.username;
+                document.getElementById('profileEmail').textContent = userData.email;
+                document.getElementById('levelBadge').textContent = `Level ${userData.level}`;
+
+                // Set profile picture
+                const avatarFile = userData.profile_picture || 'avtar1.jpg';
+                document.getElementById('avatarImg').src = `/static/avatars/${avatarFile}`;
+                currentAvatar = avatarFile;
+
+                document.getElementById('editUsername').value = userData.username;
+                document.getElementById('editEmail').value = userData.email;
+
+            } catch (e) {
+                window.location.href = '/login';
+            }
+        }
+
+        async function updateProfile() {
+            const username = document.getElementById('editUsername').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const msg = document.getElementById('profileMsg');
+
+            if (!username || !email) {
+                showMsg(msg, 'Username and email are required.', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/user/profile', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ username, email })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showMsg(msg, 'Profile updated successfully!', 'success');
+                    // If username changed, the server issues a fresh JWT
+                    if (data.access_token) {
+                        localStorage.setItem('access_token', data.access_token);
+                        token = data.access_token;
+                    }
+                    // Refresh header
+                    document.getElementById('profileUsername').textContent = data.username;
+                    document.getElementById('profileEmail').textContent = email;
+                } else {
+                    showMsg(msg, data.msg || 'Error updating profile', 'error');
+                }
+            } catch (e) {
+                showMsg(msg, 'Network error. Try again.', 'error');
+            }
+        }
+
+        async function changePassword() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmNewPassword').value;
+            const msg = document.getElementById('passwordMsg');
+
+            if (!current || !newPass || !confirm) { showMsg(msg, 'All fields are required.', 'error'); return; }
+            if (newPass !== confirm) { showMsg(msg, 'New passwords do not match.', 'error'); return; }
+            if (newPass.length < 8) { showMsg(msg, 'Password must be at least 8 characters.', 'error'); return; }
+
+            try {
+                const res = await fetch('/api/user/password', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ current_password: current, new_password: newPass })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showMsg(msg, 'Password updated successfully!', 'success');
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmNewPassword').value = '';
+                } else {
+                    showMsg(msg, data.msg || 'Error updating password', 'error');
+                }
+            } catch (e) {
+                showMsg(msg, 'Network error. Try again.', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            window.location.href = '/logout';  // Server clears Flask session too
+        }
+
+        function showMsg(el, text, type) {
+            el.textContent = text;
+            el.className = 'msg ' + type;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 5000);
+        }
+
+        // ─── Avatar Picker Logic ────────────────────────────────────────────
+        const AVATARS = [
+            'avtar1.jpg', 'avtar2.jpg', 'avtar3.jpg', 'avtar4.jpg', 'avtar5.jpg',
+            'avtar6.jpg', 'avtar7.jpg', 'avtar8.jpg', 'avtar9.jpg', 'avtar10.jpg',
+            'avtar11.jpg', 'avtar12.jpg', 'avtar13.jpg', 'avtar14.jpg', 'avtar15.jpg'
+        ];
+        let currentAvatar = 'avtar1.jpg';
+        let selectedAvatar = null;
+
+        function buildAvatarGrid() {
+            const grid = document.getElementById('avatarGrid');
+            grid.innerHTML = '';
+            AVATARS.forEach((file, i) => {
+                const div = document.createElement('div');
+                div.className = 'avatar-option' + (file === currentAvatar ? ' selected' : '');
+                div.dataset.avatar = file;
+                div.innerHTML = `<img src="/static/avatars/${file}" alt="Avatar ${i + 1}">`;
+                div.onclick = () => selectAvatar(file);
+                grid.appendChild(div);
+            });
+            selectedAvatar = currentAvatar;
+        }
+
+        function selectAvatar(file) {
+            selectedAvatar = file;
+            document.querySelectorAll('.avatar-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.avatar === file);
+            });
+        }
+
+        function openAvatarPicker() {
+            buildAvatarGrid();
+            document.getElementById('avatarModal').classList.add('active');
+        }
+
+        function closeAvatarPicker() {
+            document.getElementById('avatarModal').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('avatarModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeAvatarPicker();
+        });
+
+        async function saveAvatar() {
+            if (!selectedAvatar || selectedAvatar === currentAvatar) {
+                closeAvatarPicker();
+                return;
+            }
+            try {
+                const res = await fetch('/api/user/avatar', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ profile_picture: selectedAvatar })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    currentAvatar = selectedAvatar;
+                    document.getElementById('avatarImg').src = `/static/avatars/${currentAvatar}`;
+                    closeAvatarPicker();
+                    const msg = document.getElementById('profileMsg');
+                    showMsg(msg, 'Profile picture updated!', 'success');
+                } else {
+                    alert(data.msg || 'Error updating avatar');
+                }
+            } catch (e) {
+                alert('Network error. Try again.');
+            }
+        }
+
+        loadProfile();
+    </script>
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

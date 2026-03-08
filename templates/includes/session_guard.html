@@ -1,0 +1,43 @@
+<!--
+  Session Guard Script — Include this on protected pages BEFORE any other JS.
+  If the page was loaded without a Flask session but the user has a valid JWT in
+  localStorage, this script calls /api/auth/session-check with the token to
+  re-populate the server-side session, then reloads the page so the route guard
+  in main.py sees the session.  This only fires once per page load (via the
+  URL hash fragment #session-restored) to prevent infinite reload loops.
+-->
+<script>
+    (function () {
+        // Avoid reload loops
+        if (window.location.hash === '#session-restored') {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+            return;
+        }
+
+        const token = localStorage.getItem('access_token');
+        if (!token) return; // No token — can't restore
+
+        // This runs synchronously via XMLHttpRequest so we can reload before
+        // the rest of the page renders (avoids a flash of the login redirect).
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/auth/session-check', false); // synchronous
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        try {
+            xhr.send();
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                if (data.logged_in) {
+                    // Session has been restored on the server — reload to let Flask see it
+                    window.location.hash = '#session-restored';
+                    window.location.reload();
+                    return;
+                }
+            }
+        } catch (e) {
+            // Network error — can't restore, will redirect to login naturally
+        }
+
+        // Token was invalid or expired — clean up
+        localStorage.removeItem('access_token');
+    })();
+</script>

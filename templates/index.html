@@ -24,11 +24,15 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Dark Mode Support -->
+  <link rel="stylesheet" href="/static/dark-mode.css">
 
   <style>
     body {
@@ -55,130 +59,6 @@
     [data-aos].aos-animate {
       opacity: 1;
     }
-
-    /* Dark Mode Styles - ENHANCED */
-    :root {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8f9fa;
-      --text-primary: #212529;
-      --text-secondary: #6c757d;
-      --border-color: #dee2e6;
-    }
-
-    [data-theme="dark"] {
-      --bg-primary: #1a1a1a;
-      --bg-secondary: #2d2d2d;
-      --text-primary: #ffffff;
-      --text-secondary: #b0b0b0;
-      --border-color: #404040;
-    }
-
-    /* Body & Background */
-    [data-theme="dark"] body {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
-      color: var(--text-primary) !important;
-    }
-
-    /* White backgrounds to dark */
-    [data-theme="dark"] .bg-white {
-      background-color: var(--bg-secondary) !important;
-      color: var(--text-primary) !important;
-    }
-
-    [data-theme="dark"] .bg-gray-50,
-    [data-theme="dark"] .bg-gray-100 {
-      background-color: #2a2a3e !important;
-      color: var(--text-primary) !important;
-    }
-
-    /* Text colors */
-    [data-theme="dark"] .text-gray-800,
-    [data-theme="dark"] .text-gray-900 {
-      color: var(--text-primary) !important;
-    }
-
-    [data-theme="dark"] .text-gray-600,
-    [data-theme="dark"] .text-gray-500,
-    [data-theme="dark"] .text-gray-700 {
-      color: var(--text-secondary) !important;
-    }
-
-    /* Borders */
-    [data-theme="dark"] .border,
-    [data-theme="dark"] .border-gray-200 {
-      border-color: var(--border-color) !important;
-    }
-
-    /* Shadows */
-    [data-theme="dark"] .shadow,
-    [data-theme="dark"] .shadow-md,
-    [data-theme="dark"] .shadow-lg,
-    [data-theme="dark"] .shadow-sm {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    /* Category cards */
-    [data-theme="dark"] .category-card {
-      background-color: #2d2d40 !important;
-      color: var(--text-primary) !important;
-    }
-
-    [data-theme="dark"] .category-card:hover {
-      background-color: #34344a !important;
-    }
-
-    /* Featured section specific fix */
-    [data-theme="dark"] .bg-gray-100 {
-      background-color: #1a1a2e !important;
-    }
-
-    [data-theme="dark"] .bg-gray-100 .bg-white {
-      background-color: #2d2d40 !important;
-    }
-
-    /* Navbar dark mode toggle button styling */
-    [data-theme="dark"] #darkModeToggle {
-      background-color: #404040 !important;
-    }
-
-    [data-theme="dark"] #darkModeToggle:hover {
-      background-color: #4a4a4a !important;
-    }
-
-    [data-theme="dark"] #darkModeToggle svg {
-      color: #ffffff !important;
-    }
-
-    /* Make sure all text in dark sections is visible */
-    [data-theme="dark"] h1,
-    [data-theme="dark"] h2,
-    [data-theme="dark"] h3,
-    [data-theme="dark"] h4,
-    [data-theme="dark"] h5,
-    [data-theme="dark"] h6 {
-      color: var(--text-primary) !important;
-    }
-
-    [data-theme="dark"] p {
-      color: var(--text-secondary) !important;
-    }
-
-    /* Footer stays dark in both modes */
-    [data-theme="dark"] .bg-gray-800 {
-      background-color: #0f0f1e !important;
-    }
-
-    /* Dark mode – soften hero gradient */
-    [data-theme="dark"] .hero-gradient {
-      background: linear-gradient(135deg,
-          #2b3a8f 0%,
-          #3b1c6e 100%) !important;
-    }
-
-    [data-theme="dark"] .hero-gradient h1,
-    [data-theme="dark"] .hero-gradient p {
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-    }
   </style>
 </head>
 
@@ -203,17 +83,10 @@
         <button id="darkModeToggle"
           class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"
           title="Toggle Dark Mode">
-          <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            class="w-5 h-5 text-gray-700">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg id="moonIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" class="w-5 h-5 text-gray-700">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
+          <i class="fas fa-sun text-gray-700" id="sunIcon"></i>
+          <i class="fas fa-moon text-gray-700" id="moonIcon" style="display: none;"></i>
         </button>
+
         <button onclick="location.href='login'"
           class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md">Sign In</button>
         <button onclick="location.href='signup'"
@@ -231,19 +104,87 @@
       <a href="/about" class="block text-gray-500 hover:text-gray-900">About</a>
       <a href="/login" class="block bg-purple-600 text-white text-center py-2 rounded">Sign In</a>
       <a href="/signup" class="block bg-purple-600 text-white text-center py-2 rounded">Create Account</a>
+
+      <!-- Mobile Dark Mode Toggle -->
+      <button id="darkModeToggleMobile"
+        class="w-full flex items-center justify-between px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+        <span>Dark Mode</span>
+        <i class="fas fa-moon"></i>
+      </button>
     </div>
   </nav>
 
   <!-- HERO -->
-  <section class="hero-gradient text-white text-center py-24">
-    <h1 class="text-5xl font-extrabold" data-aos="fade-down">Challenge Your Knowledge</h1>
-    <p class="mt-6 text-xl max-w-xl mx-auto" data-aos="fade-up">
-      Join QuizVerse for fun, engaging quizzes. Test yourself, learn, and compete!
-    </p>
-    <a href="demo" class="inline-flex items-center mt-10 bg-white text-purple-700 px-6 py-3 rounded-md">
-      Start Playing demo quiz
-      <i data-feather="arrow-right" class="ml-2"></i>
-    </a>
+  <section class="hero-gradient text-white py-20 lg:py-32 relative overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+      <div class="absolute -top-40 -right-40 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 left-10 w-72 h-72 bg-purple-500 opacity-30 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+      <div class="text-center lg:text-left" data-aos="fade-right">
+        <span
+          class="inline-block py-1 px-4 rounded-full bg-white bg-opacity-20 text-sm font-semibold mb-6 backdrop-blur-sm border border-white border-opacity-30">🚀
+          The Ultimate Quiz Experience</span>
+        <h1 class="text-5xl lg:text-6xl font-extrabold leading-tight">
+          Challenge Your <br /><span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">Knowledge</span>
+        </h1>
+        <p class="mt-6 text-xl text-purple-100 max-w-xl mx-auto lg:mx-0">
+          Join QuizVerse for fun, engaging quizzes across thousands of topics. Test yourself, learn something new, and
+          compete with friends!
+        </p>
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="demo"
+            class="inline-flex justify-center items-center bg-white text-purple-700 font-bold px-8 py-4 rounded-full shadow-xl hover:-translate-y-1 transition duration-300">
+            Start Demo Quiz
+            <i data-feather="play-circle" class="ml-2"></i>
+          </a>
+          <a href="/explore"
+            class="inline-flex justify-center items-center bg-purple-800 bg-opacity-50 text-white font-bold px-8 py-4 rounded-full border border-purple-400 hover:bg-opacity-70 transition duration-300 backdrop-blur-sm">
+            Explore Topics
+          </a>
+        </div>
+      </div>
+
+      <div class="relative mt-12 lg:mt-0" data-aos="fade-left" data-aos-delay="200">
+        <!-- Floating elements -->
+        <div class="absolute -top-6 -left-6 bg-white p-4 rounded-xl shadow-2xl animate-bounce z-20 hidden md:block"
+          style="animation-duration: 3s;">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+              <i class="fas fa-check"></i>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Correct Answer</p>
+              <p class="text-sm font-bold text-gray-900">+50 Points</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-2xl animate-bounce z-20 hidden md:block"
+          style="animation-duration: 4s; animation-delay: 1s;">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 font-medium">Rank Up!</p>
+              <p class="text-sm font-bold text-gray-900">Quiz Master</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white border-opacity-20 transform md:rotate-2 md:hover:rotate-0 transition duration-500">
+          <img src="/static/quiz_page.png" alt="Quiz Interface"
+            class="w-full h-auto object-cover transform scale-105 hover:scale-100 transition duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-purple-900 via-transparent to-transparent opacity-20">
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- POPULAR CATEGORIES -->
@@ -287,56 +228,51 @@
     </div>
   </section>
 
-  <!-- Featured Quiz -->
-  <div class="bg-gray-100">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-      <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-        <div class="max-w-md mx-auto lg:max-w-none lg:mx-0" data-aos="fade-right">
-          <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            Ready to take the Challenge?
-          </h2>
-          <p class="mt-3 text-lg text-gray-500">
-            Test your knowledge about world capitals with our most popular quiz.
-          </p>
-          <div class="mt-6 space-y-3">
-            <div class="flex items-center">
-              <i data-feather="clock" class="h-5 w-5 text-purple-600 mr-2"></i>
-              <span class="text-gray-700">10 minutes • 20 questions</span>
-            </div>
-            <div class="flex items-center">
-              <i data-feather="star" class="h-5 w-5 text-purple-600 mr-2"></i>
-              <span class="text-gray-700">4.8/5 average rating</span>
-            </div>
+  <!-- WHY CHOOSE US / FEATURES -->
+  <section class="bg-white py-20 relative border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+        <h2 class="text-3xl lg:text-4xl font-extrabold mb-4">Why Choose QuizVerse?</h2>
+        <p class="text-gray-500 text-lg">Experience the most interactive and rewarding way to learn. Whether you're a
+          trivia buff or just exploring new topics, we have something for you.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-10">
+        <!-- Feature 1 -->
+        <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:-translate-y-2 transition duration-300"
+          data-aos="fade-up" data-aos-delay="100">
+          <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 text-purple-600">
+            <i data-feather="database" class="w-7 h-7"></i>
           </div>
-          <div class="mt-8">
-            <a href="/demo"
-              class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 transition duration-150 ease-in-out">
-              Take the Quiz
-              <i data-feather="chevron-right" class="ml-2"></i>
-            </a>
-          </div>
+          <h3 class="text-xl font-bold mb-3">Vast Question Bank</h3>
+          <p class="text-gray-600">Access thousands of high-quality questions across diverse categories. Our database is
+            constantly updated to keep you challenged.</p>
         </div>
-        <div class="mt-12 lg:mt-0" data-aos="fade-left" data-aos-delay="200">
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <img src="/static/quiz_page.png" alt="Quiz-Page"></a>
-            <div class="p-6">
-              <h3 class="text-xl font-medium text-gray-900">
-                World Capitals Challenge
-              </h3>
-              <p class="mt-2 text-sm text-gray-500">
-                Can you name all the capitals? Test your geography knowledge now! This quiz covers capitals from all
-                continents with varying difficulty levels.
-              </p>
-              <div class="mt-4 flex items-center justify-between">
-                <span class="text-sm text-gray-500">Difficulty: Medium</span>
-              </div>
-            </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:-translate-y-2 transition duration-300"
+          data-aos="fade-up" data-aos-delay="200">
+          <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center mb-6 text-yellow-600">
+            <i data-feather="award" class="w-7 h-7"></i>
           </div>
+          <h3 class="text-xl font-bold mb-3">Leaderboards & Badges</h3>
+          <p class="text-gray-600">Earn points for every correct answer, unlock achievements, and climb the global
+            leaderboards to prove you're the ultimate quiz master.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:-translate-y-2 transition duration-300"
+          data-aos="fade-up" data-aos-delay="300">
+          <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6 text-green-600">
+            <i data-feather="bar-chart-2" class="w-7 h-7"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Detailed Analytics</h3>
+          <p class="text-gray-600">Track your progress over time with personalized dashboards. Understand your strengths
+            and work on your weaknesses effectively.</p>
         </div>
       </div>
     </div>
-  </div>
-
+  </section>
 
   <!-- CTA -->
   <section class="bg-purple-700 text-white py-16">
@@ -357,7 +293,6 @@
   <!-- FOOTER -->
   <footer class="bg-gray-800 text-gray-400">
     <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-4 gap-8">
-
       <div>
         <div class="flex items-center gap-2">
           <img src="/static/logo.png" width="40" alt="Logo" class="rounded-lg">
@@ -367,7 +302,6 @@
           The ultimate platform for knowledge seekers.
         </p>
       </div>
-
       <div>
         <h3 class="uppercase text-sm font-semibold">QuizVerse</h3>
         <ul class="mt-4 space-y-2">
@@ -381,14 +315,13 @@
           <i data-feather="github"></i>
         </a>
       </div>
-
     </div>
-
     <div class="border-t border-gray-700 py-4 text-center text-sm">
       © 2026 QuizVerse | College Project
     </div>
   </footer>
 
+  <script src="/static/dark-mode.js"></script>
   <script>
     AOS.init({ once: true, duration: 800 });
     feather.replace();
@@ -396,46 +329,30 @@
     const btn = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
 
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-    });
-
-    // Dark Mode Toggle Script
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const sunIcon = document.getElementById('sunIcon');
-    const moonIcon = document.getElementById('moonIcon');
-    const htmlElement = document.documentElement;
-
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    htmlElement.setAttribute('data-theme', currentTheme);
-
-    // Update icon based on current theme
-    if (currentTheme === 'dark') {
-      sunIcon.style.display = 'none';
-      moonIcon.style.display = 'block';
+    if (btn && menu) {
+      btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
     }
-
-    // Toggle dark mode
-    darkModeToggle.addEventListener('click', () => {
-      const currentTheme = htmlElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-      htmlElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-
-      // Toggle icons
-      if (newTheme === 'dark') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-      } else {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-      }
-    });
-
   </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('access_token')) {
+                document.querySelectorAll('a[href="/"]').forEach(function(el) { 
+                    el.href = '/user_dashboard'; 
+                });
+                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function(el) {
+                    if (el.parentElement && el.parentElement.tagName === 'LI') {
+                        el.parentElement.style.display = 'none';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 
 </html>

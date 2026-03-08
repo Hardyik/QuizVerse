@@ -11,6 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
@@ -128,15 +129,19 @@
 
             <div class="hidden md:flex items-center gap-6">
                 <a href="/" class="text-gray-600 hover:text-purple-600 transition">Home</a>
-                <a href="/categories" class="text-gray-600 hover:text-purple-600 transition">Explore</a>
+                <a href="/explore" class="text-gray-600 hover:text-purple-600 transition">Explore</a>
                 <a href="/about" class="text-gray-600 hover:text-purple-600 transition">About</a>
                 <a href="/faq" class="text-purple-600 font-semibold border-b-2 border-purple-600">FAQ</a>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="/login"
-                    class="hidden md:block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">Sign
-                    In</a>
+                <!-- Dark Mode Toggle Button -->
+                <button id="darkModeToggle"
+                    class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"
+                    title="Toggle Dark Mode">
+                    <i class="fas fa-sun text-gray-700" id="sunIcon"></i>
+                    <i class="fas fa-moon text-gray-700" id="moonIcon" style="display: none;"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -427,15 +432,22 @@
                     </div>
                     <div class="faq-answer">
                         <div class="px-6 pb-6 text-gray-600">
-                            <p>If you're an admin, simply:</p>
+                            <p>If you're an admin, here's how to get in:</p>
                             <ol class="list-decimal ml-6 mt-2 space-y-1">
-                                <li>Go to the login page</li>
-                                <li>Check the "Admin login" checkbox</li>
-                                <li>Enter your admin credentials</li>
-                                <li>You'll be redirected to the Admin Panel! 🎉</li>
+                                <li>Go to the <a href="/login" class="text-purple-600 hover:underline">Login page</a>
+                                </li>
+                                <li>You'll see a <strong>User / Admin</strong> toggle switch below the password field
+                                </li>
+                                <li>Click the <strong>"Admin"</strong> side of the toggle to switch to admin mode</li>
+                                <li>Enter your admin email and password</li>
+                                <li>Hit <strong>Sign In</strong> — you'll be taken straight to the Admin Panel! 🎉</li>
                             </ol>
-                            <p class="mt-2 text-sm italic">⚠️ Don't forget to check that admin box, or you'll get a
-                                friendly reminder!</p>
+                            <p class="mt-3 text-sm bg-yellow-50 p-3 rounded-lg">⚠️ <strong>Important:</strong> If you
+                                try to log in as an admin without switching the toggle, the system will show a friendly
+                                warning and automatically flip the toggle for you. Just hit Sign In again!</p>
+                            <p class="mt-2 text-sm bg-purple-50 p-3 rounded-lg">🔒 <strong>Note:</strong> Only accounts
+                                with admin privileges can access the Admin Panel. Regular user accounts won't be able to
+                                switch to admin mode.</p>
                         </div>
                     </div>
                 </div>
@@ -506,6 +518,24 @@
 
     <!-- Dark Mode Script -->
     <script src="/static/dark-mode.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (localStorage.getItem('access_token')) {
+                document.querySelectorAll('a[href="/"]').forEach(function (el) {
+                    el.href = '/user_dashboard';
+                });
+                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function (el) {
+                    if (el.parentElement && el.parentElement.tagName === 'LI') {
+                        el.parentElement.style.display = 'none';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 
 </html>

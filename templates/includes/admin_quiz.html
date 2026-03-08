@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizVerse | Manage Quizzes</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden">
+    {% set active_page = 'quizzes' %}
+    {% include 'includes/admin_sidebar.html' %}
+
+    <div class="flex-1 flex flex-col overflow-hidden md:ml-64">
+        <!-- Topbar -->
+        <header class="bg-white border-b border-gray-200 flex items-center justify-between p-4">
+            <div class="flex items-center space-x-4">
+                <i id="menuToggle" data-feather="menu" class="cursor-pointer text-gray-600 md:hidden"></i>
+                <h2 class="text-lg font-semibold text-gray-800">Quiz Management</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="darkModeToggle"
+                    class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition"
+                    title="Toggle Dark Mode">
+                    <i id="sunIcon" data-feather="sun" class="w-5 h-5"></i>
+                    <i id="moonIcon" data-feather="moon" class="w-5 h-5" style="display:none;"></i>
+                </button>
+                <div
+                    class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='avatars/admin_av.png') }}" alt="Admin Avatar"
+                        class="w-full h-full rounded-full">
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+
+            <!-- Tabs -->
+            <div class="flex space-x-2 mb-6">
+                <button class="tab-btn active px-5 py-2 rounded-lg border border-gray-200 font-medium transition"
+                    onclick="showTab('categories')">
+                    <i data-feather="grid" class="inline w-4 h-4 mr-1"></i> Categories
+                </button>
+                <button class="tab-btn px-5 py-2 rounded-lg border border-gray-200 font-medium transition"
+                    onclick="showTab('questions')">
+                    <i data-feather="help-circle" class="inline w-4 h-4 mr-1"></i> Questions
+                </button>
+            </div>
+
+            <!-- ============ CATEGORIES TAB ============ -->
+            <div id="tab-categories">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-700">Categories</h3>
+                    <button onclick="openCatModal()"
+                        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                        <i data-feather="plus" class="w-4 h-4"></i> Add Category
+                    </button>
+                </div>
+
+                <div id="categoriesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="text-center text-gray-400 col-span-full py-10">Loading categories...</div>
+                </div>
+            </div>
+
+            <!-- ============ QUESTIONS TAB ============ -->
+            <div id="tab-questions" class="hidden">
+                <div class="flex flex-wrap gap-4 items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-xl font-semibold text-gray-700">Questions</h3>
+                        <select id="filterCategory" onchange="loadQuestions()"
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            <option value="">All Categories</option>
+                        </select>
+                        <div class="relative">
+                            <i data-feather="search"
+                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                            <input id="questionSearch" type="text" placeholder="Search questions..."
+                                oninput="handleSearch()"
+                                class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 w-64">
+                        </div>
+                    </div>
+                    <button onclick="openQModal()"
+                        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                        <i data-feather="plus" class="w-4 h-4"></i> Add Question
+                    </button>
+                </div>
+
+                <div id="questionsList" class="space-y-4">
+                    <div class="text-center text-gray-400 py-10">Select a category or load all questions.</div>
+                </div>
+
+                <!-- Questions Pagination -->
+                <div id="questionsPagination"
+                    class="mt-8 flex items-center justify-between border-t border-gray-200 pt-4 hidden">
+                    <button onclick="changeQuestionPage(-1)" id="prevQuestBtn"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                    <span id="questPageInfo" class="text-sm text-gray-500 font-medium">Page 1 of 1</span>
+                    <button onclick="changeQuestionPage(1)" id="nextQuestBtn"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============ ADD/EDIT CATEGORY MODAL ============ -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" id="catModalTitle">Add New Category</h3>
+                <button onclick="closeCatModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <input type="hidden" id="editCatId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category Name *</label>
+                    <input id="catName" type="text" placeholder="e.g. Science"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="catDesc" rows="2" placeholder="Short description..."
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Icon (feather icon name)</label>
+                    <input id="catIcon" type="text" placeholder="e.g. book, globe, cpu"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <div id="catMsg" class="text-sm hidden"></div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="saveCategory()" id="saveCatBtn"
+                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition">Save
+                        Category</button>
+                    <button onclick="closeCatModal()"
+                        class="flex-1 border border-gray-300 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ ADD/EDIT QUESTION MODAL ============ -->
+    <div class="modal-overlay" id="questionModal">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 p-6 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" id="qModalTitle">Add New Question</h3>
+                <button onclick="closeQModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <input type="hidden" id="editQId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                    <select id="qCategory"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <option value="">Select a category</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Question Text *</label>
+                    <textarea id="qText" rows="2" placeholder="Enter your question here..."
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                        <select id="qDifficulty" onchange="autoSetTime()"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Time Limit (seconds)</label>
+                        <input id="qTime" type="number" value="30" min="10" max="120"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Answer Options * (mark the correct
+                        one)</label>
+                    <div id="optionsContainer" class="space-y-2">
+                        <!-- Options injected by JS -->
+                    </div>
+                    <button onclick="addOptionField()"
+                        class="mt-2 text-sm text-purple-600 hover:text-purple-800 flex items-center gap-1">
+                        <i data-feather="plus-circle" class="w-4 h-4"></i> Add Another Option
+                    </button>
+                </div>
+
+                <div id="qMsg" class="text-sm hidden"></div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="saveQuestion()" id="saveQBtn"
+                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition">Save
+                        Question</button>
+                    <button onclick="closeQModal()"
+                        class="flex-1 border border-gray-300 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        if (menuToggle && sidebar) menuToggle.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+
+        const token = localStorage.getItem('access_token');
+        let allCategories = [];
+
+        // ===== TABS =====
+        function showTab(name) {
+            ['categories', 'questions'].forEach(t => {
+                document.getElementById('tab-' + t).classList.toggle('hidden', t !== name);
+            });
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', ['categories', 'questions'][i] === name);
+            });
+            feather.replace();
+            if (name === 'questions') loadQuestions();
+        }
+
+        // ===== CATEGORIES =====
+        async function loadCategories() {
+            const res = await fetch('/api/categories');
+            allCategories = await res.json();
+            const list = document.getElementById('categoriesList');
+            if (!allCategories.length) {
+                list.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10">No categories yet. Add one!</div>';
+                return;
+            }
+            list.innerHTML = allCategories.map(c => `
+                <div class="bg-white rounded-xl shadow p-5 flex items-center justify-between hover:shadow-md transition">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                            <i data-feather="${c.icon || 'layers'}"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800">${c.name}</p>
+                            <p class="text-xs text-gray-500">${c.description || ''} &bull; ${c.quiz_count} question${c.quiz_count !== 1 ? 's' : ''}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openCatModal(${c.id})" class="text-blue-400 hover:text-blue-600 transition" title="Edit">
+                            <i data-feather="edit-2" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="deleteCategory(${c.id}, '${c.name}')" class="text-red-400 hover:text-red-600 transition" title="Delete">
+                            <i data-feather="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>`).join('');
+
+            // Populate filter dropdown
+            const filter = document.getElementById('filterCategory');
+            filter.innerHTML = '<option value="">All Categories</option>' +
+                allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            feather.replace();
+        }
+
+        function openCatModal(id = null) {
+            const modal = document.getElementById('categoryModal');
+            const title = document.getElementById('catModalTitle');
+            const editId = document.getElementById('editCatId');
+
+            if (id) {
+                const cat = allCategories.find(c => c.id === id);
+                title.textContent = 'Edit Category';
+                editId.value = id;
+                document.getElementById('catName').value = cat.name;
+                document.getElementById('catDesc').value = cat.description || '';
+                document.getElementById('catIcon').value = cat.icon || '';
+            } else {
+                title.textContent = 'Add New Category';
+                editId.value = '';
+                document.getElementById('catName').value = '';
+                document.getElementById('catDesc').value = '';
+                document.getElementById('catIcon').value = '';
+            }
+            modal.classList.add('open');
+            feather.replace();
+        }
+
+        function closeCatModal() {
+            document.getElementById('categoryModal').classList.remove('open');
+        }
+
+        async function saveCategory() {
+            const id = document.getElementById('editCatId').value;
+            const name = document.getElementById('catName').value.trim();
+            const desc = document.getElementById('catDesc').value.trim();
+            const icon = document.getElementById('catIcon').value.trim() || 'layers';
+            const msg = document.getElementById('catMsg');
+
+            if (!name) { showMsg(msg, 'Category name is required.', 'red'); return; }
+
+            const url = id ? `/api/admin/category/${id}` : '/api/admin/category';
+            const method = id ? 'PATCH' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ name, description: desc, icon })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showMsg(msg, id ? 'Category updated!' : 'Category created!', 'green');
+                setTimeout(() => { closeCatModal(); loadCategories(); }, 800);
+            } else {
+                showMsg(msg, data.msg || 'Error saving category', 'red');
+            }
+        }
+
+        async function deleteCategory(id, name) {
+            if (!confirm(`Delete category "${name}" and ALL its questions? This cannot be undone.`)) return;
+            const res = await fetch(`/api/admin/category/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await res.json();
+            if (res.ok) {
+                loadCategories();
+            } else {
+                alert(data.msg || 'Failed to delete category.');
+            }
+        }
+
+        // ===== QUESTIONS LOGIC =====
+        let allQuestions = [];
+        let filteredQuestions = [];
+        let questCurrentPage = 1;
+        const QUEST_PAGE_SIZE = 10;
+
+        let questTotalPages = 1;
+
+        async function loadQuestions(page = 1) {
+            const catId = document.getElementById('filterCategory').value;
+            const search = document.getElementById('questionSearch').value;
+            const container = document.getElementById('questionsList');
+            const pagination = document.getElementById('questionsPagination');
+
+            container.innerHTML = '<div class="text-center text-gray-400 py-10">Loading questions...</div>';
+
+            try {
+                let url = `/api/admin/questions?page=${page}&per_page=10`;
+                if (catId) url += `&category_id=${catId}`;
+                if (search) url += `&search=${encodeURIComponent(search)}`;
+
+                const res = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    allQuestions = data.questions;
+                    questCurrentPage = data.current_page;
+                    questTotalPages = data.pages;
+                    renderQuestionPage();
+                } else {
+                    container.innerHTML = '<div class="text-center text-red-500 py-10">Error loading questions.</div>';
+                }
+            } catch (err) {
+                console.error('Failed to load questions:', err);
+                container.innerHTML = '<div class="text-center text-red-500 py-10">Error loading questions.</div>';
+            }
+        }
+
+        function handleSearch() {
+            clearTimeout(window.searchTimer);
+            window.searchTimer = setTimeout(() => {
+                loadQuestions(1);
+            }, 400);
+        }
+
+        function renderQuestionPage() {
+            const container = document.getElementById('questionsList');
+            const pagination = document.getElementById('questionsPagination');
+
+            if (allQuestions.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-10">No questions found.</div>';
+                pagination.classList.add('hidden');
+                return;
+            }
+
+            pagination.classList.remove('hidden');
+            container.innerHTML = allQuestions.map((q, i) => `
+                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+                    <div class="flex justify-between items-start gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-100 text-purple-700">
+                                    ${q.category_name || 'General'}
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${q.difficulty === 'hard' ? 'bg-red-100 text-red-700' : q.difficulty === 'medium' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}">
+                                    ${q.difficulty}
+                                </span>
+                            </div>
+                            <p class="text-gray-800 font-medium">${q.text}</p>
+                            <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-500">
+                                ${(q.options || []).map(opt => `
+                                    <div class="flex items-center gap-2 ${opt.is_correct ? 'text-green-600 font-semibold' : ''}">
+                                        <i data-feather="${opt.is_correct ? 'check-circle' : 'circle'}" class="w-3.5 h-3.5"></i>
+                                        <span>${opt.text}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                             <button onclick="openQModal(${q.id})" class="text-blue-400 hover:text-blue-500 transition p-1" title="Edit">
+                                <i data-feather="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteQuestion(${q.id})" class="text-gray-400 hover:text-red-500 transition p-1" title="Delete">
+                                <i data-feather="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('questPageInfo').textContent = `Page ${questCurrentPage} of ${questTotalPages}`;
+            document.getElementById('prevQuestBtn').disabled = questCurrentPage <= 1;
+            document.getElementById('nextQuestBtn').disabled = questCurrentPage >= questTotalPages;
+
+            feather.replace();
+        }
+
+        function changeQuestionPage(dir) {
+            loadQuestions(questCurrentPage + dir);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm('Are you sure you want to delete this question?')) return;
+            const res = await fetch(`/api/admin/question/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+                loadQuestions();
+            } else {
+                const data = await res.json();
+                alert(data.msg || 'Failed to delete question');
+            }
+        }
+
+        function openQModal(id = null) {
+            populateCategoryDropdown();
+            const modal = document.getElementById('questionModal');
+            const title = document.getElementById('qModalTitle');
+            const editId = document.getElementById('editQId');
+
+            if (id) {
+                const q = allQuestions.find(it => it.id === id);
+                title.textContent = 'Edit Question';
+                editId.value = id;
+                document.getElementById('qCategory').value = q.category_id;
+                document.getElementById('qText').value = q.text;
+                document.getElementById('qDifficulty').value = q.difficulty;
+                document.getElementById('qTime').value = q.time_limit || 30;
+
+                // Load options
+                const container = document.getElementById('optionsContainer');
+                container.innerHTML = '';
+                optionCount = 0;
+                (q.options || []).forEach(opt => {
+                    addOptionField(opt.text, opt.is_correct);
+                });
+            } else {
+                title.textContent = 'Add New Question';
+                editId.value = '';
+                document.getElementById('qText').value = '';
+                document.getElementById('qDifficulty').value = 'medium';
+                autoSetTime();
+                initOptionFields();
+            }
+            modal.classList.add('open');
+            feather.replace();
+        }
+
+        function closeQModal() {
+            document.getElementById('questionModal').classList.remove('open');
+        }
+
+        function addOptionField(text = '', isCorrect = false) {
+            optionCount++;
+            const container = document.getElementById('optionsContainer');
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2';
+            div.innerHTML = `
+            <input type="radio" name="correctOpt" value="${optionCount}" ${isCorrect ? 'checked' : ''} class="accent-purple-600 w-4 h-4 flex-shrink-0" title="Mark as correct">
+            <input type="text" placeholder="Option ${optionCount}" value="${text}" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm option-text focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <button onclick="this.parentElement.remove();" class="text-gray-400 hover:text-red-500 transition flex-shrink-0" type="button">
+                    <i data-feather="x" class="w-4 h-4"></i>
+                </button>`;
+            container.appendChild(div);
+            feather.replace();
+        }
+
+        async function saveQuestion() {
+            const id = document.getElementById('editQId').value;
+            const catId = document.getElementById('qCategory').value;
+            const text = document.getElementById('qText').value.trim();
+            const difficulty = document.getElementById('qDifficulty').value;
+            const timeLimit = parseInt(document.getElementById('qTime').value);
+            const msg = document.getElementById('qMsg');
+
+            if (!catId || !text) { showMsg(msg, 'Category and question text are required.', 'red'); return; }
+
+            const optionEls = document.querySelectorAll('#optionsContainer .flex');
+            const correctRadio = document.querySelector('#optionsContainer input[type=radio]:checked');
+
+            if (!correctRadio) { showMsg(msg, 'Please mark one option as correct.', 'red'); return; }
+
+            const options = [];
+            let valid = true;
+            optionEls.forEach((row, idx) => {
+                const textInput = row.querySelector('.option-text');
+                const radio = row.querySelector('input[type=radio]');
+                if (!textInput || !textInput.value.trim()) { valid = false; return; }
+                options.push({ text: textInput.value.trim(), is_correct: radio && radio.checked });
+            });
+
+            if (!valid || options.length < 2) { showMsg(msg, 'Please provide at least 2 non-empty options.', 'red'); return; }
+
+            const url = id ? `/api/admin/question/${id}` : '/api/admin/question';
+            const method = id ? 'PATCH' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ category_id: parseInt(catId), text, difficulty, time_limit: timeLimit, options })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showMsg(msg, id ? 'Question updated!' : 'Question saved!', 'green');
+                setTimeout(() => {
+                    closeQModal();
+                    loadQuestions();
+                }, 800);
+            } else {
+                showMsg(msg, data.msg || 'Error saving question', 'red');
+            }
+        }
+
+        function populateCategoryDropdown() {
+            const sel = document.getElementById('qCategory');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">Select a category</option>' +
+                allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        let optionCount = 0;
+        function initOptionFields() {
+            const container = document.getElementById('optionsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            optionCount = 0;
+            for (let i = 0; i < 4; i++) addOptionField();
+        }
+
+        // Auto-set time limit based on difficulty
+        const difficultyTimeMap = { easy: 15, medium: 25, hard: 35 };
+        function autoSetTime() {
+            const diff = document.getElementById('qDifficulty').value;
+            document.getElementById('qTime').value = difficultyTimeMap[diff] || 25;
+        }
+
+        function showMsg(el, text, color) {
+            el.textContent = text;
+            el.className = `text-sm text-${color}-600 block`;
+            setTimeout(() => el.className = 'text-sm hidden', 4000);
+        }
+
+        // Init
+        loadCategories();
+    </script>
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

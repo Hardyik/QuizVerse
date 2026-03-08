@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizVerse | Admin Settings</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Include Sidebar -->
+    {% set active_page = 'settings' %}
+    {% include 'includes/admin_sidebar.html' %}
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden md:ml-64">
+        <!-- Topbar -->
+        <header class="bg-white border-b border-gray-200 flex items-center justify-between p-4">
+            <div class="flex items-center space-x-4">
+                <i id="menuToggle" data-feather="menu" class="cursor-pointer text-gray-600 md:hidden"></i>
+                <h2 class="text-lg font-semibold text-gray-800">System Settings</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="darkModeToggle"
+                    class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition"
+                    title="Toggle Dark Mode">
+                    <i id="sunIcon" data-feather="sun" class="w-5 h-5"></i>
+                    <i id="moonIcon" data-feather="moon" class="w-5 h-5" style="display: none;"></i>
+                </button>
+                <div
+                    class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='avatars/admin_av.png') }}" alt="Admin Avatar"
+                        class="w-full h-full rounded-full">
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div class="max-w-4xl mx-auto space-y-6">
+
+                <!-- System Information -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i data-feather="info" class="text-purple-600"></i>
+                        System Information
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Application Version</p>
+                            <p id="sysVersion" class="text-lg font-semibold text-gray-800">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Environment</p>
+                            <p id="sysEnv" class="text-lg font-semibold text-gray-800">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Database Status</p>
+                            <p id="sysDbStatus" class="text-lg font-semibold text-gray-800">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Python Version</p>
+                            <p id="sysPython" class="text-lg font-semibold text-gray-800">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance Mode -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i data-feather="settings" class="text-blue-600"></i>
+                        General Configuration
+                    </h3>
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div>
+                            <p class="font-medium text-gray-800">Maintenance Mode</p>
+                            <p class="text-xs text-gray-500">Temporarily disable user access for updates</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="maintenanceToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        feather.replace();
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (menuToggle && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        }
+
+        // Elements
+        const maintenanceToggle = document.getElementById('maintenanceToggle');
+        const sysVersion = document.getElementById('sysVersion');
+        const sysEnv = document.getElementById('sysEnv');
+        const sysDbStatus = document.getElementById('sysDbStatus');
+        const sysPython = document.getElementById('sysPython');
+
+        async function fetchSettings() {
+            const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+            try {
+                const res = await fetch('/api/admin/settings', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    // Maintenance toggle
+                    maintenanceToggle.checked = data.settings.maintenance_mode;
+
+                    // System Info
+                    sysVersion.textContent = `v${data.system_info.version}`;
+
+                    sysEnv.textContent = data.system_info.environment;
+                    sysEnv.className = `text-lg font-semibold ${data.system_info.environment === 'Development' ? 'text-yellow-600' : 'text-green-600'}`;
+
+                    sysDbStatus.textContent = `${data.system_info.db_status} (${data.system_info.db_type})`;
+                    sysDbStatus.className = `text-lg font-semibold ${data.system_info.db_status === 'Connected' ? 'text-blue-600' : 'text-red-600'}`;
+
+                    sysPython.textContent = data.system_info.python_version;
+                }
+            } catch (err) {
+                console.error('Failed to fetch settings:', err);
+            }
+        }
+
+        async function updateSetting(key, value) {
+            const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+            try {
+                const res = await fetch('/api/admin/settings', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ [key]: value })
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    alert(data.msg || 'Update failed');
+                    fetchSettings();
+                }
+            } catch (err) {
+                console.error('Update failed:', err);
+                alert('Connection error');
+                fetchSettings();
+            }
+        }
+
+        maintenanceToggle.addEventListener('change', (e) => updateSetting('maintenance_mode', e.target.checked));
+
+        // Initial load
+        fetchSettings();
+    </script>
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

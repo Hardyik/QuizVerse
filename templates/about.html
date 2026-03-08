@@ -21,9 +21,7 @@
         <a href="/login" class="hover:text-purple-300">Sign in</a>
     </nav>
 
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
 
     <!-- Hero -->
     <header class="text-center py-12 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
@@ -41,15 +39,182 @@
                 QuizVerse is an interactive quiz web application created as a Computer Science project.
                 Our goal was simple – to design a platform where users can test their knowledge, explore various topics,
                 and enjoy an engaging quiz experience powered by clean UI and responsive design.
-                Built using <span class="font-semibold text-purple-700">HTML, CSS, JavaScript, Python, MYSQL & Flask
+                Built using <span class="font-semibold text-purple-700">HTML, CSS, JavaScript, Python, MySQL & Flask
                     Framework</span>.
                 it showcases how web technologies can blend fun with learning.
             </p>
         </div>
-    </section>
 
+
+    </section>
     <!-- Team Section -->
     <section class="bg-white py-12">
+        <!-- Mentor Card — Premium Horizontal Layout -->
+        <style>
+            .mentor-card-wrapper {
+                max-width: 900px;
+                margin: 0 auto 3rem auto;
+                padding: 0 1.5rem;
+            }
+
+            .mentor-card {
+                display: flex;
+                align-items: center;
+                gap: 2.5rem;
+                background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #e0e7ff 100%);
+                border: 2px solid rgba(139, 92, 246, 0.18);
+                border-radius: 1.5rem;
+                padding: 2.5rem 3rem;
+                box-shadow: 0 8px 32px rgba(124, 58, 237, 0.10), 0 1.5px 4px rgba(0, 0, 0, 0.04);
+                transition: box-shadow 0.35s ease, transform 0.35s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .mentor-card::before {
+                content: '';
+                position: absolute;
+                top: -60px;
+                right: -60px;
+                width: 180px;
+                height: 180px;
+                background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+            }
+
+            .mentor-card:hover {
+                box-shadow: 0 16px 48px rgba(124, 58, 237, 0.18), 0 2px 8px rgba(0, 0, 0, 0.06);
+                transform: translateY(-4px);
+            }
+
+            .mentor-avatar {
+                flex-shrink: 0;
+                width: 130px;
+                height: 130px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #7c3aed, #6366f1, #818cf8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 6px 24px rgba(124, 58, 237, 0.25);
+                position: relative;
+            }
+
+            .mentor-avatar::after {
+                content: '';
+                position: absolute;
+                inset: -5px;
+                border-radius: 50%;
+                border: 2.5px dashed rgba(139, 92, 246, 0.35);
+                animation: mentor-spin 18s linear infinite;
+            }
+
+            @keyframes mentor-spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .mentor-avatar span {
+                font-size: 2.8rem;
+                font-weight: 800;
+                color: #fff;
+                letter-spacing: 2px;
+                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .mentor-content {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .mentor-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                background: linear-gradient(135deg, #7c3aed, #6366f1);
+                color: #fff;
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                padding: 0.3rem 0.9rem;
+                border-radius: 999px;
+                margin-bottom: 0.8rem;
+            }
+
+            .mentor-name {
+                font-size: 1.85rem;
+                font-weight: 800;
+                color: #1e1b4b;
+                margin: 0 0 0.7rem 0;
+                line-height: 1.2;
+            }
+
+            .mentor-message {
+                color: #4b5563;
+                font-size: 0.95rem;
+                line-height: 1.75;
+                margin: 0;
+            }
+
+            /* Dark mode support */
+            [data-theme="dark"] .mentor-card {
+                background: linear-gradient(135deg, #1e1b4b 0%, #1e293b 50%, #0f172a 100%);
+                border-color: rgba(139, 92, 246, 0.25);
+            }
+
+            [data-theme="dark"] .mentor-name {
+                color: #f1f5f9;
+            }
+
+            [data-theme="dark"] .mentor-message {
+                color: #94a3b8;
+            }
+
+            /* Responsive */
+            @media (max-width: 640px) {
+                .mentor-card {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 2rem 1.5rem;
+                    gap: 1.5rem;
+                }
+
+                .mentor-avatar {
+                    width: 110px;
+                    height: 110px;
+                }
+
+                .mentor-avatar span {
+                    font-size: 2.2rem;
+                }
+
+                .mentor-name {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+        <div class="mentor-card-wrapper" data-aos="fade-up">
+            <div class="mentor-card">
+                <div class="mentor-avatar">
+                    <span>BW</span>
+                </div>
+                <div class="mentor-content">
+                    <div class="mentor-badge">
+                        <i data-feather="award" style="width:14px;height:14px;"></i>
+                        Project Guide & Mentor
+                    </div>
+                    <h3 class="mentor-name">Prof. Bindy Wilson</h3>
+                    <p class="mentor-message">
+                        We extend our heartfelt gratitude to our project guide for their continuous support,
+                        valuable feedback, and technical direction throughout the development of the QuizVerse
+                        application.
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="max-w-6xl mx-auto px-6">
             <h2 class="text-2xl font-bold text-center text-purple-700 mb-10">Meet Our Team</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
@@ -59,9 +224,10 @@
                     data-aos="fade-up">
                     <img src="/static/daund.png" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
                     <h3 class="text-lg font-semibold">Atharva Daund</h3>
-                    <p class="text-sm text-purple-600">Documentation</p>
+                    <p class="text-sm text-purple-600" style="font-weight: bold;">Technical Writer</p>
                     <p class="mt-3 text-gray-600 text-sm">
-                        documented the project, created user guides, and ensured clarity in our codebase.
+                        Maintained the version control repository. Structured the README.md file, and documented the
+                        project.
                     </p>
                 </div>
 
@@ -70,9 +236,9 @@
                     data-aos="fade-up">
                     <img src="/static/parth.jpeg" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
                     <h3 class="text-lg font-semibold">Parth More</h3>
-                    <p class="text-sm text-purple-600">Full-stack</p>
+                    <p class="text-sm text-purple-600" style="font-weight: bold;">Database Architect</p>
                     <p class="mt-3 text-gray-600 text-sm">
-                        database design, and integrating the application with the database.
+                        Designed the MySQL database structure, and handled safe data migrations using SQLAlchemy.
                     </p>
                 </div>
 
@@ -81,9 +247,9 @@
                     data-aos="fade-up">
                     <img src="/static/hardik.png" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
                     <h3 class="text-lg font-semibold">Hardik Kotawdekar</h3>
-                    <p class="text-sm text-purple-600">Backend Developer</p>
+                    <p class="text-sm text-purple-600" style="font-weight: bold;">Backend Developer</p>
                     <p class="mt-3 text-gray-600 text-sm">
-                        Handled the quiz logic, data storage, and server-side scripting using Python and SQL.
+                        Managed server logic, Secure API endpoints, and datbase autherntication using Python and Flask.
                     </p>
                 </div>
 
@@ -92,9 +258,10 @@
                     data-aos="fade-up">
                     <img src="/static/pratik.jpeg" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
                     <h3 class="text-lg font-semibold">Pratik Pandey</h3>
-                    <p class="text-sm text-purple-600">Frontend Developer</p>
+                    <p class="text-sm text-purple-600" style="font-weight: bold;">Frontend Developer</p>
                     <p class="mt-3 text-gray-600 text-sm">
-                        developed the user interface, ensuring a seamless and engaging user experience.
+                        Integrated backend APIs and Programmed the dynamic quiz features, timers and scoring using
+                        Javascript.
                     </p>
                 </div>
 
@@ -103,9 +270,10 @@
                     data-aos="fade-up">
                     <img src="/static/dingorkar.jpeg" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
                     <h3 class="text-lg font-semibold">Atharva Dingorkar</h3>
-                    <p class="text-sm text-purple-600">Frontend designing</p>
+                    <p class="text-sm text-purple-600" style="font-weight: bold;">UI/UX Designer</p>
                     <p class="mt-3 text-gray-600 text-sm">
-                        designed the visual elements and overall aesthetics of the application.
+                        Created the responsive frontend design, interactive animations and darkmode feature using
+                        Tailwind CSS.
                     </p>
                 </div>
 
@@ -170,6 +338,24 @@
         }
     </script>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('access_token')) {
+                document.querySelectorAll('a[href="/"]').forEach(function(el) { 
+                    el.href = '/user_dashboard'; 
+                });
+                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function(el) {
+                    if (el.parentElement && el.parentElement.tagName === 'LI') {
+                        el.parentElement.style.display = 'none';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 
 </html>

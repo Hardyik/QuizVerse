@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizVerse • Play Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: scale(1.01);
+            background-color: #f3f4f6;
+        }
+
+        .progress-bar {
+            transition: width 0.4s ease;
+        }
+
+        .pulse-timer {
+            animation: pulse-red 1s infinite alternate;
+        }
+
+        @keyframes pulse-red {
+            from {
+                transform: scale(1);
+                color: #dc2626;
+            }
+
+            to {
+                transform: scale(1.1);
+                color: #991b1b;
+            }
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        [data-theme="dark"] .glass-card {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        [data-theme="dark"] .option-btn:hover:not(:disabled) {
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            border-color: rgba(99, 102, 241, 0.4) !important;
+            color: #818cf8 !important;
+        }
+
+        /* Level-up celebration */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .level-up-glow {
+            animation: levelGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes levelGlow {
+            from {
+                box-shadow: 0 0 10px rgba(99, 102, 241, 0.3), 0 0 20px rgba(99, 102, 241, 0.1);
+            }
+
+            to {
+                box-shadow: 0 0 20px rgba(99, 102, 241, 0.6), 0 0 40px rgba(99, 102, 241, 0.3);
+            }
+        }
+
+        .trophy-bounce {
+            animation: trophyBounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes trophyBounce {
+            0% {
+                transform: scale(0.3) rotate(-15deg);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2) rotate(5deg);
+                opacity: 1;
+            }
+
+            70% {
+                transform: scale(0.9) rotate(-2deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/user_dashboard" class="flex items-center gap-2">
+                <img src="/static/logo.png" width="40" alt="QuizVerse" class="rounded-lg">
+                <span class="text-xl font-bold text-gray-900">QuizVerse</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <button id="darkModeToggle"
+                    class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition">
+                    <i class="fas fa-sun" id="sunIcon"></i>
+                    <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+                </button>
+                <div class="flex items-center gap-2 px-3 py-1 bg-purple-100 rounded-full">
+                    <span class="w-2 h-2 bg-purple-600 rounded-full animate-ping"></span>
+                    <span class="text-xs font-bold text-purple-700" id="usernameDisplay">...</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Quiz Content -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4">
+        <!-- Loading State -->
+        <div id="loading" class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p class="text-gray-600 font-medium">Preparing your quiz aventura...</p>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer" class="hidden w-full max-w-2xl glass-card rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header/Progress -->
+            <div class="p-6 border-b border-gray-100 flex flex-col gap-4">
+                <div class="flex justify-between items-center text-sm font-bold text-gray-500">
+                    <span id="categoryName">CATEGORIA</span>
+                    <span id="questionCounter">Question 1 of 10</span>
+                </div>
+                <!-- Progress Line -->
+                <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="progress-bar bg-purple-600 h-2 rounded-full" style="width: 10%"></div>
+                </div>
+                <div class="flex justify-center">
+                    <div id="timer" class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-clock text-purple-600"></i>
+                        <span>30s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question & Options -->
+            <div class="p-8">
+                <h2 id="questionText" class="text-2xl font-bold text-gray-800 mb-8 leading-tight"></h2>
+
+                <div id="optionsGrid" class="grid grid-cols-1 gap-4">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <!-- Footer/Actions -->
+            <div class="p-6 bg-gray-50 flex justify-end">
+                <button id="nextBtn"
+                    class="hidden bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105">
+                    Next Question <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Resume Modal -->
+        <div id="resumeModal"
+            class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black bg-opacity-50">
+            <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl">
+                <div
+                    class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-history text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Resume Quiz?</h3>
+                <p class="text-gray-600 mb-6">We found an unfinished quiz session. Would you like to continue where you
+                    left off?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="resumeQuiz()"
+                        class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">Resume
+                        Session</button>
+                    <button onclick="startFresh()"
+                        class="w-full bg-gray-100 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-200 transition">Start
+                        Fresh</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="resultCard"
+            class="hidden w-full max-w-md glass-card rounded-2xl shadow-2xl p-8 text-center animate-bounce-in">
+            <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                🏆
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Quiz Completed!</h2>
+            <p class="text-gray-500 mb-8">Great job on finishing the quiz.</p>
+
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Score</p>
+                    <p class="text-2xl font-bold text-gray-900"><span id="resScore">0</span>/<span
+                            id="resTotal">0</span></p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Percentage</p>
+                    <p class="text-2xl font-bold text-purple-600"><span id="resPercent">0</span>%</p>
+                </div>
+            </div>
+
+            <div id="levelUpMsg" class="hidden mb-6 p-4 bg-indigo-100 text-indigo-700 rounded-xl font-bold">
+                🎉 Level Up! You reached Level <span id="newLevel">2</span>
+            </div>
+
+            <!-- Share Score Section -->
+            <div class="mb-6">
+                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">📣 Share Your Score</p>
+                <div class="flex flex-wrap justify-center gap-3" id="shareButtons">
+                    <button onclick="shareWhatsApp()"
+                        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105">
+                        <i class="fab fa-whatsapp text-lg"></i> WhatsApp
+                    </button>
+                    <button onclick="shareTwitter()"
+                        class="flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105">
+                        <i class="fab fa-x-twitter text-lg"></i> X
+                    </button>
+                    <button onclick="shareTelegram()"
+                        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105">
+                        <i class="fab fa-telegram text-lg"></i> Telegram
+                    </button>
+                    <button onclick="copyShareText()"
+                        class="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105"
+                        id="copyBtn">
+                        <i class="fas fa-copy text-lg"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="location.reload()"
+                    class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-purple-700 transition">
+                    Play Again
+                </button>
+                <a href="/user_dashboard"
+                    class="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-bold hover:bg-gray-300 transition">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/dark-mode.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let categoryId = urlParams.get('category_id');
+        const difficulty = urlParams.get('difficulty');
+        const token = localStorage.getItem('access_token');
+
+        // Redirect if not logged in
+        if (!token) {
+            window.location.href = `/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+        }
+
+        // Quiz State
+        let quizData = [];
+        let currentIndex = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval;
+        let userAnswers = [];
+        let startTime = null;
+
+        // Elements
+        const loading = document.getElementById('loading');
+        const quizContainer = document.getElementById('quizContainer');
+        const resultCard = document.getElementById('resultCard');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        const questionText = document.getElementById('questionText');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const nextBtn = document.getElementById('nextBtn');
+        const timerEl = document.getElementById('timer');
+        const questionCounter = document.getElementById('questionCounter');
+        const progressBar = document.getElementById('progressBar');
+        const categoryName = document.getElementById('categoryName');
+
+        // Initialize Quiz
+        async function init() {
+            try {
+                // Get user info for display
+                const profileRes = await fetch('/api/user/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const profile = await profileRes.json();
+                usernameDisplay.textContent = profile.username;
+
+                if (!categoryId) {
+                    const catRes = await fetch('/api/categories');
+                    const cats = await catRes.json();
+                    categoryId = cats[0]?.id;
+                }
+
+                // Get Category Name (RESTORING THIS)
+                const catsRes = await fetch('/api/categories');
+                const cats = await catsRes.json();
+                const matchedCat = cats.find(c => String(c.id) === String(categoryId));
+                categoryName.textContent = matchedCat ? matchedCat.name.toUpperCase() : 'QUIZ';
+
+                // Check for server-side session first
+                const sessRes = await fetch(`/api/quiz/session/${categoryId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const sess = await sessRes.json();
+
+                if (sess) {
+                    // We found a server session!
+                    currentIndex = sess.current_index;
+                    score = sess.score;
+                    userAnswers = sess.user_answers;
+
+                    // Fetch those specific questions
+                    const qRes = await fetch('/api/questions/batch', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ ids: sess.question_ids })
+                    });
+                    quizData = await qRes.json();
+
+                    loading.classList.add('hidden');
+                    document.getElementById('resumeModal').classList.remove('hidden');
+                } else {
+                    // No server session, check localStorage as fallback or start fresh
+                    startFresh();
+                }
+            } catch (err) {
+                console.error(err);
+                loading.innerHTML = `<p class="text-red-500 font-bold">${err.message}</p>`;
+            }
+        }
+
+        async function resumeQuiz() {
+            document.getElementById('resumeModal').classList.add('hidden');
+            loading.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        async function startFresh() {
+            loading.classList.remove('hidden');
+            document.getElementById('resumeModal').classList.add('hidden');
+
+            try {
+                // Get new set of questions
+                const diffParam = difficulty ? `&difficulty=${difficulty}` : '';
+                const res = await fetch(`/api/categories/${categoryId}/questions?limit=15${diffParam}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                quizData = await res.json();
+
+                if (quizData.length === 0) throw new Error("No questions available.");
+
+                // Initialize server session
+                await fetch('/api/quiz/session/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        category_id: parseInt(categoryId),
+                        question_ids: quizData.map(q => q.id)
+                    })
+                });
+
+                currentIndex = 0;
+                score = 0;
+                userAnswers = [];
+
+                loading.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                loadQuestion();
+            } catch (err) {
+                loading.innerHTML = `<p class="text-red-500 font-bold">${err.message}</p>`;
+            }
+        }
+
+        async function saveProgress() {
+            // Local fallback
+            localStorage.setItem(`quiz_progress_${categoryId}`, JSON.stringify({
+                index: currentIndex,
+                score: score,
+                answers: userAnswers
+            }));
+
+            // Server sync
+            try {
+                await fetch(`/api/quiz/session/${categoryId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        current_index: currentIndex,
+                        score: score,
+                        user_answers: userAnswers
+                    })
+                });
+            } catch (err) {
+                console.warn("Server sync failed", err);
+            }
+        }
+
+        async function clearProgress() {
+            localStorage.removeItem(`quiz_progress_${categoryId}`);
+            try {
+                await fetch(`/api/quiz/session/${categoryId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+            } catch (err) { }
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentIndex];
+            questionText.textContent = q.text;
+            optionsGrid.innerHTML = "";
+
+            // Progress Update
+            questionCounter.textContent = `Question ${currentIndex + 1} of ${quizData.length}`;
+            progressBar.style.width = ((currentIndex + 1) / quizData.length * 100) + "%";
+
+            // Shuffle and Render Options
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.dataset.optionId = opt.id; // Store ID for server-side verification
+                btn.className = "option-btn w-full p-5 text-left bg-white border-2 border-gray-100 rounded-2xl font-medium text-gray-700 flex items-center justify-between";
+                btn.innerHTML = `<span>${opt.text}</span><i class="fas fa-circle-notch text-gray-200 opacity-20"></i>`;
+                btn.onclick = () => selectOption(btn, opt);
+                optionsGrid.appendChild(btn);
+            });
+
+            nextBtn.classList.add('hidden');
+            if (!startTime) startTime = Date.now();
+            startTimer(q.time_limit || 20);
+        }
+
+        function startTimer(duration) {
+            clearInterval(timerInterval);
+            timeLeft = duration;
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            timerEl.querySelector('span').textContent = `${timeLeft}s`;
+            if (timeLeft <= 5) {
+                timerEl.classList.add('pulse-timer');
+            } else {
+                timerEl.classList.remove('pulse-timer');
+            }
+        }
+
+        async function selectOption(btn, option) {
+            clearInterval(timerInterval);
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            // Show local feedback (loading)
+            const icon = btn.querySelector('i');
+            icon.className = "fas fa-spinner fa-spin opacity-100 text-purple-500";
+
+            try {
+                // Verify answer with backend
+                const res = await fetch('/api/check_answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question_id: quizData[currentIndex].id,
+                        option_id: option.id
+                    })
+                });
+                const data = await res.json();
+
+                userAnswers.push({
+                    question_id: quizData[currentIndex].id,
+                    option_id: option.id
+                });
+
+                if (data.is_correct) {
+                    btn.classList.replace('border-gray-100', 'border-green-500');
+                    btn.classList.add('bg-green-50');
+                    icon.className = "fas fa-check-circle text-green-500 opacity-100";
+                    score++;
+                } else {
+                    btn.classList.replace('border-gray-100', 'border-red-500');
+                    btn.classList.add('bg-red-50');
+                    icon.className = "fas fa-times-circle text-red-500 opacity-100";
+                    autoMarkCorrect(data.correct_option_id);
+                }
+                saveProgress(); // BUG FIX: Save progress after answer
+            } catch (err) {
+                console.error("Verification failed", err);
+            }
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        function autoMarkCorrect(correctOptionId) {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                if (btn.dataset.optionId == correctOptionId) {
+                    btn.classList.replace('border-gray-100', 'border-green-500');
+                    btn.classList.add('bg-green-50');
+                    const icon = btn.querySelector('i');
+                    if (icon) icon.className = "fas fa-check-circle text-green-500 opacity-50";
+                }
+            });
+        }
+
+        async function handleTimeUp() {
+            // Disable all option buttons
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            // Record as wrong answer
+            userAnswers.push({ question_id: quizData[currentIndex].id, option_id: null });
+            saveProgress();
+
+            // Show "Time's Up!" in the timer
+            timerEl.querySelector('span').textContent = "Time's Up!";
+            timerEl.classList.remove('pulse-timer');
+
+            // Fetch the correct answer from server and highlight it
+            try {
+                const res = await fetch('/api/check_answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question_id: quizData[currentIndex].id,
+                        option_id: quizData[currentIndex].options[0].id // send any option, we just need the correct_option_id back
+                    })
+                });
+                const data = await res.json();
+                autoMarkCorrect(data.correct_option_id);
+            } catch (err) {
+                console.error("Could not fetch correct answer", err);
+            }
+
+            // Auto-skip to next question after 1.5s
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < quizData.length) {
+                    loadQuestion();
+                } else {
+                    submitQuiz();
+                }
+            }, 1500);
+        }
+
+        async function submitQuiz() {
+            quizContainer.classList.add('hidden');
+            loading.classList.remove('hidden');
+            loading.querySelector('p').textContent = "Submitting results...";
+
+            try {
+                const res = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        category_id: parseInt(categoryId),
+                        answers: userAnswers,
+                        time_taken: Math.floor((Date.now() - startTime) / 1000)
+                    })
+                });
+                const data = await res.json();
+
+                clearProgress(); // Success!
+                loading.classList.add('hidden');
+                resultCard.classList.remove('hidden');
+
+                document.getElementById('resScore').textContent = data.score;
+                document.getElementById('resTotal').textContent = data.total;
+                document.getElementById('resPercent').textContent = data.percentage;
+
+                if (data.level_up) {
+                    const lvlUp = document.getElementById('levelUpMsg');
+                    lvlUp.classList.remove('hidden');
+                    lvlUp.classList.add('level-up-glow');
+                    document.getElementById('newLevel').textContent = data.level_up;
+
+                    // Trophy bounce
+                    const trophyEl = resultCard.querySelector('.text-4xl');
+                    if (trophyEl) {
+                        trophyEl.textContent = '🎉';
+                        trophyEl.classList.add('trophy-bounce');
+                    }
+
+                    // Fire confetti!
+                    launchConfetti();
+                }
+            } catch (err) {
+                loading.innerHTML = `<p class="text-red-500 font-bold">Submission failed. Score: ${score}</p>`;
+            }
+        }
+
+        nextBtn.onclick = () => {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                submitQuiz();
+            }
+        };
+
+        init();
+
+        // ======== Share Functions ========
+        function getShareText() {
+            const s = document.getElementById('resScore').textContent;
+            const t = document.getElementById('resTotal').textContent;
+            const p = document.getElementById('resPercent').textContent;
+            const cat = document.getElementById('categoryName').textContent;
+            return `🧠 I just scored ${s}/${t} (${p}%) on the ${cat} quiz on QuizVerse! Can you beat my score?\n\n🎮 Try it here: ${window.location.origin}`;
+        }
+
+        function shareWhatsApp() {
+            window.open(`https://wa.me/?text=${encodeURIComponent(getShareText())}`, '_blank');
+        }
+
+        function shareTwitter() {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}`, '_blank');
+        }
+
+        function shareTelegram() {
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(getShareText())}`, '_blank');
+        }
+
+        function copyShareText() {
+            navigator.clipboard.writeText(getShareText()).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerHTML = '<i class="fas fa-check text-lg"></i> Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-copy text-lg"></i> Copy';
+                }, 2000);
+            });
+        }
+
+        // ======== Confetti Celebration ========
+        function launchConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const colors = ['#6366f1', '#8b5cf6', '#a78bfa', '#f59e0b', '#10b981', '#ef4444', '#ec4899', '#3b82f6'];
+            const particles = [];
+
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.7) * 15,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 8 + 3,
+                    rotation: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 10,
+                    gravity: 0.15 + Math.random() * 0.1,
+                    drag: 0.98,
+                    shape: Math.floor(Math.random() * 3), // 0=circle, 1=square, 2=strip
+                    opacity: 1
+                });
+            }
+
+            let startTime = Date.now();
+
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                if (elapsed > 3500) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    return;
+                }
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const fadeStart = 2500;
+                const globalOpacity = elapsed > fadeStart ? 1 - (elapsed - fadeStart) / 1000 : 1;
+
+                particles.forEach(p => {
+                    p.vy += p.gravity;
+                    p.vx *= p.drag;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.rotation += p.rotSpeed;
+                    p.opacity = globalOpacity;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.globalAlpha = Math.max(0, p.opacity);
+                    ctx.fillStyle = p.color;
+
+                    if (p.shape === 0) {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (p.shape === 1) {
+                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    } else {
+                        ctx.fillRect(-p.size / 2, -1, p.size, 3);
+                    }
+
+                    ctx.restore();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+    </script>
+</body>
+
+</html>

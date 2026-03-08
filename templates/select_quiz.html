@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Select Quiz • QuizVerse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-purple-700 p-4 text-white flex items-center justify-between relative shadow-md">
+        <a href="/user_dashboard" class="flex items-center gap-2">
+            <span class="text-xl font-bold">QuizVerse</span>
+        </a>
+        <div class="flex items-center gap-4">
+            <a href="/user_dashboard" class="hover:text-purple-300">Dashboard</a>
+            <!-- Dark Mode Toggle -->
+            <button id="darkModeToggle"
+                class="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-600 hover:bg-purple-800 transition text-white">
+                <i class="fas fa-sun" id="sunIcon"></i>
+                <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="text-center py-10 bg-white shadow-sm">
+        <h1 class="text-3xl font-extrabold text-gray-800">Select a Quiz Category</h1>
+        <p class="mt-2 text-md text-gray-500 max-w-2xl mx-auto">
+            Pick a topic you want to test your knowledge on and select your preferred difficulty.
+        </p>
+    </header>
+
+    <!-- Categories Grid (loaded dynamically) -->
+    <main class="flex-grow max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 w-full">
+        <div id="categoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div class="col-span-full text-center py-10 text-gray-400" id="loadingMsg">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600 mx-auto mb-4">
+                </div>
+                <p class="text-lg">Loading available topics...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Difficulty Modal -->
+    <div id="difficultyModal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full transform transition-all" data-aos="zoom-in"
+            data-aos-duration="200">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800" id="modalCategoryTitle">Category Name</h2>
+                <p class="text-sm text-gray-500 mt-1">Select your difficulty level</p>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="startQuiz('easy')"
+                    class="w-full bg-green-100 text-green-700 hover:bg-green-200 py-3 rounded-xl font-bold border border-green-200 transition-colors">
+                    🍀 Easy
+                </button>
+                <button onclick="startQuiz('medium')"
+                    class="w-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 py-3 rounded-xl font-bold border border-yellow-200 transition-colors">
+                    ⚡ Medium
+                </button>
+                <button onclick="startQuiz('hard')"
+                    class="w-full bg-red-100 text-red-700 hover:bg-red-200 py-3 rounded-xl font-bold border border-red-200 transition-colors">
+                    🔥 Hard
+                </button>
+            </div>
+
+            <button onclick="closeModal()"
+                class="mt-6 w-full text-gray-500 hover:text-gray-800 text-sm font-semibold transition-colors">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 text-center text-gray-500 py-6 mt-auto">
+        <p>&copy; 2025 QuizVerse.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/static/dark-mode.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <script>
+        AOS.init({ duration: 500, once: true });
+
+        // Ensure user is logged in
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+        }
+
+        // Color/icon palette for dynamic cards
+        const palette = [
+            { bg: 'bg-purple-100', text: 'text-purple-600', icon: 'globe' },
+            { bg: 'bg-blue-100', text: 'text-blue-600', icon: 'cpu' },
+            { bg: 'bg-green-100', text: 'text-green-600', icon: 'film' },
+            { bg: 'bg-yellow-100', text: 'text-yellow-600', icon: 'music' },
+            { bg: 'bg-red-100', text: 'text-red-600', icon: 'book' },
+            { bg: 'bg-pink-100', text: 'text-pink-600', icon: 'star' },
+            { bg: 'bg-indigo-100', text: 'text-indigo-600', icon: 'book-open' },
+            { bg: 'bg-teal-100', text: 'text-teal-600', icon: 'activity' },
+        ];
+
+        let selectedCategoryId = null;
+        const modal = document.getElementById('difficultyModal');
+        const modalTitle = document.getElementById('modalCategoryTitle');
+
+        fetch('/api/categories', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(categories => {
+                const grid = document.getElementById('categoriesGrid');
+                document.getElementById('loadingMsg').remove();
+
+                if (!categories || categories.length === 0) {
+                    grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 text-gray-400">
+                        <i data-feather="inbox" class="inline-block mb-3" style="width:48px;height:48px;"></i>
+                        <p class="text-lg font-medium">No categories available</p>
+                    </div>`;
+                    feather.replace();
+                    return;
+                }
+
+                categories.forEach((cat, idx) => {
+                    const p = palette[idx % palette.length];
+                    const icon = cat.icon || p.icon;
+
+                    const card = document.createElement('div');
+                    card.setAttribute('data-aos', 'fade-up');
+                    card.className = 'bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all border border-gray-100';
+                    card.onclick = () => openModal(cat.id, cat.name);
+
+                    card.innerHTML = `
+                    <div class="p-4 ${p.bg} rounded-2xl mb-4">
+                        <i data-feather="${icon}" class="${p.text}" style="width:32px;height:32px;"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900">${cat.name}</h3>
+                    <p class="text-sm text-gray-500 mt-1">${cat.quiz_count} questions</p>
+                `;
+                    grid.appendChild(card);
+                });
+                feather.replace();
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('loadingMsg').innerHTML = '<p class="text-red-500">Failed to load categories.</p>';
+            });
+
+        function openModal(id, name) {
+            selectedCategoryId = id;
+            modalTitle.textContent = name;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            selectedCategoryId = null;
+        }
+
+        function startQuiz(difficulty) {
+            if (selectedCategoryId) {
+                window.location.href = `/play_quiz?category_id=${selectedCategoryId}&difficulty=${difficulty}`;
+            }
+        }
+
+        // Close modal on clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    </script>
+</body>
+
+</html>

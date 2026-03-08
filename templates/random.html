@@ -3,425 +3,569 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>QuizVerse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Tailwind CSS -->
+    <title>QuizVerse • Random Quiz</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
 
-        /* ===== Animation Text ===== */
-        .animation-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 60px;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: scale(1.01);
+            background-color: #f3f4f6;
+        }
+
+        .progress-bar {
+            transition: width 0.4s ease;
+        }
+
+        .pulse-timer {
+            animation: pulse-red 1s infinite alternate;
+        }
+
+        @keyframes pulse-red {
+            from {
+                transform: scale(1);
+                color: #dc2626;
+            }
+
+            to {
+                transform: scale(1.1);
+                color: #991b1b;
+            }
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        [data-theme="dark"] .glass-card {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: rgba(255, 255, 255, 0.1);
             color: white;
         }
 
-        .line {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .static-text {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .animated-text {
-            font-size: 18px;
-            font-weight: 500;
-            animation: slidein 4s ease-in-out infinite;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 9999px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .icon-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Animation */
-        @keyframes slidein {
-            0% {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-
-            30% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Mobile fix */
-        @media (max-width: 640px) {
-            .static-text {
-                font-size: 14px;
-            }
-
-            .animated-text {
-                font-size: 15px;
-            }
-        }
-
-        /* Progress bar animation */
-        .progress-fill {
-            transition: width 0.3s ease-in-out;
+        [data-theme="dark"] .option-btn:hover:not(:disabled) {
+            background-color: rgba(99, 102, 241, 0.2) !important;
+            border-color: rgba(99, 102, 241, 0.4) !important;
+            color: #818cf8 !important;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body>
+<body class="flex flex-col min-h-screen">
 
-    <!-- ================= HEADER ================= -->
-    <nav class="bg-purple-700 px-6 py-4 flex items-center text-white">
-        <a href="#" class="flex items-center gap-3">
-            <img src="/static/logo.png" class="h-10 w-10 rounded-md" alt="QuizVerse Logo">
-            <span class="text-xl font-bold">QuizVerse</span>
-        </a>
-
-        <div class="ml-auto flex gap-6 items-center justify-center text-white font-semibold">
-            <a href="/user_dashboard" class="hover:text-purple-300">Home</a>
-            <div class="user-avatar flex items-center justify-center text-white font-semibold">X</div>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/user_dashboard" class="flex items-center gap-2">
+                <img src="/static/logo.png" width="40" alt="QuizVerse" class="rounded-lg">
+                <span class="text-xl font-bold text-gray-900">QuizVerse</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <button id="darkModeToggle"
+                    class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition">
+                    <i class="fas fa-sun" id="sunIcon"></i>
+                    <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+                </button>
+                <div class="flex items-center gap-2 px-3 py-1 bg-purple-100 rounded-full">
+                    <span class="w-2 h-2 bg-purple-600 rounded-full animate-ping"></span>
+                    <span class="text-xs font-bold text-purple-700" id="usernameDisplay">...</span>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <!-- ================= QUIZ CARD ================= -->
-    <div class="max-w-2xl mx-auto mt-12 bg-white rounded-xl shadow-lg p-6">
+    <!-- Quiz Content -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4">
 
-        <!-- PROGRESS BAR -->
-        <div id="progress-container" class="mb-6">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-gray-700">Progress</span>
-                <span id="progress-text" class="text-sm font-medium text-purple-600">0%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                <div id="progress-bar"
-                    class="progress-fill bg-gradient-to-r from-purple-600 to-indigo-600 h-3 rounded-full"
-                    style="width: 0%"></div>
-            </div>
+        <!-- Loading State -->
+        <div id="loading" class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p class="text-gray-600 font-medium" id="loadingText">Preparing your random quiz...</p>
         </div>
 
-        <!-- TIMER -->
-        <div id="timer-box" class="flex justify-center mb-6">
-            <span id="timer" class="bg-purple-100 text-purple-700 px-6 py-2 rounded-full text-xl font-semibold">
-                ⏱️ Time Left: 30s
-            </span>
-        </div>
-
-        <!-- FINISHED BADGE -->
-        <div id="finished-badge" class="hidden flex justify-center mb-6">
-            <span class="bg-purple-100 text-purple-700 px-6 py-2 rounded-full text-lg font-semibold">
-                🎉 Quiz Finished
-            </span>
-        </div>
-
-        <hr class="mb-6">
-
-        <!-- QUIZ BOX -->
-        <div id="quiz-box">
-            <h2 id="question" class="text-xl font-semibold mb-6"></h2>
-            <div id="options" class="space-y-3"></div>
-
-            <button id="next-btn" class="hidden mt-6 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
-                Next Question
-            </button>
-        </div>
-
-        <!-- RESULT BOX -->
-        <div id="result-box" class="hidden text-center">
-            <h2 class="text-2xl font-bold text-purple-700 mb-4">Quiz Completed!</h2>
-            <p class="text-lg mb-4">
-                Your Score: <span id="score"></span> / <span id="total"></span>
-            </p>
-            <p class="text-md text-gray-600 mb-6">
-                Percentage: <span id="percentage" class="font-bold text-purple-600"></span>%
-            </p>
-            <div class="mb-6">
-                <div class="inline-block bg-purple-50 px-6 py-3 rounded-lg">
-                    <p id="result-message" class="text-lg font-semibold"></p>
+        <!-- Quiz Container (hidden until ready) -->
+        <div id="quizContainer" class="hidden w-full max-w-2xl glass-card rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header/Progress -->
+            <div class="p-6 border-b border-gray-100 flex flex-col gap-4">
+                <div class="flex justify-between items-center text-sm font-bold text-gray-500">
+                    <span id="categoryName">RANDOM CHALLENGE</span>
+                    <span id="questionCounter">Question 1 of 15</span>
+                </div>
+                <!-- Progress Line -->
+                <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="progress-bar bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-center">
+                    <div id="timer" class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-clock text-purple-600"></i>
+                        <span>30s</span>
+                    </div>
                 </div>
             </div>
-            <a href="/playquiz" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
-                Restart Quiz
-            </a>
-        </div>
-    </div>
 
-    <!-- ================= ANIMATION TEXT ================= -->
-    <div class="animation-wrapper">
-        <div class="line">
-            <span class="static-text">QuizVerse –</span>
-            <span class="animated-text">Quizically Awesome Experiences</span>
-        </div>
-    </div>
+            <!-- Question & Options -->
+            <div class="p-8">
+                <h2 id="questionText" class="text-2xl font-bold text-gray-800 mb-8 leading-tight"></h2>
+                <div id="optionsGrid" class="grid grid-cols-1 gap-4">
+                    <!-- Options injected here -->
+                </div>
+            </div>
 
-    <!-- ================= SCRIPT ================= -->
+            <!-- Footer/Actions -->
+            <div class="p-6 bg-gray-50 flex justify-end">
+                <button id="nextBtn"
+                    class="hidden bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105">
+                    Next Question <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Resume Modal -->
+        <div id="resumeModal"
+            class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black bg-opacity-50">
+            <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl">
+                <div
+                    class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-history text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Resume Quiz?</h3>
+                <p class="text-gray-600 mb-6">We found an unfinished random quiz. Would you like to continue where you
+                    left off?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="resumeQuiz()"
+                        class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">
+                        Resume Session
+                    </button>
+                    <button onclick="startFresh()"
+                        class="w-full bg-gray-100 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-200 transition">
+                        Start Fresh
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="resultCard" class="hidden w-full max-w-md glass-card rounded-2xl shadow-2xl p-8 text-center">
+            <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                🏆
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Quiz Completed!</h2>
+            <p class="text-gray-500 mb-8" id="resultMessage">Great job on finishing the quiz.</p>
+
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Score</p>
+                    <p class="text-2xl font-bold text-gray-900"><span id="resScore">0</span>/<span
+                            id="resTotal">0</span></p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Percentage</p>
+                    <p class="text-2xl font-bold text-purple-600"><span id="resPercent">0</span>%</p>
+                </div>
+            </div>
+
+            <div id="levelUpMsg" class="hidden mb-6 p-4 bg-indigo-100 text-indigo-700 rounded-xl font-bold">
+                🎉 Level Up! You reached Level <span id="newLevel">2</span>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="location.reload()"
+                    class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-purple-700 transition">
+                    Play Again
+                </button>
+                <a href="/user_dashboard"
+                    class="w-full bg-gray-200 text-gray-700 py-4 rounded-xl font-bold hover:bg-gray-300 transition block">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/dark-mode.js"></script>
     <script>
-        // Large pool of random questions (60+ questions)
-        const allQuizData = [
-            // Geography
-            { question: "What is the capital of France?", options: ["Madrid", "Berlin", "Rome", "Paris"], answer: "Paris" },
-            { question: "Which continent is the largest by area?", options: ["Africa", "Asia", "North America", "Europe"], answer: "Asia" },
-            { question: "What is the smallest country in the world?", options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], answer: "Vatican City" },
-            { question: "Which ocean is the deepest?", options: ["Atlantic", "Indian", "Pacific", "Arctic"], answer: "Pacific" },
-            { question: "Mount Everest is located in which mountain range?", options: ["Andes", "Rockies", "Himalayas", "Alps"], answer: "Himalayas" },
-            { question: "What is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], answer: "Nile" },
-            { question: "Which country has the most natural lakes?", options: ["USA", "Canada", "Russia", "Brazil"], answer: "Canada" },
-            { question: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Brisbane"], answer: "Canberra" },
+        // ─── Constants ────────────────────────────────────────────────────────────
+        // Random quiz uses a special sentinel category id = 0 in localStorage key
+        const RANDOM_SESSION_KEY = 'random_quiz_cat_id';
+        const token = localStorage.getItem('access_token');
 
-            // Science
-            { question: "Which planet is known as the Red Planet?", options: ["Earth", "Jupiter", "Mars", "Saturn"], answer: "Mars" },
-            { question: "What is the speed of light?", options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "200,000 km/s"], answer: "300,000 km/s" },
-            { question: "What gas do plants absorb from the atmosphere?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], answer: "Carbon Dioxide" },
-            { question: "What is H2O commonly known as?", options: ["Hydrogen Peroxide", "Water", "Salt", "Sugar"], answer: "Water" },
-            { question: "How many bones are in the adult human body?", options: ["206", "180", "250", "300"], answer: "206" },
-            { question: "What is the hardest natural substance on Earth?", options: ["Gold", "Iron", "Diamond", "Platinum"], answer: "Diamond" },
-            { question: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Chloroplast"], answer: "Mitochondria" },
-            { question: "What is the chemical symbol for gold?", options: ["Go", "Gd", "Au", "Ag"], answer: "Au" },
-
-            // Literature
-            { question: "Who wrote 'Romeo and Juliet'?", options: ["William Shakespeare", "Charles Dickens", "Leo Tolstoy", "Mark Twain"], answer: "William Shakespeare" },
-            { question: "Who wrote '1984'?", options: ["George Orwell", "Aldous Huxley", "Ray Bradbury", "Ernest Hemingway"], answer: "George Orwell" },
-            { question: "What is the first book in the Harry Potter series?", options: ["Chamber of Secrets", "Philosopher's Stone", "Prisoner of Azkaban", "Goblet of Fire"], answer: "Philosopher's Stone" },
-            { question: "Who wrote 'Pride and Prejudice'?", options: ["Jane Austen", "Emily Bronte", "Charlotte Bronte", "Mary Shelley"], answer: "Jane Austen" },
-            { question: "Which author created Sherlock Holmes?", options: ["Agatha Christie", "Arthur Conan Doyle", "Edgar Allan Poe", "H.G. Wells"], answer: "Arthur Conan Doyle" },
-            { question: "Who wrote 'The Great Gatsby'?", options: ["F. Scott Fitzgerald", "Ernest Hemingway", "John Steinbeck", "William Faulkner"], answer: "F. Scott Fitzgerald" },
-            { question: "Which book begins with 'Call me Ishmael'?", options: ["Treasure Island", "Moby Dick", "The Old Man and the Sea", "Robinson Crusoe"], answer: "Moby Dick" },
-
-            // History
-            { question: "In which year did World War II end?", options: ["1943", "1944", "1945", "1946"], answer: "1945" },
-            { question: "Who was the first President of the United States?", options: ["Thomas Jefferson", "John Adams", "George Washington", "Benjamin Franklin"], answer: "George Washington" },
-            { question: "The ancient city of Rome was built on how many hills?", options: ["5", "7", "9", "10"], answer: "7" },
-            { question: "Who discovered America in 1492?", options: ["Vasco da Gama", "Christopher Columbus", "Ferdinand Magellan", "Marco Polo"], answer: "Christopher Columbus" },
-            { question: "Which empire built the Colosseum?", options: ["Greek", "Roman", "Egyptian", "Persian"], answer: "Roman" },
-            { question: "Who was the first person to walk on the moon?", options: ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "John Glenn"], answer: "Neil Armstrong" },
-            { question: "In which year did the Titanic sink?", options: ["1910", "1912", "1914", "1916"], answer: "1912" },
-            { question: "Who was known as the Iron Lady?", options: ["Indira Gandhi", "Margaret Thatcher", "Angela Merkel", "Golda Meir"], answer: "Margaret Thatcher" },
-
-            // Technology
-            { question: "Who is known as the father of computers?", options: ["Alan Turing", "Charles Babbage", "Steve Jobs", "Bill Gates"], answer: "Charles Babbage" },
-            { question: "What does CPU stand for?", options: ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Control Processing Unit"], answer: "Central Processing Unit" },
-            { question: "Which company developed the iPhone?", options: ["Samsung", "Google", "Apple", "Microsoft"], answer: "Apple" },
-            { question: "What year was Facebook founded?", options: ["2002", "2004", "2006", "2008"], answer: "2004" },
-            { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"], answer: "Hyper Text Markup Language" },
-            { question: "Who co-founded Microsoft with Bill Gates?", options: ["Steve Jobs", "Paul Allen", "Larry Page", "Mark Zuckerberg"], answer: "Paul Allen" },
-            { question: "What does USB stand for?", options: ["Universal Serial Bus", "United System Bus", "Universal System Board", "United Serial Board"], answer: "Universal Serial Bus" },
-
-            // Sports
-            { question: "How many players are on a soccer team?", options: ["9", "10", "11", "12"], answer: "11" },
-            { question: "Which country won the FIFA World Cup in 2018?", options: ["Brazil", "Germany", "France", "Argentina"], answer: "France" },
-            { question: "How many rings are on the Olympic flag?", options: ["4", "5", "6", "7"], answer: "5" },
-            { question: "In which sport would you perform a slam dunk?", options: ["Volleyball", "Basketball", "Tennis", "Baseball"], answer: "Basketball" },
-            { question: "What is the maximum score in a single frame of bowling?", options: ["100", "200", "300", "400"], answer: "300" },
-            { question: "How long is a marathon?", options: ["26.2 miles", "20 miles", "30 miles", "25 miles"], answer: "26.2 miles" },
-            { question: "Which country has won the most Cricket World Cups?", options: ["India", "Australia", "England", "West Indies"], answer: "Australia" },
-            { question: "What sport is called 'the beautiful game'?", options: ["Basketball", "Cricket", "Football/Soccer", "Tennis"], answer: "Football/Soccer" },
-
-            // Movies
-            { question: "Who directed 'Jurassic Park'?", options: ["James Cameron", "Steven Spielberg", "George Lucas", "Christopher Nolan"], answer: "Steven Spielberg" },
-            { question: "Which movie features the character Jack Dawson?", options: ["Avatar", "Titanic", "The Revenant", "Inception"], answer: "Titanic" },
-            { question: "What is the highest-grossing film of all time?", options: ["Avengers: Endgame", "Avatar", "Titanic", "Star Wars"], answer: "Avatar" },
-            { question: "Who played Iron Man in the Marvel movies?", options: ["Chris Evans", "Robert Downey Jr.", "Chris Hemsworth", "Mark Ruffalo"], answer: "Robert Downey Jr." },
-            { question: "Which movie won the Oscar for Best Picture in 2020?", options: ["1917", "Joker", "Parasite", "Once Upon a Time in Hollywood"], answer: "Parasite" },
-            { question: "Who directed 'The Dark Knight'?", options: ["Zack Snyder", "Christopher Nolan", "Tim Burton", "James Wan"], answer: "Christopher Nolan" },
-            { question: "In which year was the first Star Wars movie released?", options: ["1975", "1977", "1979", "1980"], answer: "1977" },
-
-            // Music
-            { question: "Who is known as the King of Pop?", options: ["Elvis Presley", "Michael Jackson", "Prince", "Madonna"], answer: "Michael Jackson" },
-            { question: "Which band wrote 'Bohemian Rhapsody'?", options: ["The Beatles", "Led Zeppelin", "Queen", "Pink Floyd"], answer: "Queen" },
-            { question: "How many strings does a standard guitar have?", options: ["4", "5", "6", "7"], answer: "6" },
-            { question: "Who sang 'Rolling in the Deep'?", options: ["Adele", "Taylor Swift", "Beyoncé", "Rihanna"], answer: "Adele" },
-            { question: "What is the real name of rapper Eminem?", options: ["Marshall Mathers", "Curtis Jackson", "Calvin Broadus", "Shawn Carter"], answer: "Marshall Mathers" },
-            { question: "Which band was Freddie Mercury the lead singer of?", options: ["The Beatles", "Queen", "Led Zeppelin", "The Rolling Stones"], answer: "Queen" },
-            { question: "Who is known as the Queen of Soul?", options: ["Diana Ross", "Whitney Houston", "Aretha Franklin", "Tina Turner"], answer: "Aretha Franklin" },
-
-            // General Knowledge
-            { question: "What is the largest mammal in the world?", options: ["African Elephant", "Blue Whale", "Giraffe", "Polar Bear"], answer: "Blue Whale" },
-            { question: "How many sides does a hexagon have?", options: ["5", "6", "7", "8"], answer: "6" },
-            { question: "What is the tallest building in the world?", options: ["Empire State Building", "Burj Khalifa", "Shanghai Tower", "One World Trade Center"], answer: "Burj Khalifa" },
-            { question: "Which language has the most native speakers?", options: ["English", "Spanish", "Mandarin Chinese", "Hindi"], answer: "Mandarin Chinese" },
-            { question: "What is the largest desert in the world?", options: ["Sahara", "Arabian", "Antarctic", "Gobi"], answer: "Antarctic" },
-            { question: "How many continents are there?", options: ["5", "6", "7", "8"], answer: "7" },
-            { question: "What is the smallest prime number?", options: ["0", "1", "2", "3"], answer: "2" }
-        ];
-
-        // Shuffle and select 15 random questions
-        function getRandomQuestions(num = 15) {
-            const shuffled = [...allQuizData].sort(() => Math.random() - 0.5);
-            return shuffled.slice(0, num);
+        // Redirect if not logged in (server also guards, but JS as double-check)
+        if (!token) {
+            window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
         }
 
-        const quizData = getRandomQuestions(15);
-        let index = 0;
+        // ─── State ────────────────────────────────────────────────────────────────
+        let quizData = [];
+        let currentIndex = 0;
         let score = 0;
         let timeLeft = 30;
-        let timer;
+        let timerInterval;
+        let userAnswers = [];
+        let startTime = null;
+        let activeCategoryId = null; // The category ID actually used for this random session
 
-        const questionEl = document.getElementById("question");
-        const optionsEl = document.getElementById("options");
-        const nextBtn = document.getElementById("next-btn");
-        const timerEl = document.getElementById("timer");
-        const timerBox = document.getElementById("timer-box");
-        const finishedBadge = document.getElementById("finished-badge");
-        const quizBox = document.getElementById("quiz-box");
-        const resultBox = document.getElementById("result-box");
-        const progressBar = document.getElementById("progress-bar");
-        const progressText = document.getElementById("progress-text");
+        // ─── Elements ─────────────────────────────────────────────────────────────
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const quizContainer = document.getElementById('quizContainer');
+        const resultCard = document.getElementById('resultCard');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const questionText = document.getElementById('questionText');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const nextBtn = document.getElementById('nextBtn');
+        const timerEl = document.getElementById('timer');
+        const questionCounter = document.getElementById('questionCounter');
+        const progressBar = document.getElementById('progressBar');
+        const categoryName = document.getElementById('categoryName');
 
-        function updateProgress() {
-            const progress = ((index + 1) / quizData.length) * 100;
-            progressBar.style.width = progress + "%";
-            progressText.textContent = Math.round(progress) + "%";
-        }
-
-        function loadQuestion() {
-            const q = quizData[index];
-            questionEl.textContent = q.question;
-            optionsEl.innerHTML = "";
-
-            // Shuffle options for each question
-            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
-
-            shuffledOptions.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.textContent = opt;
-                btn.className = "w-full border rounded-md px-4 py-2 hover:bg-purple-50 transition";
-                btn.onclick = () => selectOption(btn, q.answer);
-                optionsEl.appendChild(btn);
-            });
-
-            nextBtn.classList.add("hidden");
-            updateProgress();
-        }
-
-        function selectOption(btn, answer) {
-            document.querySelectorAll("#options button").forEach(b => b.disabled = true);
-
-            if (btn.textContent === answer) {
-                btn.classList.add("bg-green-100", "border-green-500");
-                score++;
-            } else {
-                btn.classList.add("bg-red-100", "border-red-500");
-                // Show correct answer
-                document.querySelectorAll("#options button").forEach(b => {
-                    if (b.textContent === answer) {
-                        b.classList.add("bg-green-100", "border-green-500");
-                    }
+        // ─── Init ─────────────────────────────────────────────────────────────────
+        async function init() {
+            try {
+                // Show username
+                const profileRes = await fetch('/api/user/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-            }
+                if (!profileRes.ok) throw new Error('Session expired. Please log in again.');
+                const profile = await profileRes.json();
+                usernameDisplay.textContent = profile.username;
 
-            nextBtn.classList.remove("hidden");
-        }
+                // Fetch all categories
+                const catsRes = await fetch('/api/categories');
+                const cats = await catsRes.json();
+                if (!cats || cats.length === 0) throw new Error('No quiz categories found. Ask an admin to add some!');
 
-        function nextQuestion() {
-            index++;
-            if (index < quizData.length) {
-                loadQuestion();
-                resetTimer();
-            } else {
-                endQuiz();
-            }
-        }
+                // Check if there's a saved random session cat id in localStorage
+                const savedCatId = localStorage.getItem(RANDOM_SESSION_KEY);
 
-        function endQuiz() {
-            clearInterval(timer);
-            timerBox.classList.add("hidden");
-            finishedBadge.classList.remove("hidden");
-            document.getElementById("progress-container").classList.add("hidden");
+                if (savedCatId) {
+                    // Check server for that session
+                    const sessRes = await fetch(`/api/quiz/session/${savedCatId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const sess = await sessRes.json();
 
-            quizBox.classList.add("hidden");
-            resultBox.classList.remove("hidden");
+                    if (sess && sess.question_ids && sess.question_ids.length > 0) {
+                        // Found a resumable session
+                        activeCategoryId = parseInt(savedCatId);
+                        currentIndex = sess.current_index;
+                        score = sess.score;
+                        userAnswers = sess.user_answers || [];
 
-            const percentage = Math.round((score / quizData.length) * 100);
+                        // Match category name
+                        const matchedCat = cats.find(c => c.id === activeCategoryId);
+                        categoryName.textContent = matchedCat
+                            ? '🎲 RANDOM — ' + matchedCat.name.toUpperCase()
+                            : '🎲 RANDOM CHALLENGE';
 
-            document.getElementById("score").textContent = score;
-            document.getElementById("total").textContent = quizData.length;
-            document.getElementById("percentage").textContent = percentage;
+                        // Fetch those exact questions
+                        const qRes = await fetch('/api/questions/batch', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ ids: sess.question_ids })
+                        });
+                        quizData = await qRes.json();
 
-            // Result message based on score
-            const resultMessage = document.getElementById("result-message");
-            if (percentage >= 90) {
-                resultMessage.textContent = "🌟 Outstanding! You're a quiz master!";
-                resultMessage.classList.add("text-green-600");
-            } else if (percentage >= 70) {
-                resultMessage.textContent = "🎯 Great job! Well done!";
-                resultMessage.classList.add("text-blue-600");
-            } else if (percentage >= 50) {
-                resultMessage.textContent = "👍 Good effort! Keep practicing!";
-                resultMessage.classList.add("text-yellow-600");
-            } else {
-                resultMessage.textContent = "💪 Don't give up! Try again!";
-                resultMessage.classList.add("text-orange-600");
-            }
-        }
-
-        function startTimer() {
-            timer = setInterval(() => {
-                timeLeft--;
-                timerEl.textContent = `⏱️ Time Left: ${timeLeft}s`;
-
-                // Change color based on time remaining
-                if (timeLeft <= 10) {
-                    timerEl.className = "bg-red-100 text-red-700 px-6 py-2 rounded-full text-xl font-semibold animate-pulse";
-                } else if (timeLeft <= 20) {
-                    timerEl.className = "bg-yellow-100 text-yellow-700 px-6 py-2 rounded-full text-xl font-semibold";
+                        loading.classList.add('hidden');
+                        document.getElementById('resumeModal').classList.remove('hidden');
+                        return;
+                    } else {
+                        // Stale local key; clean up
+                        localStorage.removeItem(RANDOM_SESSION_KEY);
+                    }
                 }
 
+                // No existing session → start fresh
+                await startFresh(cats);
+
+            } catch (err) {
+                console.error(err);
+                loadingText.innerHTML = `<span class="text-red-500 font-bold">${err.message}</span>`;
+            }
+        }
+
+        async function resumeQuiz() {
+            document.getElementById('resumeModal').classList.add('hidden');
+            loading.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        async function startFresh(catsOverride) {
+            loading.classList.remove('hidden');
+            document.getElementById('resumeModal').classList.add('hidden');
+            quizContainer.classList.add('hidden');
+            loadingText.textContent = 'Picking a random category...';
+
+            try {
+                // Fetch cats if not passed
+                let cats = catsOverride;
+                if (!cats) {
+                    const catsRes = await fetch('/api/categories');
+                    cats = await catsRes.json();
+                }
+                if (!cats || cats.length === 0) throw new Error('No categories available.');
+
+                // Pick random category
+                const randomCat = cats[Math.floor(Math.random() * cats.length)];
+                activeCategoryId = randomCat.id;
+
+                categoryName.textContent = '🎲 RANDOM — ' + randomCat.name.toUpperCase();
+                loadingText.textContent = `Loading ${randomCat.name} questions...`;
+
+                // Fetch questions
+                const res = await fetch(`/api/categories/${activeCategoryId}/questions?limit=15`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                quizData = await res.json();
+
+                if (!quizData || quizData.length === 0)
+                    throw new Error('No questions available in this category. Try again!');
+
+                // Start server session
+                await fetch('/api/quiz/session/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        category_id: activeCategoryId,
+                        question_ids: quizData.map(q => q.id)
+                    })
+                });
+
+                // Save cat id so we can resume on next visit
+                localStorage.setItem(RANDOM_SESSION_KEY, activeCategoryId);
+
+                currentIndex = 0;
+                score = 0;
+                userAnswers = [];
+
+                loading.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                loadQuestion();
+
+            } catch (err) {
+                loadingText.innerHTML = `<span class="text-red-500 font-bold">${err.message}</span>`;
+                loading.classList.remove('hidden');
+            }
+        }
+
+        // ─── Progress Sync ────────────────────────────────────────────────────────
+        async function saveProgress() {
+            if (!activeCategoryId) return;
+            try {
+                await fetch(`/api/quiz/session/${activeCategoryId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        current_index: currentIndex,
+                        score: score,
+                        user_answers: userAnswers
+                    })
+                });
+            } catch (err) {
+                console.warn('Server sync failed', err);
+            }
+        }
+
+        async function clearProgress() {
+            localStorage.removeItem(RANDOM_SESSION_KEY);
+            if (!activeCategoryId) return;
+            try {
+                await fetch(`/api/quiz/session/${activeCategoryId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+            } catch (err) { }
+        }
+
+        // ─── Question Display ─────────────────────────────────────────────────────
+        function loadQuestion() {
+            const q = quizData[currentIndex];
+            questionText.textContent = q.text;
+            optionsGrid.innerHTML = '';
+
+            questionCounter.textContent = `Question ${currentIndex + 1} of ${quizData.length}`;
+            progressBar.style.width = ((currentIndex + 1) / quizData.length * 100) + '%';
+
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.dataset.optionId = opt.id;
+                btn.className = 'option-btn w-full p-5 text-left bg-white border-2 border-gray-100 rounded-2xl font-medium text-gray-700 flex items-center justify-between';
+                btn.innerHTML = `<span>${opt.text}</span><i class="fas fa-circle-notch text-gray-200 opacity-20"></i>`;
+                btn.onclick = () => selectOption(btn, opt);
+                optionsGrid.appendChild(btn);
+            });
+
+            nextBtn.classList.add('hidden');
+            if (!startTime) startTime = Date.now();
+            startTimer(q.time_limit || 30);
+        }
+
+        // ─── Timer ────────────────────────────────────────────────────────────────
+        function startTimer(duration) {
+            clearInterval(timerInterval);
+            timeLeft = duration;
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
                 if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    nextQuestion();
+                    clearInterval(timerInterval);
+                    userAnswers.push({ question_id: quizData[currentIndex].id, option_id: null });
+                    saveProgress();
+                    autoMarkCorrect();
+                    nextBtn.classList.remove('hidden');
                 }
             }, 1000);
         }
 
-        function resetTimer() {
-            clearInterval(timer);
-            timeLeft = 30;
-            timerEl.className = "bg-purple-100 text-purple-700 px-6 py-2 rounded-full text-xl font-semibold";
-            timerEl.textContent = `⏱️ Time Left: ${timeLeft}s`;
-            startTimer();
+        function updateTimerUI() {
+            timerEl.querySelector('span').textContent = `${timeLeft}s`;
+            if (timeLeft <= 5) timerEl.classList.add('pulse-timer');
+            else timerEl.classList.remove('pulse-timer');
         }
 
-        // Initialize quiz
-        loadQuestion();
-        startTimer();
-        nextBtn.addEventListener("click", nextQuestion);
-    </script>
-    <!-- Dark Mode Script -->
-    <script src="/static/dark-mode.js"></script>
+        // ─── Answer Selection ─────────────────────────────────────────────────────
+        async function selectOption(btn, option) {
+            clearInterval(timerInterval);
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
 
+            const icon = btn.querySelector('i');
+            icon.className = 'fas fa-spinner fa-spin opacity-100 text-purple-500';
+
+            try {
+                const res = await fetch('/api/check_answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question_id: quizData[currentIndex].id,
+                        option_id: option.id
+                    })
+                });
+                const data = await res.json();
+
+                userAnswers.push({
+                    question_id: quizData[currentIndex].id,
+                    option_id: option.id
+                });
+
+                if (data.is_correct) {
+                    btn.classList.replace('border-gray-100', 'border-green-500');
+                    btn.classList.add('bg-green-50');
+                    icon.className = 'fas fa-check-circle text-green-500 opacity-100';
+                    score++;
+                } else {
+                    btn.classList.replace('border-gray-100', 'border-red-500');
+                    btn.classList.add('bg-red-50');
+                    icon.className = 'fas fa-times-circle text-red-500 opacity-100';
+                    autoMarkCorrect(data.correct_option_id);
+                }
+                saveProgress();
+            } catch (err) {
+                console.error('Verification failed', err);
+            }
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        function autoMarkCorrect(correctOptionId) {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                if (btn.dataset.optionId == correctOptionId) {
+                    btn.classList.replace('border-gray-100', 'border-green-500');
+                    btn.classList.add('bg-green-50');
+                    const icon = btn.querySelector('i');
+                    if (icon) icon.className = 'fas fa-check-circle text-green-500 opacity-50';
+                }
+            });
+        }
+
+        // ─── Submit ───────────────────────────────────────────────────────────────
+        async function submitQuiz() {
+            quizContainer.classList.add('hidden');
+            loading.classList.remove('hidden');
+            loadingText.textContent = 'Submitting results...';
+
+            try {
+                const res = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        category_id: activeCategoryId,
+                        answers: userAnswers,
+                        time_taken: Math.floor((Date.now() - startTime) / 1000)
+                    })
+                });
+                const data = await res.json();
+
+                await clearProgress();
+                loading.classList.add('hidden');
+                resultCard.classList.remove('hidden');
+
+                document.getElementById('resScore').textContent = data.score;
+                document.getElementById('resTotal').textContent = data.total;
+                document.getElementById('resPercent').textContent = data.percentage;
+
+                const pct = data.percentage;
+                const msg = document.getElementById('resultMessage');
+                if (pct >= 80) msg.textContent = '🌟 Amazing! You\'re a true champion!';
+                else if (pct >= 50) msg.textContent = '🎯 Well done! You have a good handle on things.';
+                else msg.textContent = '💪 Keep practicing! You\'ll get better every time.';
+
+                if (data.level_up) {
+                    document.getElementById('levelUpMsg').classList.remove('hidden');
+                    document.getElementById('newLevel').textContent = data.level_up;
+                }
+
+            } catch (err) {
+                loadingText.innerHTML = `<span class="text-red-500 font-bold">Submission failed. Local score: ${score}</span>`;
+            }
+        }
+
+        // ─── Next Button ──────────────────────────────────────────────────────────
+        nextBtn.onclick = () => {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                submitQuiz();
+            }
+        };
+
+        // ─── Start ────────────────────────────────────────────────────────────────
+        init();
+    </script>
 </body>
 
 </html>

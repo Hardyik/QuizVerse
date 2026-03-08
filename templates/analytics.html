@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizVerse • Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --dark-color: #212529;
+            --light-color: #f8f9fa;
+        }
+
+        /* Dark Mode Transitions */
+        [data-theme="dark"] body {
+            background-color: #1a1a2e !important;
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .bg-white {
+            background-color: #2d2d40 !important;
+            color: #ffffff;
+            border-color: #404040;
+        }
+
+        [data-theme="dark"] .text-gray-900,
+        [data-theme="dark"] .text-gray-800,
+        [data-theme="dark"] .text-gray-700 {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .text-gray-600,
+        [data-theme="dark"] .text-gray-500 {
+            color: #b0b0b0 !important;
+        }
+
+        [data-theme="dark"] .border-gray-200,
+        [data-theme="dark"] .border-gray-100 {
+            border-color: #404040 !important;
+        }
+
+        [data-theme="dark"] .bg-gray-50,
+        [data-theme="dark"] .bg-gray-100 {
+            background-color: #3a3a50 !important;
+        }
+
+        [data-theme="dark"] nav {
+            background-color: #2d2d40 !important;
+            border-bottom-color: #404040 !important;
+        }
+
+        /* Card Hover Effects */
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] .stat-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress-bar-bg {
+            background-color: #e5e7eb;
+        }
+
+        [data-theme="dark"] .progress-bar-bg {
+            background-color: #404040;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/user_dashboard" class="flex items-center gap-2">
+                <i class="fas fa-arrow-left text-gray-600 hover:text-blue-600 transition-colors text-xl"></i>
+                <span class="text-xl font-bold text-gray-900 ml-2">Analytics</span>
+            </a>
+
+            <div class="flex items-center gap-4">
+                <button id="darkModeToggle"
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    <i class="fas fa-sun text-yellow-500" id="sunIcon"></i>
+                    <i class="fas fa-moon text-blue-300" id="moonIcon" style="display:none;"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Welcome banner -->
+        <div
+            class="bg-gradient-to-r from-blue-600 space-y-2 to-purple-600 rounded-2xl p-6 md:p-8 text-white mb-8 shadow-md">
+            <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                <i class="fas fa-chart-pie"></i> Your Performance
+            </h1>
+            <p class="text-blue-100 md:text-lg opacity-90 max-w-2xl">A simple overview of your quiz history and
+                category-wise performance.</p>
+        </div>
+
+        <!-- Summary Cards Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+            <!-- Total Quizzes -->
+            <div
+                class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 stat-card flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Total Quizzes</h3>
+                    <div class="text-2xl font-bold text-gray-900" id="statTotalQuizzes">-</div>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xl">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+            </div>
+
+            <!-- Overall Accuracy -->
+            <div
+                class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 stat-card flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Accuracy</h3>
+                    <div class="text-2xl font-bold text-gray-900" id="statOverallAccuracy">-</div>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500 text-xl">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+            </div>
+
+            <!-- Total Correct -->
+            <div
+                class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 stat-card flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Correct Answers</h3>
+                    <div class="text-2xl font-bold text-gray-900" id="statTotalCorrect">-</div>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500 text-xl">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+
+            <!-- Average Time -->
+            <div
+                class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 stat-card flex items-center justify-between">
+                <div>
+                    <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Avg Time / Quiz</h3>
+                    <div class="text-2xl font-bold text-gray-900" id="statAvgTime">-</div>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 text-xl">
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Stats Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+            <!-- Accuracy Breakdown -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 lg:col-span-1 flex flex-col">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">Answers Breakdown
+                </h3>
+
+                <div id="accuracyContainer" class="flex-grow flex flex-col justify-center space-y-6">
+                    <!-- Correct -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-circle text-green-500 text-xs"></i> Correct
+                            </span>
+                            <span class="font-bold text-green-600" id="txtCorrectNum">-</span>
+                        </div>
+                        <div class="w-full h-3 progress-bar-bg rounded-full overflow-hidden">
+                            <div id="barCorrect" class="bg-green-500 h-full rounded-full transition-all duration-1000"
+                                style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Incorrect -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-circle text-red-500 text-xs"></i> Incorrect
+                            </span>
+                            <span class="font-bold text-red-600" id="txtIncorrectNum">-</span>
+                        </div>
+                        <div class="w-full h-3 progress-bar-bg rounded-full overflow-hidden">
+                            <div id="barIncorrect" class="bg-red-500 h-full rounded-full transition-all duration-1000"
+                                style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Performance List -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 lg:col-span-2 flex flex-col">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">Category Accuracy
+                </h3>
+
+                <div id="categoriesList" class="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                    <!-- Injected by JS -->
+                    <div class="text-gray-400 text-center py-8">
+                        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                        <p>Loading records...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Recent Quiz History -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mt-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                <i class="fas fa-history text-purple-500"></i> Recent Quiz History
+            </h3>
+            <div id="quizHistoryList">
+                <div class="text-gray-400 text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                    <p>Loading history...</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script Block -->
+    <script>
+        const token = localStorage.getItem("access_token");
+
+        if (!token) {
+            window.location.href = "/login";
+        }
+
+        // Setup theme toggle icon visibility dynamically
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        const sunIcon = document.getElementById("sunIcon");
+        const moonIcon = document.getElementById("moonIcon");
+
+        function updateThemeIcons() {
+            if (document.documentElement.getAttribute("data-theme") === "dark") {
+                sunIcon.style.display = "none";
+                moonIcon.style.display = "block";
+            } else {
+                sunIcon.style.display = "block";
+                moonIcon.style.display = "none";
+            }
+        }
+
+        setTimeout(updateThemeIcons, 100);
+        darkModeToggle.addEventListener("click", () => {
+            setTimeout(updateThemeIcons, 50);
+        });
+
+        // Fetch data
+        fetch("/api/user/analytics", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to fetch analytics");
+                return res.json();
+            })
+            .then(data => {
+                // Populate stats
+                document.getElementById("statTotalQuizzes").textContent = data.total_quizzes;
+                document.getElementById("statOverallAccuracy").textContent = `${data.overall_accuracy}%`;
+                document.getElementById("statTotalCorrect").textContent = data.total_correct;
+
+                // Format time
+                const mins = Math.floor(data.avg_time_taken / 60);
+                const secs = Math.floor(data.avg_time_taken % 60);
+                let timeText = "";
+                if (mins > 0) timeText += `${mins}m `;
+                timeText += `${secs}s`;
+                if (data.avg_time_taken === 0) timeText = "0s";
+
+                document.getElementById("statAvgTime").textContent = timeText;
+
+                // Accuracy Breakdown
+                const totalQs = data.total_correct + data.total_incorrect;
+                document.getElementById("txtCorrectNum").textContent = data.total_correct;
+                document.getElementById("txtIncorrectNum").textContent = data.total_incorrect;
+
+                if (totalQs > 0) {
+                    const percCorrect = (data.total_correct / totalQs) * 100;
+                    const percIncorrect = (data.total_incorrect / totalQs) * 100;
+                    // Animate bars
+                    setTimeout(() => {
+                        document.getElementById("barCorrect").style.width = `${percCorrect}%`;
+                        document.getElementById("barIncorrect").style.width = `${percIncorrect}%`;
+                    }, 100);
+                } else {
+                    document.getElementById("accuracyContainer").innerHTML = `
+                    <div class="text-gray-400 text-center py-4">
+                        <i class="fas fa-box-open text-3xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No answers recorded yet.</p>
+                    </div>
+                `;
+                }
+
+                // Render Category List
+                const catListContainer = document.getElementById("categoriesList");
+                if (!data.category_performance || data.category_performance.length === 0) {
+                    catListContainer.innerHTML = `
+                    <div class="text-gray-400 text-center py-8">
+                        <i class="fas fa-box-open text-3xl mb-2 opacity-50"></i>
+                        <p class="text-sm">Take some quizzes to see category performance.</p>
+                    </div>`;
+                } else {
+                    // sort by accuracy descending
+                    data.category_performance.sort((a, b) => b.accuracy - a.accuracy);
+
+                    catListContainer.innerHTML = data.category_performance.map(c => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 gap-3">
+                        <div class="flex-grow">
+                            <h4 class="font-semibold text-gray-800">${c.category}</h4>
+                            <p class="text-xs text-gray-500 mt-1">${c.quizzes_taken} quiz(zes) taken</p>
+                        </div>
+                        <div class="flex items-center gap-3 w-full sm:w-1/2">
+                            <div class="w-full h-2 progress-bar-bg rounded-full overflow-hidden">
+                                <div class="bg-blue-500 h-full rounded-full" style="width: ${c.accuracy}%;"></div>
+                            </div>
+                            <span class="font-bold text-gray-700 w-12 text-right">${c.accuracy}%</span>
+                        </div>
+                    </div>
+                `).join('');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+
+        // Fetch Recent Quiz History from profile API
+        fetch("/api/user/profile", {
+            headers: { "Authorization": "Bearer " + token }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to fetch profile");
+                return res.json();
+            })
+            .then(profile => {
+                const histContainer = document.getElementById("quizHistoryList");
+                if (!profile.recent_results || profile.recent_results.length === 0) {
+                    histContainer.innerHTML = `
+                        <div class="text-gray-400 text-center py-8">
+                            <i class="fas fa-box-open text-3xl mb-2 opacity-50"></i>
+                            <p class="text-sm">No quiz history yet. Go play a quiz!</p>
+                        </div>`;
+                } else {
+                    histContainer.innerHTML = profile.recent_results.map(r => `
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 mb-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">${r.quiz}</h4>
+                                <p class="text-xs text-gray-500 mt-1">${new Date(r.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full text-sm">${r.score}/${r.total}</span>
+                                <span class="text-sm font-semibold ${Math.round(r.score / r.total * 100) >= 70 ? 'text-green-600' : Math.round(r.score / r.total * 100) >= 40 ? 'text-yellow-600' : 'text-red-500'}">${Math.round(r.score / r.total * 100)}%</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            })
+            .catch(err => console.error("Quiz history error:", err));
+    </script>
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

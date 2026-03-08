@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error | QuizVerse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            margin: 20px;
+        }
+
+        .code {
+            font-size: 100px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+
+        p {
+            font-size: 16px;
+            color: #636e72;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .error-details {
+            background: #fff5f5;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed #ffb8b8;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #d63031;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 35px;
+            background: #2d3436;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] body {
+            background: #1a1a1a;
+        }
+
+        [data-theme="dark"] .container {
+            background: #2d2d2d;
+            color: #eee;
+        }
+
+        [data-theme="dark"] h1 {
+            color: #fff;
+        }
+
+        [data-theme="dark"] p {
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="code">500</div>
+        <h1>Something went wrong!</h1>
+        <p>Our servers are having a bit of a moment. We've been notified and are looking into it.</p>
+        <div class="error-details">
+            <b>System Note:</b> Internal Server Error. Our team of educated hamsters is working hard to fix the wheel.
+        </div>
+        <a href="/">Return Home</a>
+    </div>
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

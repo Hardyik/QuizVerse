@@ -10,6 +10,9 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -49,10 +52,54 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
+
+        .password-strength {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+
+        .password-requirements {
+            margin-top: 8px;
+            font-size: 0.75rem;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 3px;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .requirement.met {
+            color: #4CAF50;
+        }
+
+        .requirement i {
+            font-size: 0.65rem;
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Dark Mode Toggle -->
+    <div class="fixed top-6 right-6 z-50">
+        <button id="darkModeToggle"
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md transition text-white border border-white/20">
+            <i class="fas fa-sun" id="sunIcon"></i>
+            <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+        </button>
+    </div>
     <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md" data-aos="fade-up">
         <div class="p-8 sm:p-10">
             <div class="text-center mb-8">
@@ -92,8 +139,19 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-feather="lock" class="text-white/60"></i>
                         </div>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required
-                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30">
+                        <input id="password" name="password" type="password" autocomplete="new-password" required
+                            class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+                            oninput="checkPasswordStrength()">
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="password-requirements" id="passwordRequirements">
+                        <div class="requirement" id="reqLength"><i class="fas fa-circle"></i> At least 8 characters
+                        </div>
+                        <div class="requirement" id="reqUpper"><i class="fas fa-circle"></i> One uppercase letter</div>
+                        <div class="requirement" id="reqLower"><i class="fas fa-circle"></i> One lowercase letter</div>
+                        <div class="requirement" id="reqNumber"><i class="fas fa-circle"></i> One number</div>
                     </div>
                 </div>
                 <div>
@@ -134,9 +192,54 @@
 
     <!-- Password Validation Script -->
     <script>
-        function validatePasswords() {
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('strengthBar');
 
-            return true; // allow submit
+            let strength = 0;
+            let color = '#f44336';
+
+            const hasLength = password.length >= 8;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+
+            if (hasLength) strength += 25;
+            if (hasUpper) strength += 25;
+            if (hasLower) strength += 25;
+            if (hasNumber) strength += 25;
+
+            if (strength >= 75) color = '#4CAF50';
+            else if (strength >= 50) color = '#FF9800';
+            else if (strength >= 25) color = '#FF5722';
+
+            strengthBar.style.width = strength + '%';
+            strengthBar.style.backgroundColor = color;
+
+            // Update requirement indicators
+            toggleRequirement('reqLength', hasLength);
+            toggleRequirement('reqUpper', hasUpper);
+            toggleRequirement('reqLower', hasLower);
+            toggleRequirement('reqNumber', hasNumber);
+        }
+
+        function toggleRequirement(id, met) {
+            const el = document.getElementById(id);
+            if (met) {
+                el.classList.add('met');
+                el.querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                el.classList.remove('met');
+                el.querySelector('i').className = 'fas fa-circle';
+            }
+        }
+
+        function isStrongPassword(password) {
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasMinimumLength = password.length >= 8;
+            return hasUpperCase && hasLowerCase && hasNumbers && hasMinimumLength;
         }
     </script>
     <!-- Form Submission Script -->
@@ -146,6 +249,11 @@
 
             const password = document.getElementById("password").value;
             const confirmPassword = document.getElementById("confirm_password").value;
+
+            if (!isStrongPassword(password)) {
+                alert("Password must be at least 8 characters with uppercase, lowercase letters and numbers");
+                return false;
+            }
 
             if (password !== confirmPassword) {
                 alert("Passwords do not match!");
@@ -164,12 +272,13 @@
 
                 const data = await response.json();
 
-                if (response.status === 400) {
-                    // This triggers if the user already exists
-                    alert("Error: " + data.message);
+                if (response.status === 400 || response.status === 409) {
+                    alert("Error: " + data.msg);
                 } else if (response.status === 201) {
                     alert("Account created successfully!");
-                    window.location.href = '/login'; // Send them to login page
+                    window.location.href = '/login';
+                } else {
+                    alert("Error: " + (data.msg || "Something went wrong"));
                 }
             } catch (error) {
                 console.error("Error:", error);
@@ -177,6 +286,7 @@
             }
         });
     </script>
+    <script src="/static/dark-mode.js"></script>
 </body>
 
 </html>

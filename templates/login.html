@@ -10,6 +10,9 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -17,10 +20,6 @@
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .right-alignment {
-            text-align: right
         }
 
         .login-card {
@@ -49,10 +48,143 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
+
+        /* ─── Login Mode Toggle ─────────────────────────────────── */
+        .mode-toggle-wrapper {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 6px;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-toggle-wrapper .slider {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .mode-toggle-wrapper .slider.right {
+            transform: translateX(100%);
+        }
+
+        .mode-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
+            border-radius: 10px;
+        }
+
+        .mode-btn.active {
+            color: #ffffff;
+        }
+
+        .mode-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* ─── Error Toast ──────────────────────────────────────── */
+        .login-toast {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-top: 16px;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.4s ease;
+        }
+
+        .login-toast.show {
+            display: flex;
+        }
+
+        .login-toast.error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #fecaca;
+        }
+
+        .login-toast.warning {
+            background: rgba(234, 179, 8, 0.2);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            color: #fef08a;
+        }
+
+        .login-toast i {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-6px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Dark Mode Toggle -->
+    <div class="fixed top-6 right-6 z-50">
+        <button id="darkModeToggle"
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md transition text-white border border-white/20">
+            <i class="fas fa-sun" id="sunIcon"></i>
+            <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+        </button>
+    </div>
     <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md" data-aos="fade-up">
         <div class="p-8 sm:p-10">
             <div class="text-center mb-8">
@@ -66,7 +198,6 @@
                 <p class="text-white/80">Quizzically analyze your knowledge</p>
             </div>
 
-            <!-- REMOVED action="/user_dashboard" - this was causing the issue -->
             <form id="loginForm" class="space-y-6">
 
                 <div>
@@ -77,7 +208,7 @@
                         </div>
                         <input id="email" name="email" type="email" autocomplete="email" required
                             class="input-field pl-10 w-full px-4 py-3 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
-                            placeholder="admin@quizverse.com">
+                            placeholder="you@example.com">
                     </div>
                 </div>
 
@@ -93,6 +224,23 @@
                     </div>
                 </div>
 
+                <!-- ─── Login Mode Toggle Panel ─────────────────────── -->
+                <div>
+                    <label class="block text-sm font-medium text-white mb-2">Login As</label>
+                    <div class="mode-toggle-wrapper">
+                        <div class="slider" id="modeSlider"></div>
+                        <button type="button" class="mode-btn active" id="userModeBtn" onclick="setLoginMode('user')">
+                            <i class="fas fa-user"></i>
+                            <span>User</span>
+                        </button>
+                        <button type="button" class="mode-btn" id="adminModeBtn" onclick="setLoginMode('admin')">
+                            <i class="fas fa-shield-halved"></i>
+                            <span>Admin</span>
+                        </button>
+                    </div>
+                    <input type="hidden" id="login-mode" value="user">
+                </div>
+
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <input id="remember-me" name="remember-me" type="checkbox"
@@ -100,26 +248,23 @@
                         <label for="remember-me" class="ml-2 block text-sm text-white">Remember me</label>
                     </div>
 
-                    <div class="text-sm text-right space-y-2">
-                        <div class="flex items-center justify-end gap-2">
-                            <input id="admin-mode" type="checkbox"
-                                class="h-4 w-4 rounded border-white/30 bg-white/10 focus:ring-white/50">
-                            <label for="admin-mode" class="text-white cursor-pointer">
-                                Admin login
-                            </label>
-                        </div>
-
-                        <a href="#" class="font-medium text-white hover:text-white/80">
-                            Forgot password?
-                        </a>
-                    </div>
+                    <a href="/forget_pass" class="text-sm font-medium text-white hover:text-white/80">
+                        Forgot password?
+                    </a>
                 </div>
 
                 <div>
-                    <button type="submit"
-                        class="btn-primary w-full flex justify-center py-3 px-4 border border- rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
+                    <button type="submit" id="submitBtn"
+                        class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-2" style="margin-top:2px"></i>
                         Sign in
                     </button>
+                </div>
+
+                <!-- Error Toast -->
+                <div class="login-toast" id="loginToast">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span id="loginToastMsg"></span>
                 </div>
             </form>
             <div class="mt-6 text-center">
@@ -140,13 +285,79 @@
         });
         feather.replace();
 
+        // ─── Login Mode Toggle ──────────────────────────────────────────────
+        function setLoginMode(mode) {
+            document.getElementById('login-mode').value = mode;
+            const slider = document.getElementById('modeSlider');
+            const userBtn = document.getElementById('userModeBtn');
+            const adminBtn = document.getElementById('adminModeBtn');
+
+            if (mode === 'admin') {
+                slider.classList.add('right');
+                adminBtn.classList.add('active');
+                userBtn.classList.remove('active');
+            } else {
+                slider.classList.remove('right');
+                userBtn.classList.add('active');
+                adminBtn.classList.remove('active');
+            }
+        }
+
+        // ─── Toast Helper ────────────────────────────────────────────────────
+        function showToast(msg, type = 'error') {
+            const toast = document.getElementById('loginToast');
+            const toastMsg = document.getElementById('loginToastMsg');
+            toastMsg.textContent = msg;
+            toast.className = 'login-toast show ' + type;
+
+            // Shake the form for emphasis
+            const form = document.getElementById('loginForm');
+            form.classList.add('shake');
+            setTimeout(() => form.classList.remove('shake'), 500);
+
+            // Auto-hide after 6 seconds
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 6000);
+        }
+
+        function hideToast() {
+            document.getElementById('loginToast').classList.remove('show');
+        }
+
+        // ─── Auto-redirect if already logged in ─────────────────────────────
+        (async () => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                try {
+                    const res = await fetch('/api/auth/session-check', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    const data = await res.json();
+                    if (data.logged_in) {
+                        const params = new URLSearchParams(window.location.search);
+                        const next = params.get('next');
+                        if (data.is_admin) {
+                            window.location.href = '/admin';
+                        } else {
+                            window.location.href = (next && next.startsWith('/')) ? next : '/user_dashboard';
+                        }
+                        return;
+                    }
+                } catch (e) { /* ignore — show login page */ }
+            }
+        })();
+
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent default form submission
+            e.preventDefault();
+            hideToast();
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const isAdminMode = document.getElementById('admin-mode').checked;
+            const isAdminMode = document.getElementById('login-mode').value === 'admin';
+            const rememberMe = document.getElementById('remember-me').checked;
 
             try {
                 const response = await fetch('/api/login', {
@@ -157,7 +368,8 @@
                     body: JSON.stringify({
                         email,
                         password,
-                        is_admin_login: isAdminMode
+                        is_admin_login: isAdminMode,
+                        remember_me: rememberMe
                     })
                 });
 
@@ -167,22 +379,34 @@
                     // Store token in localStorage
                     localStorage.setItem("access_token", data.access_token);
 
-                    // Redirect based on role
+                    // Redirect based on role, honouring ?next= param
                     if (data.is_admin) {
                         window.location.href = '/admin';
                     } else {
-                        window.location.href = '/user_dashboard';
+                        const params = new URLSearchParams(window.location.search);
+                        const next = params.get('next');
+                        window.location.href = (next && next.startsWith('/')) ? next : '/user_dashboard';
+                    }
+                } else if (response.status === 403) {
+                    // Role mismatch — show warning and auto-switch toggle
+                    showToast(data.msg, 'warning');
+                    // Auto-switch to the correct mode
+                    if (isAdminMode) {
+                        setLoginMode('user');
+                    } else {
+                        setLoginMode('admin');
                     }
                 } else {
-                    alert('Login failed: ' + data.msg);
+                    showToast(data.msg || 'Login failed. Check your credentials.', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Something went wrong. Please try again.');
+                showToast('Something went wrong. Please try again.', 'error');
             }
         });
     </script>
 
+    <script src="/static/dark-mode.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Analytics</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden">
+
+    {% set active_page = 'analytics' %}
+    {% include 'includes/admin_sidebar.html' %}
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden md:ml-64">
+        <!-- Topbar -->
+        <header class="bg-white border-b border-gray-200 flex items-center justify-between p-4">
+            <div class="flex items-center space-x-4">
+                <i id="menuToggle" data-feather="menu" class="cursor-pointer text-gray-600 md:hidden"></i>
+                <h2 class="text-lg font-semibold text-gray-800">Analytics & Performance</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle"
+                    class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition"
+                    title="Toggle Dark Mode">
+                    <i id="sunIcon" data-feather="sun" class="w-5 h-5"></i>
+                    <i id="moonIcon" data-feather="moon" class="w-5 h-5" style="display: none;"></i>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center">
+                        <img src="{{ url_for('static', filename='avatars/admin_av.png') }}" alt="Admin Avatar"
+                            class="w-full h-full rounded-full">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div class="mb-8 p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow text-white">
+                <h3 class="text-2xl font-bold mb-1">Category Insights</h3>
+                <p class="text-blue-100">Track user engagement across different quiz categories.</p>
+            </div>
+
+            <!-- Loader -->
+            <div id="loader" class="flex flex-col items-center justify-center py-20">
+                <i data-feather="loader" class="animate-spin text-blue-500 w-10 h-10 mb-4"></i>
+                <p class="text-gray-500 font-medium">Crunching the numbers...</p>
+            </div>
+
+            <!-- Analytics Content (Hidden initially) -->
+            <div id="analytics-content" class="hidden">
+                <!-- Top Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Total Categories -->
+                    <div class="card bg-white rounded-lg shadow p-6 flex items-center">
+                        <div class="p-4 rounded-full bg-blue-100 text-blue-600 mr-6">
+                            <i data-feather="layers" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Categories Attempted</p>
+                            <h3 class="text-3xl font-bold text-gray-800" id="stat-total-cats">-</h3>
+                        </div>
+                    </div>
+
+                    <!-- Most Viewed -->
+                    <div class="card bg-white rounded-lg shadow p-6 flex items-center">
+                        <div class="p-4 rounded-full bg-purple-100 text-purple-600 mr-6">
+                            <i data-feather="star" class="w-8 h-8"></i>
+                        </div>
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-sm text-gray-500 font-medium">Most Popular Category</p>
+                            <h3 class="text-2xl font-bold text-gray-800 truncate" id="stat-most-popular">-</h3>
+                            <p class="text-sm text-purple-600 mt-1 font-medium" id="stat-popular-attempts"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Rankings Board -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="font-semibold text-lg text-gray-800 flex items-center">
+                            <i data-feather="list" class="mr-2 text-blue-500 w-5 h-5"></i>
+                            Category Engagement Rankings
+                        </h3>
+                    </div>
+
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200">
+                                    <th class="py-3 font-semibold w-16 text-center">Rank</th>
+                                    <th class="py-3 font-semibold">Category Name</th>
+                                    <th class="py-3 font-semibold text-right">Total Attempts</th>
+                                    <th class="py-3 font-semibold text-right w-48">Popularity Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="category-table-body" class="text-sm divide-y divide-gray-100">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Init feather icons
+        feather.replace();
+
+        // Mobile Sidebar Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (menuToggle && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        }
+
+        const token = localStorage.getItem('admin_token') || localStorage.getItem('access_token');
+
+        async function loadAnalytics() {
+            try {
+                const res = await fetch('/api/admin/analytics/categories', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) throw new Error("Failed to fetch analytics");
+
+                const data = await res.json();
+
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('analytics-content').classList.remove('hidden');
+
+                // Populate Summary Cards
+                document.getElementById('stat-total-cats').textContent = data.total_categories_attempted;
+
+                if (data.most_viewed) {
+                    document.getElementById('stat-most-popular').textContent = data.most_viewed.category;
+                    document.getElementById('stat-popular-attempts').textContent = `${data.most_viewed.attempts} total attempts`;
+                } else {
+                    document.getElementById('stat-most-popular').textContent = "No Data";
+                }
+
+                // Populate Table
+                const tbody = document.getElementById('category-table-body');
+                if (data.category_stats && data.category_stats.length > 0) {
+
+                    // Find max attempts to calculate relative bar widths
+                    const maxAttempts = data.category_stats[0].attempts;
+
+                    tbody.innerHTML = data.category_stats.map((stat, index) => {
+                        const rank = index + 1;
+                        let rankBadge = `<span class="text-gray-500 font-bold">${rank}</span>`;
+                        if (rank === 1) rankBadge = `<span class="bg-yellow-100 text-yellow-700 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">1</span>`;
+                        else if (rank === 2) rankBadge = `<span class="bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">2</span>`;
+                        else if (rank === 3) rankBadge = `<span class="bg-orange-100 text-orange-700 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">3</span>`;
+
+                        const popPercent = Math.max(5, (stat.attempts / maxAttempts) * 100);
+
+                        return `
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="py-4 flex justify-center">${rankBadge}</td>
+                                <td class="py-4 font-medium text-gray-800">${stat.category}</td>
+                                <td class="py-4 text-right font-bold text-blue-600">${stat.attempts}</td>
+                                <td class="py-4 pr-2">
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full" style="width: ${popPercent}%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="p-8 text-center text-gray-500">
+                                <i data-feather="inbox" class="mx-auto text-gray-400 mb-2 w-8 h-8"></i>
+                                No quiz attempts found.
+                            </td>
+                        </tr>
+                    `;
+                    feather.replace();
+                }
+
+            } catch (error) {
+                console.error("Analytics Error:", error);
+                document.getElementById('loader').innerHTML = `
+                    <div class="text-red-500 flex flex-col items-center">
+                        <i data-feather="alert-circle" class="w-10 h-10 mb-2"></i>
+                        <span class="font-medium">Failed to load analytics data</span>
+                    </div>
+                `;
+                feather.replace();
+            }
+        }
+
+        loadAnalytics();
+    </script>
+    <!-- Dark Mode Script -->
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

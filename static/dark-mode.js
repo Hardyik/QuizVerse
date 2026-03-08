@@ -1,52 +1,61 @@
 // ============================================
 // GLOBAL DARK MODE SCRIPT
-// Include this in all pages except login/signup
 // ============================================
 
-(function() {
+(function () {
   'use strict';
 
-  // Initialize dark mode from localStorage on page load
-  const htmlElement = document.documentElement;
+  // Initialize dark mode from localStorage on page load (immediately to avoid flicker)
   const savedTheme = localStorage.getItem('theme') || 'light';
-  htmlElement.setAttribute('data-theme', savedTheme);
+  document.documentElement.setAttribute('data-theme', savedTheme);
 
-  // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', function() {
-    
-    // Create dark mode toggle button if it doesn't exist
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    
-    if (darkModeToggle) {
-      const sunIcon = document.getElementById('sunIcon');
-      const moonIcon = document.getElementById('moonIcon');
-      
-      // Update icon based on current theme
-      if (savedTheme === 'dark') {
+  // Sync function to update all toggles on the page
+  function updateAllToggles(theme) {
+    const allToggles = document.querySelectorAll('#darkModeToggle, #darkModeToggleMobile, .dark-mode-toggle');
+
+    allToggles.forEach(toggle => {
+      const sunIcon = toggle.querySelector('.fa-sun, [data-feather="sun"], #sunIcon, #sunIconMobile');
+      const moonIcon = toggle.querySelector('.fa-moon, [data-feather="moon"], #moonIcon, #moonIconMobile');
+      const textSpan = toggle.querySelector('span'); // For mobile text like "Dark Mode"
+
+      if (theme === 'dark') {
         if (sunIcon) sunIcon.style.display = 'none';
         if (moonIcon) moonIcon.style.display = 'block';
+        if (textSpan && textSpan.textContent.includes('Dark Mode')) textSpan.textContent = 'Light Mode';
       } else {
         if (sunIcon) sunIcon.style.display = 'block';
         if (moonIcon) moonIcon.style.display = 'none';
+        if (textSpan && textSpan.textContent.includes('Mode')) textSpan.textContent = 'Dark Mode';
       }
+    });
+  }
 
-      // Toggle dark mode
-      darkModeToggle.addEventListener('click', function() {
-        const currentTheme = htmlElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  // Initialization after DOM is ready
+  function init() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    updateAllToggles(currentTheme);
 
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+    // Delegate click events to handle any toggle button
+    document.addEventListener('click', function (e) {
+      const toggle = e.target.closest('#darkModeToggle, #darkModeToggleMobile, .dark-mode-toggle');
+      if (!toggle) return;
 
-        // Toggle icons
-        if (newTheme === 'dark') {
-          if (sunIcon) sunIcon.style.display = 'none';
-          if (moonIcon) moonIcon.style.display = 'block';
-        } else {
-          if (sunIcon) sunIcon.style.display = 'block';
-          if (moonIcon) moonIcon.style.display = 'none';
-        }
-      });
-    }
-  });
+      e.preventDefault();
+      const theme = document.documentElement.getAttribute('data-theme');
+      const newTheme = theme === 'dark' ? 'light' : 'dark';
+
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateAllToggles(newTheme);
+
+      // If feather icons are used, we might need to re-replace them if they were hidden/shown
+      if (window.feather) feather.replace();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();

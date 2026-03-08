@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizVerse | Manage Users</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Include Sidebar -->
+    {% set active_page = 'users' %}
+    {% include 'includes/admin_sidebar.html' %}
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden md:ml-64">
+        <!-- Topbar -->
+        <header class="bg-white border-b border-gray-200 flex items-center justify-between p-4">
+            <div class="flex items-center space-x-4">
+                <i id="menuToggle" data-feather="menu" class="cursor-pointer text-gray-600 md:hidden"></i>
+                <h2 class="text-lg font-semibold text-gray-800">Manage Users</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle"
+                    class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition"
+                    title="Toggle Dark Mode">
+                    <i id="sunIcon" data-feather="sun" class="w-5 h-5"></i>
+                    <i id="moonIcon" data-feather="moon" class="w-5 h-5" style="display: none;"></i>
+                </button>
+                <div
+                    class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='avatars/admin_av.png') }}" alt="Admin Avatar"
+                        class="w-full h-full rounded-full">
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <!-- Search bar -->
+            <div class="mb-4 flex items-center gap-3">
+                <div class="relative flex-1 max-w-sm">
+                    <i data-feather="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                    <input id="userSearch" type="text" placeholder="Search by username or email..."
+                        class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        oninput="filterUsers()">
+                </div>
+                <span id="userCount" class="text-sm text-gray-500"></span>
+            </div>
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    #</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Username</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Role</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Joined</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Loaded via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Pagination -->
+            <div id="pagination" class="flex items-center justify-between mt-4 text-sm text-gray-600">
+                <button id="prevBtn" onclick="changePage(-1)"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 transition">←
+                    Previous</button>
+                <span id="pageInfo"></span>
+                <button id="nextBtn" onclick="changePage(1)"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-40 transition">Next
+                    →</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        feather.replace();
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+
+        // ===== Search + Pagination =====
+        const PAGE_SIZE = 10;
+        let currentPage = 1;
+        // ===== Search + Pagination =====
+        let totalPages = 1;
+
+        async function loadUsers(page = 1) {
+            const search = document.getElementById('userSearch').value;
+            const tbody = document.getElementById('userTableBody');
+            const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-10 text-center text-gray-400">Loading users...</td></tr>';
+
+            try {
+                let url = `/api/admin/users?page=${page}&per_page=${PAGE_SIZE}`;
+                if (search) url += `&search=${encodeURIComponent(search)}`;
+
+                const res = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    currentPage = data.current_page;
+                    totalPages = data.pages;
+                    renderTable(data.users);
+                    updatePaginationUI(data.total);
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-red-500">${data.msg || 'Error loading users'}</td></tr>`;
+                }
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-red-500">Failed to connect to server</td></tr>`;
+            }
+        }
+
+        function renderTable(users) {
+            const tbody = document.getElementById('userTableBody');
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-10 text-center text-gray-400">No users found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map((user, i) => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${(currentPage - 1) * PAGE_SIZE + i + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm font-medium text-gray-900">${user.username}</div></td>
+                    <td class="px-6 py-4 whitespace-nowrap"><div class="text-sm text-gray-500">${user.email}</div></td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.is_admin ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'}">
+                            ${user.is_admin ? 'Admin' : 'User'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.created_at}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button data-id="${user.id}" data-role="${user.is_admin ? 'admin' : 'user'}" 
+                            onclick="handleToggleAdmin(this)" class="text-indigo-600 hover:text-indigo-900 mr-4">
+                            ${user.is_admin ? 'Demote' : 'Promote'}
+                        </button>
+                        <button data-id="${user.id}" onclick="handleDeleteUser(this)" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updatePaginationUI(total) {
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages} · ${total} users`;
+            document.getElementById('prevBtn').disabled = currentPage <= 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+            document.getElementById('userCount').textContent = `${total} total users`;
+        }
+
+        function filterUsers() {
+            clearTimeout(window.searchTimer);
+            window.searchTimer = setTimeout(() => {
+                loadUsers(1);
+            }, 400);
+        }
+
+        function changePage(dir) {
+            loadUsers(currentPage + dir);
+        }
+
+        // Init
+        loadUsers(1);
+
+        // ===== Delete User =====
+        function handleDeleteUser(btn) {
+            const userId = btn.getAttribute('data-id');
+            deleteUser(userId);
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
+            try {
+                const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+                const response = await fetch(`/api/admin/user/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.msg || 'Failed to delete user');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+        }
+
+        // ===== Toggle Admin =====
+        function handleToggleAdmin(btn) {
+            const userId = btn.getAttribute('data-id');
+            const role = btn.getAttribute('data-role');
+            toggleAdmin(userId, role);
+        }
+
+        async function toggleAdmin(userId, role) {
+            const isAdmin = (role === 'admin');
+            const action = isAdmin ? 'demote' : 'promote';
+            if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+            try {
+                const token = sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
+                const response = await fetch(`/api/admin/user/${userId}/toggle-admin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.msg || 'Failed to toggle admin status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+        }
+    </script>
+    <script src="/static/dark-mode.js"></script>
+</body>
+
+</html>

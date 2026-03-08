@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • My Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Dark Mode Support -->
+    <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
         * {
             margin: 0;
@@ -84,6 +86,13 @@
             color: white;
             font-weight: bold;
             font-size: 1.2rem;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-details h3 {
@@ -194,6 +203,13 @@
             color: white;
             font-weight: bold;
             font-size: 1.8rem;
+            overflow: hidden;
+        }
+
+        .mobile-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .mobile-actions {
@@ -273,6 +289,7 @@
             background: rgba(255, 255, 255, 0.08) !important;
             color: #e6e6ff !important;
         }
+
 
 
         /* Stats Cards */
@@ -526,6 +543,15 @@
             background-color: #ffffff !important;
         }
 
+        [data-theme="dark"] .mobile-action-btn {
+            background-color: #404040 !important;
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .mobile-action-btn:hover {
+            background-color: var(--primary-color) !important;
+        }
+
         /* Settings Dropdown */
         .settings-dropdown {
             position: absolute;
@@ -547,8 +573,8 @@
         }
 
         [data-theme="dark"] .settings-dropdown {
-            background: #2d2d40;
-            border-color: #404040;
+            background-color: #2d2d40 !important;
+            border-color: #404040 !important;
         }
 
         .dropdown-item {
@@ -568,7 +594,7 @@
         }
 
         [data-theme="dark"] .dropdown-item {
-            color: var(--dm-text-primary);
+            color: var(--text-primary);
         }
 
         [data-theme="dark"] .dropdown-item:hover {
@@ -607,7 +633,9 @@
 
                 <!-- User Info -->
                 <div class="flex items-center gap-3">
-                    <div class="user-avatar">X</div>
+                    <div class="user-avatar" id="userAvatarDesktop">
+                        <img id="userAvatarImgDesktop" src="/static/avatars/avtar1.jpg" alt="Avatar">
+                    </div>
 
                     <div class="user-details text-left">
                         <h3 class="text-sm font-semibold" id="userNameDesktop"></h3>
@@ -630,13 +658,18 @@
 
                         <!-- Settings Dropdown -->
                         <div class="settings-dropdown" id="settingsDropdown">
-                            <div class="dropdown-item">
+                            <div class="dropdown-item" onclick="location.href='/profile'">
                                 <i class="fas fa-user-circle"></i>
                                 <span>Profile</span>
                             </div>
-                            <div class="dropdown-item">
-                                <i class="fas fa-bell"></i>
-                                <span>Notifications</span>
+                            <div class="dropdown-item" onclick="location.href='/analytics'">
+                                <i class="fas fa-chart-pie"></i>
+                                <span>Analytics</span>
+                            </div>
+
+                            <div class="dropdown-item" onclick="location.href='/faq'">
+                                <i class="fas fa-question-circle"></i>
+                                <span>Help / FAQ</span>
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-item text-red-500 hover:text-red-600" id="logoutBtn">
@@ -670,7 +703,9 @@
         </div>
 
         <div class="mobile-user-info">
-            <div class="mobile-user-avatar">X</div>
+            <div class="mobile-user-avatar" id="userAvatarMobile">
+                <img id="userAvatarImgMobile" src="/static/avatars/avtar1.jpg" alt="Avatar">
+            </div>
             <p class="font-semibold" id="userNameMobile"></p>
             <p class="text-sm text-gray-500" id="userLevelMobile"></p>
         </div>
@@ -720,15 +755,23 @@
             </div>
         </div>
 
+        <!-- Badges -->
+        <section class="quick-actions" style="margin-top:0;">
+            <h2 class="section-title"><i class="fas fa-medal"></i> Your Badges</h2>
+            <div id="badgesContainer" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;">
+                <span style="color:#aaa;font-size:0.9rem;">Play quizzes to earn badges!</span>
+            </div>
+        </section>
+
         <!-- Quick Actions -->
         <section class="quick-actions">
             <h2 class="section-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
             <div class="actions-grid">
-                <a href="#" class="action-btn" id="practiceBtn">
+                <a href="/random" class="action-btn" id="practiceBtn">
                     <i class="fas fa-dumbbell"></i>
                     <span>Practice Mode</span>
                 </a>
-                <a href="#" class="action-btn" id="selectQuizBtn">
+                <a href="/select_quiz" class="action-btn" id="selectQuizBtn">
                     <i class="fas fa-play"></i>
                     <span>Select Quiz</span>
                 </a>
@@ -736,6 +779,11 @@
                     <i class="fas fa-random"></i>
                     <span>Play Random</span>
                 </a>
+                <a href="/leaderboard" class="action-btn" id="leaderboardBtn">
+                    <i class="fas fa-trophy"></i>
+                    <span>Leaderboard</span>
+                </a>
+
             </div>
         </section>
     </main>
@@ -810,7 +858,13 @@
             }
         })
             .then(res => {
-                if (!res.ok) throw new Error("Unauthorized");
+                if (res.status === 401) {
+                    // Token truly expired/invalid — logout
+                    localStorage.removeItem("access_token");
+                    window.location.href = "/login";
+                    throw new Error("Session expired");
+                }
+                if (!res.ok) throw new Error("Server error");
                 return res.json();
             })
             .then(data => {
@@ -830,19 +884,33 @@
                 document.getElementById("avgScore").textContent = `${data.avg_score}%`;
 
 
-                // Avatar initials
-                const initials = data.username
-                    .split(" ")
-                    .map(n => n[0])
-                    .join("")
-                    .toUpperCase();
+                // Set profile picture avatar
+                const avatarFile = data.profile_picture || 'avtar1.jpg';
+                const avatarUrl = `/static/avatars/${avatarFile}`;
+                document.getElementById('userAvatarImgDesktop').src = avatarUrl;
+                document.getElementById('userAvatarImgMobile').src = avatarUrl;
 
-                document.querySelectorAll(".user-avatar, .mobile-user-avatar")
-                    .forEach(el => el.textContent = initials);
+                // Badges
+                const badgesContainer = document.getElementById('badgesContainer');
+                if (badgesContainer && data.badges && data.badges.length > 0) {
+                    badgesContainer.innerHTML = data.badges.map(b => `
+                        <div title="${b.desc}" style="
+                            display:flex;align-items:center;gap:8px;
+                            background:linear-gradient(135deg,#667eea22,#764ba222);
+                            border:1.5px solid #667eea44;
+                            border-radius:20px;padding:6px 14px;
+                            font-size:0.85rem;font-weight:600;color:#4361ee;
+                            cursor:default;">
+                            <span style="font-size:1.1rem;">${b.icon}</span>
+                            <span>${b.name}</span>
+                        </div>`).join('');
+                } else if (badgesContainer) {
+                    badgesContainer.innerHTML = '<span style="color:#aaa;font-size:0.9rem;">Play quizzes to earn badges!</span>';
+                }
             })
             .catch(err => {
-                console.error(err);
-                window.location.href = "/login";
+                // Only log — don't nuke the token for network/server errors
+                console.error("Dashboard load error:", err);
             });
 
         // LOGOUT (desktop)
@@ -850,7 +918,7 @@
         if (logoutBtn) {
             logoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("access_token");
-                window.location.href = "/login";
+                window.location.href = "/logout";
             });
         }
 
@@ -859,71 +927,15 @@
         if (mobileLogoutBtn) {
             mobileLogoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("access_token");
-                window.location.href = "/login";
+                window.location.href = "/logout";
             });
         }
 
     </script>
 
-    <!-- Dark Mode Script (Embedded) -->
+    <script src="/static/dark-mode.js"></script>
     <script>
-        (function () {
-            'use strict';
-
-            // Initialize dark mode from localStorage
-            const htmlElement = document.documentElement;
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            htmlElement.setAttribute('data-theme', savedTheme);
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const darkModeToggle = document.getElementById('darkModeToggle');
-                const darkModeToggleMobile = document.getElementById('darkModeToggleMobile');
-                const sunIcon = document.getElementById('sunIcon');
-                const moonIcon = document.getElementById('moonIcon');
-                const sunIconMobile = document.getElementById('sunIconMobile');
-                const moonIconMobile = document.getElementById('moonIconMobile');
-                const darkModeText = document.getElementById('darkModeTextMobile');
-
-                // Update icons based on current theme
-                function updateIcons(theme) {
-                    if (theme === 'dark') {
-                        if (sunIcon) sunIcon.style.display = 'none';
-                        if (moonIcon) moonIcon.style.display = 'inline';
-                        if (sunIconMobile) sunIconMobile.style.display = 'none';
-                        if (moonIconMobile) moonIconMobile.style.display = 'inline';
-                        if (darkModeText) darkModeText.textContent = 'Light Mode';
-                    } else {
-                        if (sunIcon) sunIcon.style.display = 'inline';
-                        if (moonIcon) moonIcon.style.display = 'none';
-                        if (sunIconMobile) sunIconMobile.style.display = 'inline';
-                        if (moonIconMobile) moonIconMobile.style.display = 'none';
-                        if (darkModeText) darkModeText.textContent = 'Dark Mode';
-                    }
-                }
-
-                // Initial icon state
-                updateIcons(savedTheme);
-
-                // Toggle function
-                function toggleDarkMode() {
-                    const currentTheme = htmlElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    htmlElement.setAttribute('data-theme', newTheme);
-                    localStorage.setItem('theme', newTheme);
-                    updateIcons(newTheme);
-                }
-
-                // Desktop toggle
-                if (darkModeToggle) {
-                    darkModeToggle.addEventListener('click', toggleDarkMode);
-                }
-
-                // Mobile toggle
-                if (darkModeToggleMobile) {
-                    darkModeToggleMobile.addEventListener('click', toggleDarkMode);
-                }
-            });
-        })();
+        feather.replace();
     </script>
 
 </body>
