@@ -12,8 +12,10 @@ class Config:
     APP_VERSION = '1.0.0'
     # ─── Database ─────────────────────────────────────────────────────────────
     # Reads from env; falls back to local dev default if not set.
-    # In production, always set DATABASE_URI in your environment / .env file.
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
+    # We check multiple common names (DATABASE_URI, DATABASE_URL, SQLALCHEMY_DATABASE_URI)
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
+                              os.getenv('DATABASE_URL') or \
+                              os.getenv('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # ─── Security ─────────────────────────────────────────────────────────────
@@ -37,6 +39,7 @@ class Config:
     MAIL_SERVER         = os.getenv('MAIL_SERVER',   'smtp.gmail.com')
     MAIL_PORT           = int(os.getenv('MAIL_PORT', '587'))
     MAIL_USE_TLS        = os.getenv('MAIL_USE_TLS',  'True').lower() == 'true'
+    MAIL_USE_SSL        = os.getenv('MAIL_USE_SSL',  'False').lower() == 'true'
     MAIL_USERNAME       = os.getenv('MAIL_USERNAME',  '')
     MAIL_PASSWORD       = os.getenv('MAIL_PASSWORD',  '')
-    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', 'QuizVerse <no-reply@quizverse.com>')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER') or os.getenv('MAIL_USERNAME') or 'QuizVerse <no-reply@quizverse.com>'

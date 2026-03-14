@@ -112,33 +112,49 @@ def _generate_otp(length=6) -> str:
 def _send_async_email(app, msg):
     with app.app_context():
         try:
+            print(f"[MAIL] Attempting to send email to {msg.recipients}...")
             mail.send(msg)
+            print(f"[MAIL] Email sent successfully to {msg.recipients}")
         except Exception as e:
-            print(f"[MAIL] Async send failed: {e}")
+            print(f"[MAIL] Async send failed for {msg.recipients}: {e}")
+            import traceback
+            traceback.print_exc()
 
 def _send_otp_email(to_email: str, otp: str) -> bool:
     """Send OTP via Flask-Mail asynchronously."""
     try:
+        sender = current_app.config.get('MAIL_DEFAULT_SENDER')
+        print(f"[MAIL] Preparing OTP email for {to_email} (Sender: {sender})")
+        
         msg = Message(
             subject="Your QuizVerse Password Reset OTP",
             recipients=[to_email],
+            body=f"Your QuizVerse OTP is: {otp}. Valid for 10 minutes.", # Plain text fallback
             html=f"""
-            <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;">
-                <h2 style="color:#4361ee;">QuizVerse - Password Reset</h2>
-                <p>Your one-time password (OTP) is:</p>
-                <h1 style="letter-spacing:8px;color:#3a0ca3;font-size:36px;">{otp}</h1>
-                <p style="color:#888;">Valid for <strong>10 minutes</strong>. Do not share this with anyone.</p>
-                <hr>
-                <p style="font-size:12px;color:#aaa;">If you did not request this, ignore this email.</p>
+            <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:20px;border:1px solid #eee;border-radius:10px;">
+                <h2 style="color:#4361ee;text-align:center;">QuizVerse</h2>
+                <p style="font-size:16px;">Your one-time password (OTP) for password reset is:</p>
+                <div style="background:#f8f9fa;padding:20px;text-align:center;border-radius:8px;margin:20px 0;">
+                    <h1 style="letter-spacing:8px;color:#3a0ca3;font-size:36px;margin:0;">{otp}</h1>
+                </div>
+                <p style="color:#666;font-size:14px;">Valid for <strong>10 minutes</strong>. Do not share this with anyone.</p>
+                <hr style="border:0;border-top:1px solid #eee;margin:20px 0;">
+                <p style="font-size:12px;color:#aaa;text-align:center;">If you did not request this, please ignore this email.</p>
             </div>"""
         )
+        
         # Get the underlying Flask app object from the proxy
         app = current_app._get_current_object()
-        threading.Thread(target=_send_async_email, args=(app, msg)).start()
+        
+        # For debugging on Render: Log the start of the thread
+        print(f"[MAIL] Starting background thread for {to_email}")
+        thread = threading.Thread(target=_send_async_email, args=(app, msg))
+        thread.daemon = True # Ensure it doesn't block exit
+        thread.start()
+        
         return True
     except Exception as e:
-        print(f"[MAIL] Could not prepare OTP email: {e}")
-        print(f"[MAIL] DEV OTP for {to_email}: {otp}")
+        print(f"[MAIL] Could not prepare OTP email for {to_email}: {e}")
         return False
 
 
