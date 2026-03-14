@@ -17,7 +17,7 @@
   <meta property="og:description" content="Join millions of players worldwide in fun quizzes.">
   <meta property="og:type" content="website">
 
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="/static/title%20logo.png">
 
   <!-- Libraries -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -68,7 +68,7 @@
   <nav class="bg-white shadow-sm sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2">
-        <img src="/static/logo.png" width="50" alt="QuizVerse" class="rounded-lg">
+        <img src="/static/title%20logo.png" width="50" alt="QuizVerse" class="rounded-lg">
         <span class="text-xl font-bold text-gray-900">QuizVerse</span>
       </a>
 
@@ -193,28 +193,28 @@
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
       <!-- Geography -->
-      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up">
+      <a href="/explore" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up">
         <i data-feather="globe" class="text-purple-600"></i>
         <h3 class="mt-4 font-semibold">Geography</h3>
         <p class="text-sm text-gray-500 mt-2">Explore countries, capitals, and landmarks.</p>
       </a>
 
       <!-- Technology -->
-      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="100">
+      <a href="/explore" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="100">
         <i data-feather="cpu" class="text-blue-600"></i>
         <h3 class="mt-4 font-semibold">Technology</h3>
         <p class="text-sm text-gray-500 mt-2">Programming, AI, gadgets, and more.</p>
       </a>
 
       <!-- Movies -->
-      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="200">
+      <a href="/explore" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="200">
         <i data-feather="film" class="text-green-600"></i>
         <h3 class="mt-4 font-semibold">Movies</h3>
         <p class="text-sm text-gray-500 mt-2">From classics to blockbusters.</p>
       </a>
 
       <!-- Music -->
-      <a href="#" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="300">
+      <a href="/explore" class="category-card bg-white p-6 rounded-lg shadow" data-aos="fade-up" data-aos-delay="300">
         <i data-feather="music" class="text-yellow-600"></i>
         <h3 class="mt-4 font-semibold">Music</h3>
         <p class="text-sm text-gray-500 mt-2">Artists, albums, genres & lyrics.</p>
@@ -295,7 +295,7 @@
     <div class="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-4 gap-8">
       <div>
         <div class="flex items-center gap-2">
-          <img src="/static/logo.png" width="40" alt="Logo" class="rounded-lg">
+          <img src="/static/title%20logo.png" width="40" alt="Logo" class="rounded-lg">
           <span class="text-white font-bold text-xl">QuizVerse</span>
         </div>
         <p class="mt-4 text-sm">
@@ -336,22 +336,30 @@
     }
   </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('access_token')) {
-                document.querySelectorAll('a[href="/"]').forEach(function(el) { 
-                    el.href = '/user_dashboard'; 
-                });
-                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function(el) {
-                    if (el.parentElement && el.parentElement.tagName === 'LI') {
-                        el.parentElement.style.display = 'none';
-                    } else {
-                        el.style.display = 'none';
-                    }
-                });
-            }
-        });
-    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        try {
+          const res = await fetch('/api/auth/session-check', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          const data = await res.json();
+          if (data.logged_in) {
+            const dashboardUrl = data.is_admin ? '/admin' : '/user_dashboard';
+            document.querySelectorAll('a[href="/"]').forEach(el => el.href = dashboardUrl);
+            document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(el => {
+              if (el.parentElement && el.parentElement.tagName === 'LI') {
+                el.parentElement.style.display = 'none';
+              } else {
+                el.style.display = 'none';
+              }
+            });
+          }
+        } catch (e) { console.error('Session check failed', e); }
+      }
+    });
+  </script>
 </body>
 
 

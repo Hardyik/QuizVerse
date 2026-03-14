@@ -3,8 +3,9 @@ from flask_jwt_extended import create_access_token
 from models import User, OTP, db # UPDATED: Added OTP
 from extensions import db, jwt, mail, limiter
 from flask_mail import Message
-import random, string
+import random, string, threading
 from datetime import datetime, timedelta
+from flask import current_app
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -108,8 +109,15 @@ window.location.replace('/login');
 def _generate_otp(length=6) -> str:
     return ''.join(random.choices(string.digits, k=length))
 
+def _send_async_email(app, msg):
+    with app.app_context():
+        try:
+            mail.send(msg)
+        except Exception as e:
+            print(f"[MAIL] Async send failed: {e}")
+
 def _send_otp_email(to_email: str, otp: str) -> bool:
-    """Send OTP via Flask-Mail."""
+    """Send OTP via Flask-Mail asynchronously."""
     try:
         msg = Message(
             subject="Your QuizVerse Password Reset OTP",
@@ -124,10 +132,12 @@ def _send_otp_email(to_email: str, otp: str) -> bool:
                 <p style="font-size:12px;color:#aaa;">If you did not request this, ignore this email.</p>
             </div>"""
         )
-        mail.send(msg)
+        # Get the underlying Flask app object from the proxy
+        app = current_app._get_current_object()
+        threading.Thread(target=_send_async_email, args=(app, msg)).start()
         return True
     except Exception as e:
-        print(f"[MAIL] Could not send OTP email: {e}")
+        print(f"[MAIL] Could not prepare OTP email: {e}")
         print(f"[MAIL] DEV OTP for {to_email}: {otp}")
         return False
 

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Select Quiz • QuizVerse</title>
+    <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -99,6 +100,20 @@
         if (!token) {
             window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
         }
+
+        // Handle admin redirection logic
+        (async () => {
+             try {
+                const res = await fetch('/api/auth/session-check', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (data.logged_in) {
+                    const dashboardUrl = data.is_admin ? '/admin' : '/user_dashboard';
+                    document.querySelectorAll('a[href="/user_dashboard"]').forEach(el => el.href = dashboardUrl);
+                }
+            } catch (e) { console.error('Session check failed', e); }
+        })();
 
         // Color/icon palette for dynamic cards
         const palette = [

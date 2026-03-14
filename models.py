@@ -73,20 +73,6 @@ class OTP(db.Model):
     expires_at = db.Column(db.DateTime, nullable=False)
     is_verified = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-class QuizSession(db.Model):
-    __tablename__ = 'quiz_sessions'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
-    question_ids = db.Column(db.Text, nullable=False) # JSON-encoded list of IDs
-    current_index = db.Column(db.Integer, default=0)
-    score = db.Column(db.Integer, default=0)
-    user_answers = db.Column(db.Text, nullable=True) # JSON-encoded list of answers
-    last_active = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    user = db.relationship('User', backref=db.backref('quiz_sessions', cascade="all, delete-orphan", lazy=True))
-    category = db.relationship('Category', backref=db.backref('quiz_sessions', cascade="all, delete-orphan", lazy=True))
-
 
 class SystemSetting(db.Model):
     __tablename__ = 'system_settings'

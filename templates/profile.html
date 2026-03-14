@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse | My Profile</title>
+    <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <meta name="description" content="Manage your QuizVerse profile and account settings.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/dark-mode.css">
@@ -519,13 +520,13 @@
 
 <body>
     <nav>
-        <a href="/user_dashboard" class="logo">
-            <img src="/static/logo.png" alt="QuizVerse Logo">
+        <a href="/user_dashboard" class="logo" id="navLogo">
+            <img src="/static/title%20logo.png" alt="QuizVerse Logo">
             <span>QuizVerse</span>
         </a>
         <div class="nav-links">
             <a href="/leaderboard">Leaderboard</a>
-            <a href="/user_dashboard">Dashboard</a>
+            <a href="/user_dashboard" id="navDashboard">Dashboard</a>
             <a href="/logout">Logout</a>
 
             <!-- Dark Mode Toggle -->
@@ -614,12 +615,25 @@
         </div>
     </div>
     <script>
-        const token = localStorage.getItem('access_token');
+        let token = localStorage.getItem('access_token');
         if (!token) window.location.href = '/login';
 
         let userData = {};
 
         async function loadProfile() {
+            // Update dashboard links for admins
+            const token_check = await fetch('/api/auth/session-check', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const sess_data = await token_check.json();
+            if (sess_data.is_admin) {
+                const adminUrl = '/admin';
+                const logo = document.querySelector('.logo');
+                if (logo) logo.href = adminUrl;
+                // Update all dashboard links
+                document.querySelectorAll('a[href="/user_dashboard"]').forEach(el => el.href = adminUrl);
+            }
+
             try {
                 const res = await fetch('/api/user/profile', {
                     headers: { 'Authorization': 'Bearer ' + token }

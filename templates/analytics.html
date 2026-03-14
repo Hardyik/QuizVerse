@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Analytics</title>
+    <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
@@ -251,6 +252,20 @@
         if (!token) {
             window.location.href = "/login";
         }
+
+        // Handle admin redirection logic
+        (async () => {
+             try {
+                const res = await fetch('/api/auth/session-check', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (data.logged_in) {
+                    const dashboardUrl = data.is_admin ? '/admin' : '/user_dashboard';
+                    document.querySelectorAll('a[href="/user_dashboard"]').forEach(el => el.href = dashboardUrl);
+                }
+            } catch (e) { console.error('Session check failed', e); }
+        })();
 
         // Setup theme toggle icon visibility dynamically
         const darkModeToggle = document.getElementById("darkModeToggle");

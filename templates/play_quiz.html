@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Play Quiz</title>
+    <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Dark Mode Support -->
@@ -129,7 +130,7 @@
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <a href="/user_dashboard" class="flex items-center gap-2">
-                <img src="/static/logo.png" width="40" alt="QuizVerse" class="rounded-lg">
+                <img src="/static/title%20logo.png" width="40" alt="QuizVerse" class="rounded-lg">
                 <span class="text-xl font-bold text-gray-900">QuizVerse</span>
             </a>
             <div class="flex items-center gap-4">
@@ -138,9 +139,11 @@
                     <i class="fas fa-sun" id="sunIcon"></i>
                     <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
                 </button>
-                <div class="flex items-center gap-2 px-3 py-1 bg-purple-100 rounded-full">
-                    <span class="w-2 h-2 bg-purple-600 rounded-full animate-ping"></span>
-                    <span class="text-xs font-bold text-purple-700" id="usernameDisplay">...</span>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-200 shadow-sm">
+                        <img id="userAvatar" src="/static/avatars/avtar1.jpg" alt="Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-sm font-bold text-gray-700" id="usernameDisplay">...</span>
                 </div>
             </div>
         </div>
@@ -192,27 +195,7 @@
             </div>
         </div>
 
-        <!-- Resume Modal -->
-        <div id="resumeModal"
-            class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black bg-opacity-50">
-            <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl">
-                <div
-                    class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-history text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Resume Quiz?</h3>
-                <p class="text-gray-600 mb-6">We found an unfinished quiz session. Would you like to continue where you
-                    left off?</p>
-                <div class="flex flex-col gap-3">
-                    <button onclick="resumeQuiz()"
-                        class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">Resume
-                        Session</button>
-                    <button onclick="startFresh()"
-                        class="w-full bg-gray-100 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-200 transition">Start
-                        Fresh</button>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Result Card -->
         <div id="resultCard"
@@ -311,7 +294,6 @@
         const progressBar = document.getElementById('progressBar');
         const categoryName = document.getElementById('categoryName');
 
-        // Initialize Quiz
         async function init() {
             try {
                 // Get user info for display
@@ -320,6 +302,8 @@
                 });
                 const profile = await profileRes.json();
                 usernameDisplay.textContent = profile.username;
+                const avatarFile = profile.profile_picture || 'avtar1.jpg';
+                document.getElementById('userAvatar').src = `/static/avatars/${avatarFile}`;
 
                 if (!categoryId) {
                     const catRes = await fetch('/api/categories');
@@ -327,57 +311,21 @@
                     categoryId = cats[0]?.id;
                 }
 
-                // Get Category Name (RESTORING THIS)
+                // Get Category Name
                 const catsRes = await fetch('/api/categories');
                 const cats = await catsRes.json();
                 const matchedCat = cats.find(c => String(c.id) === String(categoryId));
                 categoryName.textContent = matchedCat ? matchedCat.name.toUpperCase() : 'QUIZ';
 
-                // Check for server-side session first
-                const sessRes = await fetch(`/api/quiz/session/${categoryId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const sess = await sessRes.json();
-
-                if (sess) {
-                    // We found a server session!
-                    currentIndex = sess.current_index;
-                    score = sess.score;
-                    userAnswers = sess.user_answers;
-
-                    // Fetch those specific questions
-                    const qRes = await fetch('/api/questions/batch', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ ids: sess.question_ids })
-                    });
-                    quizData = await qRes.json();
-
-                    loading.classList.add('hidden');
-                    document.getElementById('resumeModal').classList.remove('hidden');
-                } else {
-                    // No server session, check localStorage as fallback or start fresh
-                    startFresh();
-                }
+                startFresh();
             } catch (err) {
                 console.error(err);
                 loading.innerHTML = `<p class="text-red-500 font-bold">${err.message}</p>`;
             }
         }
 
-        async function resumeQuiz() {
-            document.getElementById('resumeModal').classList.add('hidden');
-            loading.classList.add('hidden');
-            quizContainer.classList.remove('hidden');
-            loadQuestion();
-        }
-
         async function startFresh() {
             loading.classList.remove('hidden');
-            document.getElementById('resumeModal').classList.add('hidden');
 
             try {
                 // Get new set of questions
@@ -389,19 +337,6 @@
 
                 if (quizData.length === 0) throw new Error("No questions available.");
 
-                // Initialize server session
-                await fetch('/api/quiz/session/start', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        category_id: parseInt(categoryId),
-                        question_ids: quizData.map(q => q.id)
-                    })
-                });
-
                 currentIndex = 0;
                 score = 0;
                 userAnswers = [];
@@ -412,43 +347,6 @@
             } catch (err) {
                 loading.innerHTML = `<p class="text-red-500 font-bold">${err.message}</p>`;
             }
-        }
-
-        async function saveProgress() {
-            // Local fallback
-            localStorage.setItem(`quiz_progress_${categoryId}`, JSON.stringify({
-                index: currentIndex,
-                score: score,
-                answers: userAnswers
-            }));
-
-            // Server sync
-            try {
-                await fetch(`/api/quiz/session/${categoryId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        current_index: currentIndex,
-                        score: score,
-                        user_answers: userAnswers
-                    })
-                });
-            } catch (err) {
-                console.warn("Server sync failed", err);
-            }
-        }
-
-        async function clearProgress() {
-            localStorage.removeItem(`quiz_progress_${categoryId}`);
-            try {
-                await fetch(`/api/quiz/session/${categoryId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-            } catch (err) { }
         }
 
         function loadQuestion() {
@@ -537,7 +435,7 @@
                     icon.className = "fas fa-times-circle text-red-500 opacity-100";
                     autoMarkCorrect(data.correct_option_id);
                 }
-                saveProgress(); // BUG FIX: Save progress after answer
+
             } catch (err) {
                 console.error("Verification failed", err);
             }
@@ -563,7 +461,7 @@
 
             // Record as wrong answer
             userAnswers.push({ question_id: quizData[currentIndex].id, option_id: null });
-            saveProgress();
+
 
             // Show "Time's Up!" in the timer
             timerEl.querySelector('span').textContent = "Time's Up!";
@@ -616,7 +514,7 @@
                 });
                 const data = await res.json();
 
-                clearProgress(); // Success!
+
                 loading.classList.add('hidden');
                 resultCard.classList.remove('hidden');
 

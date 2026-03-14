@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • My Dashboard</title>
+    <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
@@ -718,15 +719,23 @@
                 <span id="darkModeTextMobile">Dark Mode</span>
             </button>
 
-            <button class="mobile-action-btn" id="mobileSettingsBtn">
-                <i class="fas fa-cog"></i>
-                Settings
-            </button>
-            <button class="mobile-action-btn" id="mobileLogoutBtn">
+            <a href="/profile" class="mobile-action-btn">
+                <i class="fas fa-user-circle"></i>
+                Profile
+            </a>
+            <a href="/analytics" class="mobile-action-btn">
+                <i class="fas fa-chart-pie"></i>
+                Analytics
+            </a>
+            <a href="/faq" class="mobile-action-btn">
+                <i class="fas fa-question-circle"></i>
+                Help / FAQ
+            </a>
+            
+            <button class="mobile-action-btn text-red-500 mt-2 border-t pt-4" id="mobileLogoutBtn">
                 <i class="fas fa-sign-out-alt"></i>
                 Logout
             </button>
-
         </div>
     </div>
 
@@ -738,7 +747,7 @@
         <section class="welcome-section">
             <div class="welcome-text">
                 <h2>Welcome back <span id="welcomeUsername"></span>! 🎉</h2>
-                <p class="learning-goal">Your knowledge is growing every day. Keep up the great work!</p>
+                <p id="welcomeMessage" class="learning-goal">Your knowledge is growing every day. Keep up the great work!</p>
             </div>
         </section>
 
@@ -838,13 +847,7 @@
             }
         });
 
-        // Mobile settings
-        if (mobileSettingsBtn) {
-            mobileSettingsBtn.addEventListener('click', () => {
-                alert('Opening settings...');
-                closeMobileMenu();
-            });
-        }
+        // Mobile settings logic removed in favor of direct links
 
         const token = localStorage.getItem("access_token");
 
@@ -878,6 +881,17 @@
 
                 // Welcome Message
                 document.getElementById("welcomeUsername").textContent = data.username;
+                
+                const welcomeMessages = [
+                    "Your knowledge is growing every day. Keep up the great work!",
+                    "Mastery is a journey, not a destination. Ready for the next quiz?",
+                    "Every correct answer is a step closer to becoming a Quiz Master!",
+                    "Unlock your potential one question at a time. Let's get started!",
+                    "Knowledge is power. What will you learn today?",
+                    "Challenge yourself and see how far you can go. You've got this!"
+                ];
+                const randomMsg = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+                document.getElementById("welcomeMessage").textContent = randomMsg;
 
                 // Stats
                 document.getElementById("totalQuizzes").textContent = data.total_quizzes;

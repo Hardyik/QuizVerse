@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import User, Category, Question, Option, Result, QuizSession, db
+from models import User, Category, Question, Option, Result, db
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 import json
 
@@ -202,81 +202,6 @@ def get_questions(cat_id):
         })
     return jsonify(result)
 
-# ─── QUIZ SESSION PERSISTENCE ────────────────────────────────────────────────
-@api_bp.route('/api/quiz/session/start', methods=['POST'])
-@jwt_required()
-def start_quiz_session():
-    data = request.get_json() or {}
-    cat_id = data.get('category_id')
-    q_ids = data.get('question_ids', [])
-    
-    if not cat_id or not q_ids:
-        return jsonify({"msg": "category_id and question_ids required"}), 400
-        
-    user_identity = get_jwt_identity()
-    user = User.query.filter_by(username=user_identity).first()
-    
-    # Clear any old session for this user/category
-    QuizSession.query.filter_by(user_id=user.id, category_id=cat_id).delete()
-    
-    sess = QuizSession(
-        user_id=user.id,
-        category_id=cat_id,
-        question_ids=json.dumps(q_ids),
-        current_index=0,
-        score=0,
-        user_answers=json.dumps([])
-    )
-    db.session.add(sess)
-    db.session.commit()
-    return jsonify({"msg": "Session started", "session_id": sess.id}), 201
-
-@api_bp.route('/api/quiz/session/<int:cat_id>', methods=['GET'])
-@jwt_required()
-def get_quiz_session(cat_id):
-    user_identity = get_jwt_identity()
-    user = User.query.filter_by(username=user_identity).first()
-    
-    sess = QuizSession.query.filter_by(user_id=user.id, category_id=cat_id).first()
-    if not sess:
-        return jsonify(None), 200
-        
-    return jsonify({
-        "current_index": sess.current_index,
-        "score": sess.score,
-        "question_ids": json.loads(sess.question_ids),
-        "user_answers": json.loads(sess.user_answers or '[]')
-    })
-
-@api_bp.route('/api/quiz/session/<int:cat_id>', methods=['PATCH'])
-@jwt_required()
-def update_quiz_session(cat_id):
-    data = request.get_json() or {}
-    user_identity = get_jwt_identity()
-    user = User.query.filter_by(username=user_identity).first()
-    
-    sess = QuizSession.query.filter_by(user_id=user.id, category_id=cat_id).first()
-    if not sess:
-        return jsonify({"msg": "No active session"}), 404
-        
-    if 'current_index' in data:
-        sess.current_index = data['current_index']
-    if 'score' in data:
-        sess.score = data['score']
-    if 'user_answers' in data:
-        sess.user_answers = json.dumps(data['user_answers'])
-        
-    db.session.commit()
-    return jsonify({"msg": "Progress saved"}), 200
-
-@api_bp.route('/api/quiz/session/<int:cat_id>', methods=['DELETE'])
-@jwt_required()
-def delete_quiz_session(cat_id):
-    user_identity = get_jwt_identity()
-    user = User.query.filter_by(username=user_identity).first()
-    QuizSession.query.filter_by(user_id=user.id, category_id=cat_id).delete()
-    db.session.commit()
-    return jsonify({"msg": "Session cleared"}), 200
 
 @api_bp.route('/api/questions/batch', methods=['POST'])
 @jwt_required()
@@ -402,8 +327,6 @@ def submit_quiz():
         db.session.commit()
         result_id = result.id
 
-        # Clear active quiz session after submission
-        QuizSession.query.filter_by(user_id=user_id, category_id=category_id).delete()
         db.session.commit()
 
     return jsonify({

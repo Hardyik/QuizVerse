@@ -144,6 +144,8 @@ def user_dashboard():
     guard = _login_required_or_restore()
     if guard:
         return guard
+    if session.get('auth_is_admin'):
+        return redirect('/admin')
     return render_template('user_dashboard.html')
 
 @main_bp.route('/select_quiz')
