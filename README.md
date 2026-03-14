@@ -2,8 +2,6 @@
 
 > **Enter the universe of quizzes — where learning meets fun.**
 
-![QuizVerse Banner](https://via.placeholder.com/1200x400?text=QuizVerse+Banner)
-
 **QuizVerse** is a full-stack web application built with Flask that allows users to test their knowledge across various categories. It features a robust quiz engine, user authentication, score tracking, and a comprehensive admin panel for content management.
 
 ---
