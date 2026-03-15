@@ -93,7 +93,7 @@ def admin_panel():
     guard = _admin_login_or_restore()
     if guard:
         return guard
-    total_users = User.query.count()
+    total_users = User.query.filter_by(is_admin=False).count()
     return render_template('includes/Admin.html', total_users=total_users)
 
 @admin_bp.route('/admin/users')
@@ -101,8 +101,7 @@ def list_users():
     guard = _admin_login_or_restore()
     if guard:
         return guard
-    user = User.query.get(session['auth_user_id'])
-    users = User.query.filter(User.id != user.id).all()
+    users = User.query.filter_by(is_admin=False).all()
     return render_template('includes/admin_users.html', users=users)
 
 @admin_bp.route('/admin/quizzes')
@@ -194,7 +193,7 @@ def api_list_users():
     per_page = int(request.args.get('per_page', 10))
     search = request.args.get('search', '').strip()
     
-    query = User.query
+    query = User.query.filter_by(is_admin=False)
     if search:
         query = query.filter(User.username.ilike(f'%{search}%') | User.email.ilike(f'%{search}%'))
         
@@ -377,13 +376,13 @@ def delete_question(q_id):
 @admin_bp.route('/api/admin/stats', methods=['GET'])
 @admin_required_decorator
 def admin_stats():
-    total_users = User.query.count()
+    total_users = User.query.filter_by(is_admin=False).count()
     total_quizzes = Question.query.count()
     total_attempts = Result.query.count()
     total_categories = Category.query.count()
     
     # Get recent activity (last 10 items)
-    recent_users = User.query.order_by(User.created_at.desc()).limit(5).all()
+    recent_users = User.query.filter_by(is_admin=False).order_by(User.created_at.desc()).limit(5).all()
     recent_results = Result.query.order_by(Result.taken_at.desc()).limit(5).all()
     
     activity = []
