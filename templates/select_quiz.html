@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>QuizVerse • Select Quiz</title>
-    <link rel="icon" type="image/png" href="/static/title%20logo.png">
+    <link rel="icon" type="image/png" href="/static/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Dark Mode Support -->
@@ -14,18 +14,21 @@
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
     <!-- Navbar -->
-    <nav class="bg-purple-700 p-4 text-white flex items-center justify-between relative shadow-md">
-        <a href="/user_dashboard" class="flex items-center gap-2">
-            <span class="text-xl font-bold">QuizVerse</span>
-        </a>
-        <div class="flex items-center gap-4">
-            <a href="/user_dashboard" class="hover:text-purple-300">Dashboard</a>
-            <!-- Dark Mode Toggle -->
-            <button id="darkModeToggle"
-                class="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-600 hover:bg-purple-800 transition text-white">
-                <i data-feather="sun" id="sunIcon"></i>
-                <i data-feather="moon" id="moonIcon" style="display:none;"></i>
-            </button>
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/user_dashboard" class="flex items-center gap-2">
+                <img src="/static/logo.png" alt="QuizVerse Logo" class="w-10 h-10 rounded-lg">
+                <span class="text-xl font-bold text-gray-900">QuizVerse</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="/user_dashboard" class="text-gray-600 hover:text-purple-600 font-medium transition">Dashboard</a>
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle"
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 transition text-gray-600">
+                    <i data-feather="sun" id="sunIcon"></i>
+                    <i data-feather="moon" id="moonIcon" style="display:none;"></i>
+                </button>
+            </div>
         </div>
     </nav>
 

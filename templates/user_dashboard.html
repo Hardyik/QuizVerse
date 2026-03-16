@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • My Dashboard</title>
-    <link rel="icon" type="image/png" href="/static/title%20logo.png">
+    <link rel="icon" type="image/png" href="/static/logo.png">
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
@@ -540,9 +540,6 @@
             color: #ffffff !important;
         }
 
-        [data-theme="dark"] nav img {
-            background-color: #ffffff !important;
-        }
 
         [data-theme="dark"] .mobile-action-btn {
             background-color: #404040 !important;
@@ -623,8 +620,7 @@
 
             <!-- Logo -->
             <a href="#" class="flex items-center gap-2">
-                <img src="static/logo.png" alt="QuizVerse Logo"
-                    class="w-12 h-12 rounded-xl object-contain bg-white shadow-sm" />
+                <img src="/static/logo.png" alt="QuizVerse Logo" class="w-10 h-10 rounded-lg">
 
                 <span class="text-xl font-bold text-gray-900">QuizVerse</span>
             </a>
@@ -731,7 +727,7 @@
                 <i data-feather="help-circle"></i>
                 Help / FAQ
             </a>
-            
+
             <button class="mobile-action-btn text-red-500 mt-2 border-t pt-4" id="mobileLogoutBtn">
                 <i data-feather="log-out"></i>
                 Logout
@@ -747,7 +743,8 @@
         <section class="welcome-section">
             <div class="welcome-text">
                 <h2>Welcome back <span id="welcomeUsername"></span>! 🎉</h2>
-                <p id="welcomeMessage" class="learning-goal">Your knowledge is growing every day. Keep up the great work!</p>
+                <p id="welcomeMessage" class="learning-goal">Your knowledge is growing every day. Keep up the great
+                    work!</p>
             </div>
         </section>
 
@@ -877,7 +874,7 @@
 
                 // Welcome Message
                 document.getElementById("welcomeUsername").textContent = data.username;
-                
+
                 const welcomeMessages = [
                     "Your knowledge is growing every day. Keep up the great work!",
                     "Mastery is a journey, not a destination. Ready for the next quiz?",

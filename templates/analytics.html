@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Analytics</title>
-    <link rel="icon" type="image/png" href="/static/title%20logo.png">
+    <link rel="icon" type="image/png" href="/static/logo.png">
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
@@ -188,7 +188,8 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-medium text-gray-700 flex items-center gap-2">
-                                <i data-feather="circle" class="text-green-500 fill-current" style="width: 8px; height: 8px;"></i> Correct
+                                <i data-feather="circle" class="text-green-500 fill-current"
+                                    style="width: 8px; height: 8px;"></i> Correct
                             </span>
                             <span class="font-bold text-green-600" id="txtCorrectNum">-</span>
                         </div>
@@ -202,7 +203,8 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-medium text-gray-700 flex items-center gap-2">
-                                <i data-feather="circle" class="text-red-500 fill-current" style="width: 8px; height: 8px;"></i> Incorrect
+                                <i data-feather="circle" class="text-red-500 fill-current"
+                                    style="width: 8px; height: 8px;"></i> Incorrect
                             </span>
                             <span class="font-bold text-red-600" id="txtIncorrectNum">-</span>
                         </div>
@@ -255,7 +257,7 @@
 
         // Handle admin redirection logic
         (async () => {
-             try {
+            try {
                 const res = await fetch('/api/auth/session-check', {
                     headers: { 'Authorization': 'Bearer ' + token }
                 });

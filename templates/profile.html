@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • My Profile</title>
-    <link rel="icon" type="image/png" href="/static/title%20logo.png">
+    <link rel="icon" type="image/png" href="/static/logo.png">
     <meta name="description" content="Manage your QuizVerse profile and account settings.">
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="/static/dark-mode.css">
@@ -502,39 +502,19 @@
         [data-theme="dark"] .nav-links a {
             color: #b0b0b0 !important;
         }
-
-        [data-theme="dark"] .nav-links a:hover {
-            color: #818cf8 !important;
-        }
-
-        [data-theme="dark"] #darkModeToggle {
-            background-color: #404040 !important;
-            color: #ffffff !important;
-        }
-
-        [data-theme="dark"] #darkModeToggle:hover {
-            background-color: #4a4a4a !important;
-        }
     </style>
 </head>
 
 <body>
     <nav>
         <a href="/user_dashboard" class="logo" id="navLogo">
-            <img src="/static/title%20logo.png" alt="QuizVerse Logo">
+            <img src="/static/logo.png" alt="QuizVerse Logo">
             <span>QuizVerse</span>
         </a>
         <div class="nav-links">
             <a href="/leaderboard">Leaderboard</a>
             <a href="/user_dashboard" id="navDashboard">Dashboard</a>
             <a href="/logout">Logout</a>
-
-            <!-- Dark Mode Toggle -->
-            <button id="darkModeToggle"
-                style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;border:none;cursor:pointer;margin-left:16px;transition:all 0.2s;color:#555;font-size:1rem;">
-                <i data-feather="sun" id="sunIcon"></i>
-                <i data-feather="moon" id="moonIcon" style="display:none;"></i>
-            </button>
         </div>
     </nav>
 
@@ -589,16 +569,6 @@
             </div>
             <button class="btn-primary" onclick="changePassword()">Update Password</button>
             <div class="msg" id="passwordMsg"></div>
-        </div>
-
-
-
-        <!-- Danger Zone -->
-        <div class="card" style="border:1.5px solid #fee2e2;">
-            <h2 style="color:#dc2626;"><i data-feather="alert-triangle"></i> Danger Zone</h2>
-            <p style="color:#6c757d;font-size:0.9rem;margin-bottom:16px;">Logging out will clear your session. To
-                permanently delete your account, contact admin.</p>
-            <button class="btn-danger" onclick="logout()"><i data-feather="log-out"></i> Logout</button>
         </div>
     </div>
 
