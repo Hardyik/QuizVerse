@@ -30,7 +30,7 @@
 | **Forgot Password** | OTP sent to email → verify OTP → reset password. Rate-limited to 3 req/min. |
 | **Category Explorer** | Browse all quiz categories (name, description, icon, question count). |
 | **Quiz Play** | Select a category → get questions (filterable by difficulty). Per-question timer. Answers verified server-side. Correct option ID returned only after answering. |
-| **Quiz Session Persistence** | In-progress quizzes are saved to the DB so users can resume after page refresh or browser close. |
+
 | **Demo Mode** | Unauthenticated users can try a demo quiz. Results are *not* saved to the database. |
 | **Random Quiz** | Play a random quiz from any category (login required). |
 | **Score & Results** | After submission the user receives score, percentage, and optional level-up notification. |
@@ -123,7 +123,7 @@ Defines **7 SQLAlchemy models**:
 | **`Option`** | `options` | `id`, `question_id` (FK), `text`, `is_correct` | Answer options for each question. Cascaded delete with question. |
 | **`Result`** | `results` | `id`, `user_id` (FK), `username`, `category_id` (FK), `score`, `total`, `time_taken`, `taken_at` | Stores completed quiz results for scoring and analytics. |
 | **`OTP`** | `otps` | `id`, `email`, `otp`, `expires_at`, `is_verified`, `created_at` | Temporary OTPs for the forgot-password flow. |
-| **`QuizSession`** | `quiz_sessions` | `id`, `user_id` (FK), `category_id` (FK), `question_ids` (JSON), `current_index`, `score`, `user_answers` (JSON), `last_active` | Persists in-progress quiz state so users can resume. |
+
 | **`SystemSetting`** | `system_settings` | `key` (PK), `value`, `updated_at` | Key-value store for app settings (maintenance mode, etc.). Includes an in-memory `_cache` with `get_val()`, `set_val()`, `clear_cache()`. |
 
 ---
@@ -242,13 +242,7 @@ Sample values for `DATABASE_URI`, security keys, admin credentials, SMTP setting
 | `/api/submit` | POST | — | Submit full quiz; calculates score. For authenticated users: saves `Result`, handles level-up, clears `QuizSession`. Anonymous users get score but nothing is persisted. |
 | `/api/leaderboard` | GET | — | Aggregated leaderboard: per-user accuracy, time, quizzes played. Filterable by category. |
 
-**Quiz Session Persistence (JWT required):**
-| Endpoint | Method | Description |
-|---|---|---|
-| `/api/quiz/session/start` | POST | Start a new quiz session (category + question IDs). Clears any existing session for that user/category. |
-| `/api/quiz/session/<cat_id>` | GET | Get current session progress. |
-| `/api/quiz/session/<cat_id>` | PATCH | Update progress (current index, score, answers). |
-| `/api/quiz/session/<cat_id>` | DELETE | Clear session. |
+
 | `/api/questions/batch` | POST | Fetch multiple questions by IDs (for session resume). |
 
 ---
@@ -375,19 +369,7 @@ flask db upgrade   # Apply migration
        │         │ time_taken   │
        │         │ taken_at     │
        │         └──────────────┘
-       │
-       │         ┌────────────────┐
-       ├────────►│ quiz_sessions  │
-       │         ├────────────────┤
-       │         │ id (PK)        │
-       │         │ user_id (FK)   │
-       │         │ category_id    │
-       │         │ question_ids   │
-       │         │ current_index  │
-       │         │ score          │
-       │         │ user_answers   │
-       │         │ last_active    │
-       │         └────────────────┘
+
        │
        │         ┌──────────────────┐
        │         │  system_settings │

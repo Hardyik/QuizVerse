@@ -3,11 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Select Quiz • QuizVerse</title>
+    <title>QuizVerse • Select Quiz</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
 </head>
@@ -24,8 +23,8 @@
             <!-- Dark Mode Toggle -->
             <button id="darkModeToggle"
                 class="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-600 hover:bg-purple-800 transition text-white">
-                <i class="fas fa-sun" id="sunIcon"></i>
-                <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+                <i data-feather="sun" id="sunIcon"></i>
+                <i data-feather="moon" id="moonIcon" style="display:none;"></i>
             </button>
         </div>
     </nav>
@@ -52,8 +51,7 @@
     <!-- Difficulty Modal -->
     <div id="difficultyModal"
         class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full transform transition-all" data-aos="zoom-in"
-            data-aos-duration="200">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full transform transition-all">
             <div class="text-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800" id="modalCategoryTitle">Category Name</h2>
                 <p class="text-sm text-gray-500 mt-1">Select your difficulty level</p>
@@ -87,13 +85,11 @@
     </footer>
 
     <!-- Scripts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Feather Icons -->
     <script src="/static/dark-mode.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
 
     <script>
-        AOS.init({ duration: 500, once: true });
 
         // Ensure user is logged in
         const token = localStorage.getItem('access_token');
@@ -103,7 +99,7 @@
 
         // Handle admin redirection logic
         (async () => {
-             try {
+            try {
                 const res = await fetch('/api/auth/session-check', {
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
@@ -154,7 +150,6 @@
                     const icon = cat.icon || p.icon;
 
                     const card = document.createElement('div');
-                    card.setAttribute('data-aos', 'fade-up');
                     card.className = 'bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all border border-gray-100';
                     card.onclick = () => openModal(cat.id, cat.name);
 

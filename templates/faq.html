@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ - QuizVerse</title>
+    <title>QuizVerse • FAQ</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
@@ -139,8 +139,8 @@
                 <button id="darkModeToggle"
                     class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition"
                     title="Toggle Dark Mode">
-                    <i class="fas fa-sun text-gray-700" id="sunIcon"></i>
-                    <i class="fas fa-moon text-gray-700" id="moonIcon" style="display: none;"></i>
+                    <i data-feather="sun" class="text-gray-700" id="sunIcon"></i>
+                    <i data-feather="moon" class="text-gray-700" id="moonIcon" style="display: none;"></i>
                 </button>
             </div>
         </div>
@@ -478,8 +478,7 @@
     <footer class="bg-gray-800 text-gray-400 py-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <div class="flex items-center justify-center gap-2 mb-4">
-                <img src="/static/title%20logo.png" width="40" alt="Logo"
-                    class="rounded-lg">
+                <img src="/static/title%20logo.png" width="40" alt="Logo" class="rounded-lg">
                 <span class="text-white font-bold text-xl fun-title">QuizVerse</span>
             </div>
             <p class="text-sm">© 2026 QuizVerse | Made with ❤️ by Computer Science Students</p>

@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizVerse | My Profile</title>
+    <title>QuizVerse • My Profile</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <meta name="description" content="Manage your QuizVerse profile and account settings.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -532,8 +532,8 @@
             <!-- Dark Mode Toggle -->
             <button id="darkModeToggle"
                 style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;border:none;cursor:pointer;margin-left:16px;transition:all 0.2s;color:#555;font-size:1rem;">
-                <i class="fas fa-sun" id="sunIcon"></i>
-                <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+                <i data-feather="sun" id="sunIcon"></i>
+                <i data-feather="moon" id="moonIcon" style="display:none;"></i>
             </button>
         </div>
     </nav>
@@ -545,7 +545,7 @@
                 <div class="avatar-circle" id="avatarCircle">
                     <img id="avatarImg" src="/static/avatars/avtar1.jpg" alt="Profile Picture">
                 </div>
-                <div class="avatar-edit-badge"><i class="fas fa-camera"></i></div>
+                <div class="avatar-edit-badge"><i data-feather="camera"></i></div>
             </div>
             <div class="profile-info">
                 <h1 id="profileUsername">Loading...</h1>
@@ -558,7 +558,7 @@
 
         <!-- Edit Profile -->
         <div class="card">
-            <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+            <h2><i data-feather="edit-3"></i> Edit Profile</h2>
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="editUsername" placeholder="Your username">
@@ -574,7 +574,7 @@
 
         <!-- Change Password -->
         <div class="card">
-            <h2><i class="fas fa-lock"></i> Change Password</h2>
+            <h2><i data-feather="lock"></i> Change Password</h2>
             <div class="form-group">
                 <label>Current Password</label>
                 <input type="password" id="currentPassword" placeholder="Enter current password">
@@ -595,17 +595,17 @@
 
         <!-- Danger Zone -->
         <div class="card" style="border:1.5px solid #fee2e2;">
-            <h2 style="color:#dc2626;"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+            <h2 style="color:#dc2626;"><i data-feather="alert-triangle"></i> Danger Zone</h2>
             <p style="color:#6c757d;font-size:0.9rem;margin-bottom:16px;">Logging out will clear your session. To
                 permanently delete your account, contact admin.</p>
-            <button class="btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <button class="btn-danger" onclick="logout()"><i data-feather="log-out"></i> Logout</button>
         </div>
     </div>
 
     <!-- Avatar Picker Modal -->
     <div class="avatar-modal-overlay" id="avatarModal">
         <div class="avatar-modal">
-            <h2><i class="fas fa-user-circle" style="color:#4361ee;"></i> Choose Your Avatar</h2>
+            <h2><i data-feather="user" style="color:#4361ee;"></i> Choose Your Avatar</h2>
             <p>Pick a profile picture that represents you!</p>
             <div class="avatar-grid" id="avatarGrid"></div>
             <div class="modal-actions">
@@ -815,6 +815,7 @@
         }
 
         loadProfile();
+        feather.replace();
     </script>
     <script src="/static/dark-mode.js"></script>
 </body>

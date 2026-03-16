@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizVerse | Leaderboard</title>
+    <title>QuizVerse • Leaderboard</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <meta name="description" content="See the top quiz performers on QuizVerse. Compete and climb the ranks!">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -74,8 +74,8 @@
                 <!-- Dark Mode Toggle -->
                 <button id="darkModeToggle"
                     class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 transition text-gray-600 ml-2">
-                    <i class="fas fa-sun" id="sunIcon"></i>
-                    <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+                    <i data-feather="sun" id="sunIcon"></i>
+                    <i data-feather="moon" id="moonIcon" style="display:none;"></i>
                 </button>
             </div>
         </div>
@@ -144,7 +144,7 @@
         <!-- Full Leaderboard Table -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="p-5 border-b border-gray-100 flex items-center gap-2">
-                <i class="fas fa-list-ol text-purple-600"></i>
+                <i data-feather="list" class="text-purple-600"></i>
                 <h2 class="font-semibold text-gray-800">Full Rankings</h2>
             </div>
             <div id="leaderboardList" class="divide-y divide-gray-100">
@@ -226,12 +226,15 @@
                         <p class="text-xs text-gray-400">${r.score}/${r.total} correct</p>
                     </div>
                     ${r.time_taken ? `<div class="text-right flex-shrink-0 ml-2">
-                        <p class="text-xs text-gray-400"><i class="fas fa-clock"></i> ${formatTime(r.time_taken)}</p>
+                        <p class="text-xs text-gray-400"><i data-feather="clock" class="inline-block w-3 h-3"></i> ${formatTime(r.time_taken)}</p>
                     </div>` : ''}
                 </div>`).join('');
         }
 
-        loadCategories().then(() => loadLeaderboard());
+        loadCategories().then(() => {
+            loadLeaderboard();
+            feather.replace();
+        });
     </script>
 
     <script>

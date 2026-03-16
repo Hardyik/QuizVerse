@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Random Quiz</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
     <style>
@@ -84,8 +84,8 @@
             <div class="flex items-center gap-4">
                 <button id="darkModeToggle"
                     class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center transition">
-                    <i class="fas fa-sun" id="sunIcon"></i>
-                    <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+                    <i data-feather="sun" id="sunIcon"></i>
+                    <i data-feather="moon" id="moonIcon" style="display: none;"></i>
                 </button>
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-200 shadow-sm">
@@ -120,7 +120,7 @@
                 </div>
                 <div class="flex justify-center">
                     <div id="timer" class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                        <i class="fas fa-clock text-purple-600"></i>
+                        <i data-feather="clock" class="text-purple-600"></i>
                         <span>30s</span>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
             <div class="p-6 bg-gray-50 flex justify-end">
                 <button id="nextBtn"
                     class="hidden bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105">
-                    Next Question <i class="fas fa-chevron-right ml-2"></i>
+                    Next Question <i data-feather="chevron-right" class="ml-2"></i>
                 </button>
             </div>
         </div>
@@ -303,9 +303,10 @@
                 const btn = document.createElement('button');
                 btn.dataset.optionId = opt.id;
                 btn.className = 'option-btn w-full p-5 text-left bg-white border-2 border-gray-100 rounded-2xl font-medium text-gray-700 flex items-center justify-between';
-                btn.innerHTML = `<span>${opt.text}</span><i class="fas fa-circle-notch text-gray-200 opacity-20"></i>`;
+                btn.innerHTML = `<span>${opt.text}</span><i data-feather="circle" class="text-gray-200 opacity-20"></i>`;
                 btn.onclick = () => selectOption(btn, opt);
                 optionsGrid.appendChild(btn);
+                feather.replace();
             });
 
             nextBtn.classList.add('hidden');
@@ -340,8 +341,9 @@
             clearInterval(timerInterval);
             document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
 
-            const icon = btn.querySelector('i');
-            icon.className = 'fas fa-spinner fa-spin opacity-100 text-purple-500';
+            icon.setAttribute('data-feather', 'loader');
+            icon.classList.add('animate-spin', 'opacity-100', 'text-purple-500');
+            feather.replace();
 
             try {
                 const res = await fetch('/api/check_answer', {
@@ -362,12 +364,16 @@
                 if (data.is_correct) {
                     btn.classList.replace('border-gray-100', 'border-green-500');
                     btn.classList.add('bg-green-50');
-                    icon.className = 'fas fa-check-circle text-green-500 opacity-100';
+                    icon.setAttribute('data-feather', 'check-circle');
+                    icon.classList.add('text-green-500', 'opacity-100');
+                    feather.replace();
                     score++;
                 } else {
                     btn.classList.replace('border-gray-100', 'border-red-500');
                     btn.classList.add('bg-red-50');
-                    icon.className = 'fas fa-times-circle text-red-500 opacity-100';
+                    icon.setAttribute('data-feather', 'x-circle');
+                    icon.classList.add('text-red-500', 'opacity-100');
+                    feather.replace();
                     autoMarkCorrect(data.correct_option_id);
                 }
 
@@ -422,8 +428,11 @@
                 if (btn.dataset.optionId == correctOptionId) {
                     btn.classList.replace('border-gray-100', 'border-green-500');
                     btn.classList.add('bg-green-50');
-                    const icon = btn.querySelector('i');
-                    if (icon) icon.className = 'fas fa-check-circle text-green-500 opacity-50';
+                    if (icon) {
+                        icon.setAttribute('data-feather', 'check-circle');
+                        icon.classList.add('text-green-500', 'opacity-50');
+                        feather.replace();
+                    }
                 }
             });
         }
@@ -485,6 +494,7 @@
 
         // ─── Start ────────────────────────────────────────────────────────────────
         init();
+        feather.replace();
     </script>
 </body>
 

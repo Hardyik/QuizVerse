@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Analytics</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -95,15 +95,15 @@
     <nav class="bg-white shadow-sm sticky top-0 z-50 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/user_dashboard" class="flex items-center gap-2">
-                <i class="fas fa-arrow-left text-gray-600 hover:text-blue-600 transition-colors text-xl"></i>
+                <i data-feather="arrow-left" class="text-gray-600 hover:text-blue-600 transition-colors text-xl"></i>
                 <span class="text-xl font-bold text-gray-900 ml-2">Analytics</span>
             </a>
 
             <div class="flex items-center gap-4">
                 <button id="darkModeToggle"
                     class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                    <i class="fas fa-sun text-yellow-500" id="sunIcon"></i>
-                    <i class="fas fa-moon text-blue-300" id="moonIcon" style="display:none;"></i>
+                    <i data-feather="sun" class="text-yellow-500" id="sunIcon"></i>
+                    <i data-feather="moon" class="text-blue-300" id="moonIcon" style="display:none;"></i>
                 </button>
             </div>
         </div>
@@ -116,7 +116,7 @@
         <div
             class="bg-gradient-to-r from-blue-600 space-y-2 to-purple-600 rounded-2xl p-6 md:p-8 text-white mb-8 shadow-md">
             <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
-                <i class="fas fa-chart-pie"></i> Your Performance
+                <i data-feather="pie-chart"></i> Your Performance
             </h1>
             <p class="text-blue-100 md:text-lg opacity-90 max-w-2xl">A simple overview of your quiz history and
                 category-wise performance.</p>
@@ -132,7 +132,7 @@
                     <div class="text-2xl font-bold text-gray-900" id="statTotalQuizzes">-</div>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xl">
-                    <i class="fas fa-gamepad"></i>
+                    <i data-feather="play"></i>
                 </div>
             </div>
 
@@ -144,7 +144,7 @@
                     <div class="text-2xl font-bold text-gray-900" id="statOverallAccuracy">-</div>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500 text-xl">
-                    <i class="fas fa-bullseye"></i>
+                    <i data-feather="target"></i>
                 </div>
             </div>
 
@@ -157,7 +157,7 @@
                 </div>
                 <div
                     class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500 text-xl">
-                    <i class="fas fa-check"></i>
+                    <i data-feather="check"></i>
                 </div>
             </div>
 
@@ -170,7 +170,7 @@
                 </div>
                 <div
                     class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 text-xl">
-                    <i class="fas fa-clock"></i>
+                    <i data-feather="clock"></i>
                 </div>
             </div>
         </div>
@@ -188,7 +188,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-medium text-gray-700 flex items-center gap-2">
-                                <i class="fas fa-circle text-green-500 text-xs"></i> Correct
+                                <i data-feather="circle" class="text-green-500 fill-current" style="width: 8px; height: 8px;"></i> Correct
                             </span>
                             <span class="font-bold text-green-600" id="txtCorrectNum">-</span>
                         </div>
@@ -202,7 +202,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-medium text-gray-700 flex items-center gap-2">
-                                <i class="fas fa-circle text-red-500 text-xs"></i> Incorrect
+                                <i data-feather="circle" class="text-red-500 fill-current" style="width: 8px; height: 8px;"></i> Incorrect
                             </span>
                             <span class="font-bold text-red-600" id="txtIncorrectNum">-</span>
                         </div>
@@ -222,7 +222,7 @@
                 <div id="categoriesList" class="space-y-4 max-h-[300px] overflow-y-auto pr-2">
                     <!-- Injected by JS -->
                     <div class="text-gray-400 text-center py-8">
-                        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                        <i data-feather="loader" class="animate-spin text-2xl mb-2"></i>
                         <p>Loading records...</p>
                     </div>
                 </div>
@@ -233,11 +233,11 @@
         <!-- Recent Quiz History -->
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mt-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
-                <i class="fas fa-history text-purple-500"></i> Recent Quiz History
+                <i data-feather="clock" class="text-purple-500"></i> Recent Quiz History
             </h3>
             <div id="quizHistoryList">
                 <div class="text-gray-400 text-center py-8">
-                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                    <i data-feather="loader" class="animate-spin text-2xl mb-2"></i>
                     <p>Loading history...</p>
                 </div>
             </div>
@@ -329,7 +329,7 @@
                 } else {
                     document.getElementById("accuracyContainer").innerHTML = `
                     <div class="text-gray-400 text-center py-4">
-                        <i class="fas fa-box-open text-3xl mb-2 opacity-50"></i>
+                        <i data-feather="inbox" class="text-3xl mb-2 opacity-50"></i>
                         <p class="text-sm">No answers recorded yet.</p>
                     </div>
                 `;
@@ -340,7 +340,7 @@
                 if (!data.category_performance || data.category_performance.length === 0) {
                     catListContainer.innerHTML = `
                     <div class="text-gray-400 text-center py-8">
-                        <i class="fas fa-box-open text-3xl mb-2 opacity-50"></i>
+                        <i data-feather="inbox" class="text-3xl mb-2 opacity-50"></i>
                         <p class="text-sm">Take some quizzes to see category performance.</p>
                     </div>`;
                 } else {
@@ -380,7 +380,7 @@
                 if (!profile.recent_results || profile.recent_results.length === 0) {
                     histContainer.innerHTML = `
                         <div class="text-gray-400 text-center py-8">
-                            <i class="fas fa-box-open text-3xl mb-2 opacity-50"></i>
+                            <i data-feather="inbox" class="text-3xl mb-2 opacity-50"></i>
                             <p class="text-sm">No quiz history yet. Go play a quiz!</p>
                         </div>`;
                 } else {

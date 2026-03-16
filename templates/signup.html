@@ -4,13 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizVerse | Create Account</title>
+    <title>QuizVerse • Create Account</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
 
@@ -96,11 +93,11 @@
     <div class="fixed top-6 right-6 z-50">
         <button id="darkModeToggle"
             class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md transition text-white border border-white/20">
-            <i class="fas fa-sun" id="sunIcon"></i>
-            <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+            <i data-feather="sun" id="sunIcon"></i>
+            <i data-feather="moon" id="moonIcon" style="display:none;"></i>
         </button>
     </div>
-    <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md" data-aos="fade-up">
+    <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md">
         <div class="p-8 sm:p-10">
             <div class="text-center mb-8">
                 <div class="flex justify-center mb-4">
@@ -147,11 +144,11 @@
                         <div class="strength-bar" id="strengthBar"></div>
                     </div>
                     <div class="password-requirements" id="passwordRequirements">
-                        <div class="requirement" id="reqLength"><i class="fas fa-circle"></i> At least 8 characters
+                        <div class="requirement" id="reqLength"><i data-feather="circle"></i> At least 8 characters
                         </div>
-                        <div class="requirement" id="reqUpper"><i class="fas fa-circle"></i> One uppercase letter</div>
-                        <div class="requirement" id="reqLower"><i class="fas fa-circle"></i> One lowercase letter</div>
-                        <div class="requirement" id="reqNumber"><i class="fas fa-circle"></i> One number</div>
+                        <div class="requirement" id="reqUpper"><i data-feather="circle"></i> One uppercase letter</div>
+                        <div class="requirement" id="reqLower"><i data-feather="circle"></i> One lowercase letter</div>
+                        <div class="requirement" id="reqNumber"><i data-feather="circle"></i> One number</div>
                     </div>
                 </div>
                 <div>
@@ -180,13 +177,8 @@
             </form>
         </div>
     </div>
-    <!-- AOS and Feather Icons Initialization -->
+    <!-- Feather Icons Initialization -->
     <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
         feather.replace();
     </script>
 
@@ -227,11 +219,12 @@
             const el = document.getElementById(id);
             if (met) {
                 el.classList.add('met');
-                el.querySelector('i').className = 'fas fa-check-circle';
+                el.querySelector('i').setAttribute('data-feather', 'check-circle');
             } else {
                 el.classList.remove('met');
-                el.querySelector('i').className = 'fas fa-circle';
+                el.querySelector('i').setAttribute('data-feather', 'circle');
             }
+            feather.replace();
         }
 
         function isStrongPassword(password) {

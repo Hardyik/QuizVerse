@@ -120,24 +120,7 @@ def get_questions(cat_id):
     } for q in questions])
 ```
 
-### Quiz Session Persistence (Lines 206–303)
-```python
-# POST /api/quiz/session/start → Creates a new QuizSession row
-#   - Deletes any existing session for same user+category (one active quiz per category)
-#   - Stores question_ids as JSON string, initializes score=0, current_index=0
 
-# GET /api/quiz/session/<cat_id> → Returns session progress (index, score, answers)
-#   - Returns null (None) if no active session exists
-
-# PATCH /api/quiz/session/<cat_id> → Updates progress (current_index, score, user_answers)
-#   - Called after each question to save progress
-
-# DELETE /api/quiz/session/<cat_id> → Clears the session
-
-# POST /api/questions/batch → Fetch multiple questions by IDs
-#   - Used when resuming: frontend sends saved question_ids, gets full question data back
-#   - Results sorted to match requested ID order using a dict lookup
-```
 
 ### Answer Checking & Quiz Submission (Lines 305–415)
 ```python
@@ -189,8 +172,7 @@ def submit_quiz():
             user.level = calculated_level      # Level up!
 
         db.session.commit()
-        # Clean up active quiz session
-        QuizSession.query.filter_by(user_id=user_id, category_id=category_id).delete()
+
 
     return jsonify({
         "score": correct, "total": total,

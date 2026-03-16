@@ -179,21 +179,6 @@ class OTP(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 ```
 
-### QuizSession Model (Lines 76–88)
-```python
-class QuizSession(db.Model):
-    __tablename__ = 'quiz_sessions'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
-    question_ids = db.Column(db.Text, nullable=False)     # JSON string: [1, 5, 12, ...]
-    current_index = db.Column(db.Integer, default=0)      # Which question user is on
-    score = db.Column(db.Integer, default=0)               # Score so far
-    user_answers = db.Column(db.Text, nullable=True)       # JSON: list of user's answers
-    last_active = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    # onupdate: automatically updates timestamp whenever the row is modified
-```
-
 ### SystemSetting Model (Lines 91–130)
 ```python
 class SystemSetting(db.Model):

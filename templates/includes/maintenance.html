@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance | QuizVerse</title>
+    <title>Under Maintenance • QuizVerse</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
         .glass {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -17,15 +22,16 @@
         }
     </style>
 </head>
+
 <body class="bg-slate-50 flex items-center justify-center min-h-screen p-6">
     <div class="max-w-md w-full text-center">
         <div class="mb-8 inline-block p-6 bg-purple-100 rounded-full text-purple-600 animate-pulse">
             <i data-feather="tool" class="w-16 h-16"></i>
         </div>
-        
+
         <h1 class="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Under Maintenance</h1>
         <p class="text-slate-600 mb-8 leading-relaxed">
-            We're currently performing some scheduled maintenance to improve your experience. 
+            We're currently performing some scheduled maintenance to improve your experience.
             We'll be back online shortly!
         </p>
 
@@ -34,12 +40,13 @@
                 <i data-feather="clock" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Estimated back by: 15-20 minutes</span>
             </div>
-            
+
             <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden mb-6">
                 <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-600 w-3/4 rounded-full"></div>
             </div>
 
-            <button onclick="window.location.reload()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-purple-200 hover:scale-[1.02] transition-transform active:scale-95">
+            <button onclick="window.location.reload()"
+                class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-purple-200 hover:scale-[1.02] transition-transform active:scale-95">
                 Check Again
             </button>
         </div>
@@ -53,4 +60,5 @@
         feather.replace();
     </script>
 </body>
+
 </html>

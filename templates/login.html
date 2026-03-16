@@ -4,13 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizVerse | Login</title>
+    <title>QuizVerse • Login</title>
     <link rel="icon" type="image/png" href="/static/title%20logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Dark Mode Support -->
     <link rel="stylesheet" href="/static/dark-mode.css">
 
@@ -181,11 +178,11 @@
     <div class="fixed top-6 right-6 z-50">
         <button id="darkModeToggle"
             class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md transition text-white border border-white/20">
-            <i class="fas fa-sun" id="sunIcon"></i>
-            <i class="fas fa-moon" id="moonIcon" style="display:none;"></i>
+            <i data-feather="sun" id="sunIcon"></i>
+            <i data-feather="moon" id="moonIcon" style="display:none;"></i>
         </button>
     </div>
-    <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md" data-aos="fade-up">
+    <div class="login-card rounded-2xl shadow-2xl overflow-hidden w-full max-w-md">
         <div class="p-8 sm:p-10">
             <div class="text-center mb-8">
                 <div class="flex justify-center mb-4">
@@ -230,11 +227,11 @@
                     <div class="mode-toggle-wrapper">
                         <div class="slider" id="modeSlider"></div>
                         <button type="button" class="mode-btn active" id="userModeBtn" onclick="setLoginMode('user')">
-                            <i class="fas fa-user"></i>
+                            <i data-feather="user"></i>
                             <span>User</span>
                         </button>
                         <button type="button" class="mode-btn" id="adminModeBtn" onclick="setLoginMode('admin')">
-                            <i class="fas fa-shield-halved"></i>
+                            <i data-feather="shield"></i>
                             <span>Admin</span>
                         </button>
                     </div>
@@ -256,14 +253,14 @@
                 <div>
                     <button type="submit" id="submitBtn"
                         class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-2" style="margin-top:2px"></i>
+                        <i data-feather="log-in" class="mr-2" style="margin-top:2px"></i>
                         Sign in
                     </button>
                 </div>
 
                 <!-- Error Toast -->
                 <div class="login-toast" id="loginToast">
-                    <i class="fas fa-circle-exclamation"></i>
+                    <i data-feather="alert-circle"></i>
                     <span id="loginToastMsg"></span>
                 </div>
             </form>
@@ -278,11 +275,6 @@
 
 
     <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
         feather.replace();
 
         // ─── Login Mode Toggle ──────────────────────────────────────────────
