@@ -46,3 +46,8 @@ logs/
 # ─── Flask instance ──────────────────────────────────────────────────────────
 instance/
 .env
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
