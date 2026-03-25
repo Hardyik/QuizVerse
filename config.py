@@ -12,8 +12,12 @@ class Config:
     APP_VERSION = '1.0.0'
     # ─── Database ─────────────────────────────────────────────────────────────
     # Reads from env; falls back to local dev default if not set.
-    # We check multiple common names (DATABASE_URI, DATABASE_URL, SQLALCHEMY_DATABASE_URI)
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or os.getenv('DATABASE_URL')
+    # We check multiple common names (DATABASE_URI, DATABASE_URL)
+    _raw_db_url = os.getenv('DATABASE_URI') or os.getenv('DATABASE_URL') or ''
+    # Railway/Heroku give mysql:// which needs mysqlclient; force pymysql driver
+    if _raw_db_url.startswith('mysql://'):
+        _raw_db_url = _raw_db_url.replace('mysql://', 'mysql+pymysql://', 1)
+    SQLALCHEMY_DATABASE_URI = _raw_db_url or None
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # ─── Security ─────────────────────────────────────────────────────────────
