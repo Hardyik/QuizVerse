@@ -13,14 +13,12 @@ class Config:
     # ─── Database ─────────────────────────────────────────────────────────────
     # Reads from env; falls back to local dev default if not set.
     # We check multiple common names (DATABASE_URI, DATABASE_URL, SQLALCHEMY_DATABASE_URI)
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
-                              os.getenv('DATABASE_URL') or \
-                              os.getenv('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # ─── Security ─────────────────────────────────────────────────────────────
-    SECRET_KEY          = os.getenv('SECRET_KEY',     'change-me-in-production')
-    JWT_SECRET_KEY      = os.getenv('JWT_SECRET_KEY', 'change-jwt-secret-too')
+    SECRET_KEY          = os.getenv('SECRET_KEY')
+    JWT_SECRET_KEY      = os.getenv('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)
 
     # ─── Session Configuration ────────────────────────────────────────────────
