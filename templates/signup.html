@@ -178,9 +178,7 @@
         </div>
     </div>
     <!-- Feather Icons Initialization -->
-    <script>
-        feather.replace();
-    </script>
+    <script>try { feather.replace(); } catch(e) { console.warn('Feather icons not available (offline?).'); }</script>
 
     <!-- Password Validation Script -->
     <script>
@@ -224,7 +222,7 @@
                 el.classList.remove('met');
                 el.querySelector('i').setAttribute('data-feather', 'circle');
             }
-            feather.replace();
+            try { feather.replace(); } catch(e) {}
         }
 
         function isStrongPassword(password) {
