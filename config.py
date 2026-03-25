@@ -13,7 +13,7 @@ class Config:
     # ─── Database ─────────────────────────────────────────────────────────────
     # Reads from env; falls back to local dev default if not set.
     # We check multiple common names (DATABASE_URI, DATABASE_URL, SQLALCHEMY_DATABASE_URI)
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # ─── Security ─────────────────────────────────────────────────────────────
