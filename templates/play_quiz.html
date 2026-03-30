@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Play Quiz</title>
-    <link rel="icon" type="image/png" href="/static/title%20logo.png">
+    <link rel="icon" type="image/png" href="/static/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
@@ -130,7 +130,7 @@
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <a href="/user_dashboard" class="flex items-center gap-2">
-                <img src="/static/title%20logo.png" width="40" alt="QuizVerse" class="rounded-lg">
+                <img src="/static/logo.png" width="40" alt="QuizVerse" class="rounded-lg">
                 <span class="text-xl font-bold text-gray-900">QuizVerse</span>
             </a>
             <div class="flex items-center gap-4">
@@ -404,11 +404,15 @@
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => b.disabled = true);
 
-            // Show local feedback (loading)
-            const icon = btn.querySelector('i');
-            icon.setAttribute('data-feather', 'loader');
-            icon.classList.add('animate-spin', 'opacity-100', 'text-purple-500');
-            feather.replace();
+            // Show loading spinner - replace the SVG/icon in this button
+            const oldIcon = btn.querySelector('svg') || btn.querySelector('i');
+            if (oldIcon) {
+                const loader = document.createElement('i');
+                loader.setAttribute('data-feather', 'loader');
+                loader.className = 'animate-spin opacity-100 text-purple-500';
+                oldIcon.replaceWith(loader);
+                feather.replace();
+            }
 
             try {
                 // Verify answer with backend
@@ -427,18 +431,24 @@
                     option_id: option.id
                 });
 
+                // Replace the loader with the result icon
+                const currentIcon = btn.querySelector('svg') || btn.querySelector('i');
                 if (data.is_correct) {
                     btn.classList.replace('border-gray-100', 'border-green-500');
                     btn.classList.add('bg-green-50');
-                    icon.setAttribute('data-feather', 'check-circle');
-                    icon.classList.add('text-green-500', 'opacity-100');
+                    const newIcon = document.createElement('i');
+                    newIcon.setAttribute('data-feather', 'check-circle');
+                    newIcon.className = 'text-green-500 opacity-100';
+                    if (currentIcon) currentIcon.replaceWith(newIcon);
                     feather.replace();
                     score++;
                 } else {
                     btn.classList.replace('border-gray-100', 'border-red-500');
                     btn.classList.add('bg-red-50');
-                    icon.setAttribute('data-feather', 'x-circle');
-                    icon.classList.add('text-red-500', 'opacity-100');
+                    const newIcon = document.createElement('i');
+                    newIcon.setAttribute('data-feather', 'x-circle');
+                    newIcon.className = 'text-red-500 opacity-100';
+                    if (currentIcon) currentIcon.replaceWith(newIcon);
                     feather.replace();
                     autoMarkCorrect(data.correct_option_id);
                 }
@@ -455,10 +465,12 @@
                 if (btn.dataset.optionId == correctOptionId) {
                     btn.classList.replace('border-gray-100', 'border-green-500');
                     btn.classList.add('bg-green-50');
-                    const icon = btn.querySelector('i');
-                    if (icon) {
-                        icon.setAttribute('data-feather', 'check-circle');
-                        icon.classList.add('text-green-500', 'opacity-50');
+                    const oldIcon = btn.querySelector('svg') || btn.querySelector('i');
+                    if (oldIcon) {
+                        const newIcon = document.createElement('i');
+                        newIcon.setAttribute('data-feather', 'check-circle');
+                        newIcon.className = 'text-green-500 opacity-50';
+                        oldIcon.replaceWith(newIcon);
                         feather.replace();
                     }
                 }
