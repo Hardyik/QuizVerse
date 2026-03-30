@@ -405,6 +405,7 @@
             allBtns.forEach(b => b.disabled = true);
 
             // Show local feedback (loading)
+            const icon = btn.querySelector('i');
             icon.setAttribute('data-feather', 'loader');
             icon.classList.add('animate-spin', 'opacity-100', 'text-purple-500');
             feather.replace();
