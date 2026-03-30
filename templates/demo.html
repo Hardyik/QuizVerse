@@ -206,7 +206,6 @@
                 }
 
                 loadQuestion();
-                startTimer();
             } catch (e) {
                 console.error(e);
                 questionEl.innerHTML = `<div class="text-center py-10 text-red-400">${e.message}</div>`;
@@ -232,10 +231,11 @@
             });
 
             nextBtn.classList.add('hidden');
-            updateTimerUI();
+            startTimer();
         }
 
         async function selectOption(selectedBtn, option) {
+            clearInterval(timerInterval);
             const allBtns = document.querySelectorAll("#options button");
             allBtns.forEach(btn => btn.disabled = true);
 
@@ -319,12 +319,13 @@
         }
 
         function startTimer() {
+            clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerUI();
                 if (timeLeft <= 0) {
-                    // Auto-select nothing if time out? 
-                    // For now, just skip
+                    clearInterval(timerInterval);
+                    // Auto-select nothing if time out
                     userAnswers.push({ question_id: quizData[currentIndex].id, option_id: null });
                     nextQuestion();
                 }
@@ -340,6 +341,7 @@
         }
 
         function nextQuestion() {
+            clearInterval(timerInterval);
             currentIndex++;
             if (currentIndex < quizData.length) {
                 loadQuestion();

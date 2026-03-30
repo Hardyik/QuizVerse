@@ -327,7 +327,6 @@ def submit_quiz():
         db.session.commit()
         result_id = result.id
 
-        db.session.commit()
 
     return jsonify({
         "score": correct,
