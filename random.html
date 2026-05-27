@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • Random Quiz</title>
-    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="icon" type="image/png" href="static/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
-    <link rel="stylesheet" href="/static/dark-mode.css">
+    <link rel="stylesheet" href="static/dark-mode.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -78,7 +78,7 @@
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <a href="/user_dashboard" class="flex items-center gap-2">
-                <img src="/static/logo.png" width="40" alt="QuizVerse" class="rounded-lg">
+                <img src="static/logo.png" width="40" alt="QuizVerse" class="rounded-lg">
                 <span class="text-xl font-bold text-gray-900">QuizVerse</span>
             </a>
             <div class="flex items-center gap-4">
@@ -89,7 +89,7 @@
                 </button>
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-200 shadow-sm">
-                        <img id="userAvatar" src="/static/avatars/avtar1.jpg" alt="Avatar" class="w-full h-full object-cover">
+                        <img id="userAvatar" src="static/avatars/avtar1.jpg" alt="Avatar" class="w-full h-full object-cover">
                     </div>
                     <span class="text-sm font-bold text-gray-700" id="usernameDisplay">...</span>
                 </div>
@@ -182,7 +182,7 @@
         </div>
     </main>
 
-    <script src="/static/dark-mode.js"></script>
+    <script src="static/dark-mode.js"></script>
     <script>
         // ─── Constants ────────────────────────────────────────────────────────────
         // Random quiz uses a special sentinel category id = 0 in localStorage key
@@ -229,7 +229,7 @@
                 const profile = await profileRes.json();
                 usernameDisplay.textContent = profile.username;
                 const avatarFile = profile.profile_picture || 'avtar1.jpg';
-                document.getElementById('userAvatar').src = `/static/avatars/${avatarFile}`;
+                document.getElementById('userAvatar').src = `static/avatars/${avatarFile}`;
 
                 // Fetch all categories
                 const catsRes = await fetch('/api/categories');

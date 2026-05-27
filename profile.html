@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • My Profile</title>
-    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="icon" type="image/png" href="static/logo.png">
     <meta name="description" content="Manage your QuizVerse profile and account settings.">
     <script src="https://unpkg.com/feather-icons"></script>
-    <link rel="stylesheet" href="/static/dark-mode.css">
+    <link rel="stylesheet" href="static/dark-mode.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -508,7 +508,7 @@
 <body>
     <nav>
         <a href="/user_dashboard" class="logo" id="navLogo">
-            <img src="/static/logo.png" alt="QuizVerse Logo">
+            <img src="static/logo.png" alt="QuizVerse Logo">
             <span>QuizVerse</span>
         </a>
         <div class="nav-links">
@@ -523,7 +523,7 @@
         <div class="profile-header">
             <div class="avatar-wrapper" onclick="openAvatarPicker()" title="Change profile picture">
                 <div class="avatar-circle" id="avatarCircle">
-                    <img id="avatarImg" src="/static/avatars/avtar1.jpg" alt="Profile Picture">
+                    <img id="avatarImg" src="static/avatars/avtar1.jpg" alt="Profile Picture">
                 </div>
                 <div class="avatar-edit-badge"><i data-feather="camera"></i></div>
             </div>
@@ -617,7 +617,7 @@
 
                 // Set profile picture
                 const avatarFile = userData.profile_picture || 'avtar1.jpg';
-                document.getElementById('avatarImg').src = `/static/avatars/${avatarFile}`;
+                document.getElementById('avatarImg').src = `static/avatars/${avatarFile}`;
                 currentAvatar = avatarFile;
 
                 document.getElementById('editUsername').value = userData.username;
@@ -727,7 +727,7 @@
                 const div = document.createElement('div');
                 div.className = 'avatar-option' + (file === currentAvatar ? ' selected' : '');
                 div.dataset.avatar = file;
-                div.innerHTML = `<img src="/static/avatars/${file}" alt="Avatar ${i + 1}">`;
+                div.innerHTML = `<img src="static/avatars/${file}" alt="Avatar ${i + 1}">`;
                 div.onclick = () => selectAvatar(file);
                 grid.appendChild(div);
             });
@@ -772,7 +772,7 @@
                 const data = await res.json();
                 if (res.ok) {
                     currentAvatar = selectedAvatar;
-                    document.getElementById('avatarImg').src = `/static/avatars/${currentAvatar}`;
+                    document.getElementById('avatarImg').src = `static/avatars/${currentAvatar}`;
                     closeAvatarPicker();
                     const msg = document.getElementById('profileMsg');
                     showMsg(msg, 'Profile picture updated!', 'success');
@@ -787,7 +787,7 @@
         loadProfile();
         feather.replace();
     </script>
-    <script src="/static/dark-mode.js"></script>
+    <script src="static/dark-mode.js"></script>
 </body>
 
 </html>

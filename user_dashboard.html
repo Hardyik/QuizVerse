@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuizVerse • My Dashboard</title>
-    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="icon" type="image/png" href="static/logo.png">
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Dark Mode Support -->
-    <link rel="stylesheet" href="/static/dark-mode.css">
+    <link rel="stylesheet" href="static/dark-mode.css">
     <style>
         * {
             margin: 0;
@@ -620,7 +620,7 @@
 
             <!-- Logo -->
             <a href="#" class="flex items-center gap-2">
-                <img src="/static/logo.png" alt="QuizVerse Logo" class="w-10 h-10 rounded-lg">
+                <img src="static/logo.png" alt="QuizVerse Logo" class="w-10 h-10 rounded-lg">
 
                 <span class="text-xl font-bold text-gray-900">QuizVerse</span>
             </a>
@@ -631,7 +631,7 @@
                 <!-- User Info -->
                 <div class="flex items-center gap-3">
                     <div class="user-avatar" id="userAvatarDesktop">
-                        <img id="userAvatarImgDesktop" src="/static/avatars/avtar1.jpg" alt="Avatar">
+                        <img id="userAvatarImgDesktop" src="static/avatars/avtar1.jpg" alt="Avatar">
                     </div>
 
                     <div class="user-details text-left">
@@ -701,7 +701,7 @@
 
         <div class="mobile-user-info">
             <div class="mobile-user-avatar" id="userAvatarMobile">
-                <img id="userAvatarImgMobile" src="/static/avatars/avtar1.jpg" alt="Avatar">
+                <img id="userAvatarImgMobile" src="static/avatars/avtar1.jpg" alt="Avatar">
             </div>
             <p class="font-semibold" id="userNameMobile"></p>
             <p class="text-sm text-gray-500" id="userLevelMobile"></p>
@@ -893,7 +893,7 @@
 
                 // Set profile picture avatar
                 const avatarFile = data.profile_picture || 'avtar1.jpg';
-                const avatarUrl = `/static/avatars/${avatarFile}`;
+                const avatarUrl = `static/avatars/${avatarFile}`;
                 document.getElementById('userAvatarImgDesktop').src = avatarUrl;
                 document.getElementById('userAvatarImgMobile').src = avatarUrl;
 
@@ -940,7 +940,7 @@
 
     </script>
 
-    <script src="/static/dark-mode.js"></script>
+    <script src="static/dark-mode.js"></script>
     <script>
         feather.replace();
     </script>
