@@ -21,7 +21,7 @@
                 <span class="text-xl font-bold text-gray-900">QuizVerse</span>
             </a>
             <div class="flex items-center gap-4">
-                <a href="/user_dashboard" class="text-gray-600 hover:text-purple-600 font-medium transition">Dashboard</a>
+                <a href="user_dashboard.html" class="text-gray-600 hover:text-purple-600 font-medium transition">Dashboard</a>
                 <!-- Dark Mode Toggle -->
                 <button id="darkModeToggle"
                     class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 transition text-gray-600">
@@ -109,7 +109,7 @@
                 const data = await res.json();
                 if (data.logged_in) {
                     const dashboardUrl = data.is_admin ? '/admin' : '/user_dashboard';
-                    document.querySelectorAll('a[href="/user_dashboard"]').forEach(el => el.href = dashboardUrl);
+                    document.querySelectorAll('a[href="user_dashboard.html"]').forEach(el => el.href = dashboardUrl);
                 }
             } catch (e) { console.error('Session check failed', e); }
         })();

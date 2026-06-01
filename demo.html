@@ -19,7 +19,7 @@
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <!-- Logo -->
             <div class="flex items-center gap-2">
-                <a href="/" class="flex items-center gap-2">
+                <a href="index.html" class="flex items-center gap-2">
                     <img src="static/logo.png" alt="QuizVerse Logo" class="h-10 w-10 rounded-lg">
                     <span class="text-xl font-bold text-gray-900">QuizVerse</span>
                 </a>
@@ -27,9 +27,9 @@
 
             <!-- Central Links -->
             <div class="hidden md:flex gap-8 text-gray-600 font-medium">
-                <a href="/" class="hover:text-purple-600 transition">Home</a>
+                <a href="index.html" class="hover:text-purple-600 transition">Home</a>
                 <a href="#" class="text-purple-700 font-bold border-b-2 border-purple-600">Demo Quiz</a>
-                <a href="/about" class="hover:text-purple-600 transition">About</a>
+                <a href="about.html" class="hover:text-purple-600 transition">About</a>
             </div>
 
             <!-- Actions -->
@@ -41,7 +41,7 @@
                     <i data-feather="moon" id="moonIcon" style="display:none;"></i>
                 </button>
 
-                <button onclick="location.href='/signup'"
+                <button onclick="location.href='signup.html'"
                     class="hidden md:block bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg font-medium transition shadow-sm">
                     Sign Up
                 </button>
@@ -162,7 +162,7 @@
             const signupBtn = document.querySelector('button[onclick*="/signup"]');
             if (signupBtn) {
                 signupBtn.textContent = 'Dashboard';
-                signupBtn.onclick = () => location.href = '/user_dashboard';
+                signupBtn.onclick = () => location.href = 'user_dashboard.html';
                 signupBtn.classList.remove('hidden');
             }
         }
@@ -391,10 +391,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('access_token')) {
-                document.querySelectorAll('a[href="/"]').forEach(function (el) {
-                    el.href = '/user_dashboard';
+                document.querySelectorAll('a[href="index.html"]').forEach(function (el) {
+                    el.href = 'user_dashboard.html';
                 });
-                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function (el) {
+                document.querySelectorAll('a[href="explore.html"], a[href="about.html"]').forEach(function (el) {
                     if (el.parentElement && el.parentElement.tagName === 'LI') {
                         el.parentElement.style.display = 'none';
                     } else {

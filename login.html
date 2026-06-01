@@ -245,7 +245,7 @@
                         <label for="remember-me" class="ml-2 block text-sm text-white">Remember me</label>
                     </div>
 
-                    <a href="/forget_pass" class="text-sm font-medium text-white hover:text-white/80">
+                    <a href="forget_pass.html" class="text-sm font-medium text-white hover:text-white/80">
                         Forgot password?
                     </a>
                 </div>
@@ -267,7 +267,7 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-white/80">
                     Don't have an account?
-                    <a href="/signup" class="font-medium text-white hover:text-white/80 transition">Sign up</a>
+                    <a href="signup.html" class="font-medium text-white hover:text-white/80 transition">Sign up</a>
                 </p>
             </div>
         </div>
@@ -332,9 +332,9 @@
                         const params = new URLSearchParams(window.location.search);
                         const next = params.get('next');
                         if (data.is_admin) {
-                            window.location.href = '/admin';
+                            window.location.href = 'Admin.html';
                         } else {
-                            window.location.href = (next && next.startsWith('/')) ? next : '/user_dashboard';
+                            window.location.href = (next && next.startsWith('/')) ? next.substring(1) : 'user_dashboard.html';
                         }
                         return;
                     }
@@ -374,11 +374,11 @@
 
                     // Redirect based on role, honouring ?next= param
                     if (data.is_admin) {
-                        window.location.href = '/admin';
+                        window.location.href = 'Admin.html';
                     } else {
                         const params = new URLSearchParams(window.location.search);
                         const next = params.get('next');
-                        window.location.href = (next && next.startsWith('/')) ? next : '/user_dashboard';
+                        window.location.href = (next && next.startsWith('/')) ? next.substring(1) : 'user_dashboard.html';
                     }
                 } else if (response.status === 403) {
                     // Role mismatch — show warning and auto-switch toggle

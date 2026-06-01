@@ -94,7 +94,7 @@
     <!-- Navbar -->
     <nav class="bg-white shadow-sm sticky top-0 z-50 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="/user_dashboard" class="flex items-center gap-2">
+            <a href="user_dashboard.html" class="flex items-center gap-2">
                 <i data-feather="arrow-left" class="text-gray-600 hover:text-blue-600 transition-colors text-xl"></i>
                 <span class="text-xl font-bold text-gray-900 ml-2">Analytics</span>
             </a>
@@ -252,7 +252,7 @@
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            window.location.href = "/login";
+            window.location.href = "login.html";
         }
 
         // Handle admin redirection logic
@@ -263,8 +263,8 @@
                 });
                 const data = await res.json();
                 if (data.logged_in) {
-                    const dashboardUrl = data.is_admin ? '/admin' : '/user_dashboard';
-                    document.querySelectorAll('a[href="/user_dashboard"]').forEach(el => el.href = dashboardUrl);
+                    const dashboardUrl = data.is_admin ? 'Admin.html' : 'user_dashboard.html';
+                    document.querySelectorAll('a[href="user_dashboard.html"]').forEach(el => el.href = dashboardUrl);
                 }
             } catch (e) { console.error('Session check failed', e); }
         })();

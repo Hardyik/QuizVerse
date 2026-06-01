@@ -586,7 +586,7 @@
     </div>
     <script>
         let token = localStorage.getItem('access_token');
-        if (!token) window.location.href = '/login';
+        if (!token) window.location.href = 'login.html';
 
         let userData = {};
 
@@ -601,7 +601,7 @@
                 const logo = document.querySelector('.logo');
                 if (logo) logo.href = adminUrl;
                 // Update all dashboard links
-                document.querySelectorAll('a[href="/user_dashboard"]').forEach(el => el.href = adminUrl);
+                document.querySelectorAll('a[href="user_dashboard.html"]').forEach(el => el.href = adminUrl);
             }
 
             try {
@@ -624,7 +624,7 @@
                 document.getElementById('editEmail').value = userData.email;
 
             } catch (e) {
-                window.location.href = '/login';
+                window.location.href = 'login.html';
             }
         }
 
@@ -701,7 +701,7 @@
 
         function logout() {
             localStorage.removeItem('access_token');
-            window.location.href = '/logout';  // Server clears Flask session too
+            window.location.href = 'logout';  // Server clears Flask session too
         }
 
         function showMsg(el, text, type) {

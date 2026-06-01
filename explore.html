@@ -18,11 +18,11 @@
     <!-- Navbar -->
     <nav
         class="bg-purple-700 p-4 text-white flex flex-wrap items-center justify-center gap-4 text-sm sm:text-base relative">
-        <a href="/" class="hover:text-purple-300 transition-colors">Home</a>
-        <a href="/explore" class="border-b-2 border-white font-medium">Explore</a>
-        <a href="/about" class="hover:text-purple-300 transition-colors">About</a>
-        <a href="/signup" class="hover:text-purple-300 transition-colors">Sign up</a>
-        <a href="/login" class="hover:text-purple-300 transition-colors">Sign in</a>
+        <a href="index.html" class="hover:text-purple-300 transition-colors">Home</a>
+        <a href="explore.html" class="border-b-2 border-white font-medium">Explore</a>
+        <a href="about.html" class="hover:text-purple-300 transition-colors">About</a>
+        <a href="signup.html" class="hover:text-purple-300 transition-colors">Sign up</a>
+        <a href="login.html" class="hover:text-purple-300 transition-colors">Sign in</a>
     </nav>
 
     <!-- Hero Section -->
@@ -119,10 +119,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('access_token')) {
-                document.querySelectorAll('a[href="/"]').forEach(function (el) {
-                    el.href = '/user_dashboard';
+                document.querySelectorAll('a[href="index.html"]').forEach(function (el) {
+                    el.href = 'user_dashboard.html';
                 });
-                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function (el) {
+                document.querySelectorAll('a[href="explore.html"], a[href="about.html"]').forEach(function (el) {
                     if (el.parentElement && el.parentElement.tagName === 'LI') {
                         el.parentElement.style.display = 'none';
                     } else {

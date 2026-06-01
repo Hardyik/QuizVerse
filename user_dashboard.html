@@ -655,16 +655,16 @@
 
                         <!-- Settings Dropdown -->
                         <div class="settings-dropdown" id="settingsDropdown">
-                            <div class="dropdown-item" onclick="location.href='/profile'">
+                            <div class="dropdown-item" onclick="location.href='profile.html'">
                                 <i data-feather="user"></i>
                                 <span>Profile</span>
                             </div>
-                            <div class="dropdown-item" onclick="location.href='/analytics'">
+                            <div class="dropdown-item" onclick="location.href='analytics.html'">
                                 <i data-feather="pie-chart"></i>
                                 <span>Analytics</span>
                             </div>
 
-                            <div class="dropdown-item" onclick="location.href='/faq'">
+                            <div class="dropdown-item" onclick="location.href='faq.html'">
                                 <i data-feather="help-circle"></i>
                                 <span>Help / FAQ</span>
                             </div>
@@ -715,15 +715,15 @@
                 <span id="darkModeTextMobile">Dark Mode</span>
             </button>
 
-            <a href="/profile" class="mobile-action-btn">
+            <a href="profile.html" class="mobile-action-btn">
                 <i data-feather="user"></i>
                 Profile
             </a>
-            <a href="/analytics" class="mobile-action-btn">
+            <a href="analytics.html" class="mobile-action-btn">
                 <i data-feather="pie-chart"></i>
                 Analytics
             </a>
-            <a href="/faq" class="mobile-action-btn">
+            <a href="faq.html" class="mobile-action-btn">
                 <i data-feather="help-circle"></i>
                 Help / FAQ
             </a>
@@ -845,7 +845,7 @@
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-            window.location.href = "/login";
+            window.location.href = "login.html";
         }
 
         fetch("/api/user/profile", {
@@ -857,7 +857,7 @@
                 if (res.status === 401) {
                     // Token truly expired/invalid — logout
                     localStorage.removeItem("access_token");
-                    window.location.href = "/login";
+                    window.location.href = "login.html";
                     throw new Error("Session expired");
                 }
                 if (!res.ok) throw new Error("Server error");
@@ -925,7 +925,7 @@
         if (logoutBtn) {
             logoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("access_token");
-                window.location.href = "/logout";
+                window.location.href = "logout";
             });
         }
 
@@ -934,7 +934,7 @@
         if (mobileLogoutBtn) {
             mobileLogoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("access_token");
-                window.location.href = "/logout";
+                window.location.href = "logout";
             });
         }
 

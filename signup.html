@@ -166,7 +166,7 @@
                 <div>
                     <p class="right-alignment text-sm text-white/80 mb-4">
                         Already have an account?
-                        <a href="/login" class="text-white underline hover:text-white/90">Sign in</a>
+                        <a href="login.html" class="text-white underline hover:text-white/90">Sign in</a>
                     </p>
                     <button type="submit"
                         class="btn-primary w-full flex justify-center py-3 px-4 border border- rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50 transition-all duration-300">
@@ -267,7 +267,7 @@
                     alert("Error: " + data.msg);
                 } else if (response.status === 201) {
                     alert("Account created successfully!");
-                    window.location.href = '/login';
+                    window.location.href = 'login.html';
                 } else {
                     alert("Error: " + (data.msg || "Something went wrong"));
                 }

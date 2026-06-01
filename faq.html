@@ -129,9 +129,9 @@
 
             <div class="hidden md:flex items-center gap-6">
                 <a href="/" class="text-gray-600 hover:text-purple-600 transition">Home</a>
-                <a href="/explore" class="text-gray-600 hover:text-purple-600 transition">Explore</a>
-                <a href="/about" class="text-gray-600 hover:text-purple-600 transition">About</a>
-                <a href="/faq" class="text-purple-600 font-semibold border-b-2 border-purple-600">FAQ</a>
+                <a href="explore.html" class="text-gray-600 hover:text-purple-600 transition">Explore</a>
+                <a href="about.html" class="text-gray-600 hover:text-purple-600 transition">About</a>
+                <a href="faq.html" class="text-purple-600 font-semibold border-b-2 border-purple-600">FAQ</a>
             </div>
 
             <div class="flex items-center gap-3">
@@ -434,7 +434,7 @@
                         <div class="px-6 pb-6 text-gray-600">
                             <p>If you're an admin, here's how to get in:</p>
                             <ol class="list-decimal ml-6 mt-2 space-y-1">
-                                <li>Go to the <a href="/login" class="text-purple-600 hover:underline">Login page</a>
+                                <li>Go to the <a href="login.html" class="text-purple-600 hover:underline">Login page</a>
                                 </li>
                                 <li>You'll see a <strong>User / Admin</strong> toggle switch below the password field
                                 </li>
@@ -521,10 +521,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('access_token')) {
-                document.querySelectorAll('a[href="/"]').forEach(function (el) {
-                    el.href = '/user_dashboard';
+                document.querySelectorAll('a[href="index.html"]').forEach(function (el) {
+                    el.href = 'user_dashboard.html';
                 });
-                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function (el) {
+                document.querySelectorAll('a[href="explore.html"], a[href="about.html"]').forEach(function (el) {
                     if (el.parentElement && el.parentElement.tagName === 'LI') {
                         el.parentElement.style.display = 'none';
                     } else {

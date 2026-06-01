@@ -14,11 +14,11 @@
 <body class="bg-gray-50 text-gray-800">
     <!-- Navbar -->
     <nav class="bg-purple-700 p-4 text-white flex justify-center space-x-6">
-        <a href="/" class="hover:text-purple-300">Home</a>
-        <a href="/explore" class="hover:text-purple-300">Explore</a>
-        <a href="/about" class="border-b-2 border-white-500 font-medium">About</a>
-        <a href="/signup" class="hover:text-purple-300">Sign up</a>
-        <a href="/login" class="hover:text-purple-300">Sign in</a>
+        <a href="index.html" class="hover:text-purple-300">Home</a>
+        <a href="explore.html" class="hover:text-purple-300">Explore</a>
+        <a href="about.html" class="border-b-2 border-white-500 font-medium">About</a>
+        <a href="signup.html" class="hover:text-purple-300">Sign up</a>
+        <a href="login.html" class="hover:text-purple-300">Sign in</a>
     </nav>
 
     <script src="https://unpkg.com/feather-icons"></script>
@@ -234,7 +234,7 @@
                 <ul class="mt-4 space-y-2">
                     <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=contactquizverse@gmail.com"
                             target="_blank">Contact Us</a></li>
-                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
                 </ul>
             </div>
 
@@ -265,10 +265,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('access_token')) {
-                document.querySelectorAll('a[href="/"]').forEach(function (el) {
-                    el.href = '/user_dashboard';
+                document.querySelectorAll('a[href="index.html"]').forEach(function (el) {
+                    el.href = 'user_dashboard.html';
                 });
-                document.querySelectorAll('a[href="/explore"], a[href="/about"]').forEach(function (el) {
+                document.querySelectorAll('a[href="explore.html"], a[href="about.html"]').forEach(function (el) {
                     if (el.parentElement && el.parentElement.tagName === 'LI') {
                         el.parentElement.style.display = 'none';
                     } else {
